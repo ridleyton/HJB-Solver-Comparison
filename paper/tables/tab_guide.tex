@@ -1,0 +1,44 @@
+% The decision guide: which method to use, when, and the measurement that decides it.
+%
+% Hand-written rather than generated, because it is an argument rather than a dump of results:
+% every row points at a measurement made elsewhere in the paper. Kept to one column; the
+% "deciding measurement" column carries the number so a reader can check it against the tables.
+\begin{table}[!tb]
+\centering
+\caption{Which solver to use. Each row is a regime a practitioner can recognise before solving
+anything, and the evidence is a measurement reported in this paper rather than a preference. The
+recommendation is deliberately conditional: the two rows that prefer the neural solver are cases
+where the classical scheme \emph{cannot} be run or \emph{should not} be re-run, not cases where it
+is beaten on accuracy.}
+\label{tab:guide}
+\small
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{@{}p{0.20\columnwidth}p{0.30\columnwidth}p{0.40\columnwidth}@{}}
+\toprule
+Regime & Use & Deciding measurement \\
+\midrule
+Single instance, $p \le 5$ & \textbf{grid scheme} & faster \emph{and} more accurate everywhere it
+runs: factor $5$--$50$ in time at $p=4$--$5$, two to three orders at low $p$ (Table~\ref{tab:main}) \\
+\addlinespace
+Control accuracy matters, not just value accuracy & \textbf{grid scheme}, and raise the
+reconstruction order & a cubic reconstruction on the same nodes cuts the control error
+$4$--$5$ orders of magnitude and the control/value ratio from $185$ to $2.8$
+(Table~\ref{tab:extract}) \\
+\addlinespace
+$p \ge 8$ & \textbf{neural}, the only method that runs & the grid needs $N^p$ points;
+at $N=21$, $p=8$ is $2\times10^{7}$ before the CFL-limited time step is counted
+(Section~\ref{sec:highdim}) \\
+\addlinespace
+A family of $\gtrsim 10^3$ problems & \textbf{learned operator} & the classical scheme must be
+re-solved per instance; an operator amortises after $1{,}000$ to $4{,}365$ parameter settings \\
+\addlinespace
+Accuracy must be known, not assumed & \textbf{grid scheme} & the neural solver's accuracy decays
+from $R^2 = 0.98$ at $p=8$ to $0.76$ at $p=20$ while its control-sign agreement stays near $0.7$:
+no internal signal of the decay (Section~\ref{sec:highdim}) \\
+\addlinespace
+Inputs will leave the training domain & \textbf{scale them explicitly}, whichever solver &
+an unscaled network's price sensitivity decays monotonically with price level, rank correlation
+$-0.90$ to $-1.00$, so any threshold on it yields an artefact (Section~\ref{sec:ood}) \\
+\bottomrule
+\end{tabular}
+\end{table}

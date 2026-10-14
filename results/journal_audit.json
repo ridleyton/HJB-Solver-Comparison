@@ -1,0 +1,57 @@
+{
+  "findings": [
+    {
+      "item": "Released package free of secrets and absolute paths",
+      "verdict": "MANUAL",
+      "evidence": "not checkable from here",
+      "why": "Secrets are out of scope for this repository -- every .py in src/ was checked and none reads or embeds a credential -- but the RELEASED package has to be confirmed clean at the moment it is published, including any file copied in from elsewhere."
+    },
+    {
+      "item": "Repository actually published",
+      "verdict": "MANUAL",
+      "evidence": "results directory holds 55 result files",
+      "why": "Every table needs a path from the released repo to the number; the results exist, the public location does not yet. The manuscript's \\repourl macro carries a visible placeholder until it is set, so the PDF cannot be submitted with a stale link."
+    },
+    {
+      "item": "Timing claim not resting on one machine pair",
+      "verdict": "ENHANCE",
+      "evidence": "manuscript states the single-hardware caveat explicitly",
+      "why": "The cost model makes the claim hardware-independent in FLOPs, which is the right defence; a second machine pair would make it a measurement rather than a model."
+    },
+    {
+      "item": "No unfinished placeholders in the manuscript body",
+      "verdict": "OK",
+      "evidence": "0 found",
+      "why": "A submission carrying 'repository link to be added' cannot be uploaded as-is, and a journal copy-editor will not chase it."
+    },
+    {
+      "item": "Reference list sized for a journal",
+      "verdict": "OK",
+      "evidence": "40 entries in refs.bib, 40 \\cite commands in main.tex",
+      "why": "Journal reviews in this area typically see 40-60+ references; a short list reads as an under-positioned contribution and invites 'the authors appear unaware of ...'."
+    },
+    {
+      "item": "Figure count appropriate to a journal paper",
+      "verdict": "OK",
+      "evidence": "6 figures, 7 tables, 7 sections, 7 display equations",
+      "why": "A results paper with no figure asks the reader to reconstruct every trend from tables. It is survivable but it is the first thing a referee asks for."
+    },
+    {
+      "item": "Deep BSDE benchmarked, not merely cited",
+      "verdict": "OK",
+      "evidence": "cited=True, solver class in solvers.py=True, table \\input in manuscript=True, measurements on disk=True, result files=21",
+      "why": "Deep BSDE is THE standard high-dimensional method in mathematical finance. A comparison paper that cites it and does not run it will be asked why by the first referee, and the honest answer -- that the PINN was easier to run -- is not one that helps the paper. All three of run/wired/in-manuscript are required: results on disk with no table is the state this check was written to catch."
+    },
+    {
+      "item": "Current paper's numbers are traceable to results/",
+      "verdict": "OK",
+      "evidence": "verified: 7/7 prose assertions match, all 12 tables reproduce digit-for-digit, 0 unmatched",
+      "why": "This replaces an earlier MANUAL item that asked the authors to source six conclusions from the ORIGINAL THESIS. That item was removed when the thesis was put out of scope: nothing in this paper cites or reproduces those conclusions, and the paper's own traceability is checked mechanically by verify_paper_numbers.py and check_table_drift.py instead of being asserted."
+    }
+  ],
+  "counts": {
+    "blocker": 0,
+    "manual": 2,
+    "enhance": 1
+  }
+}

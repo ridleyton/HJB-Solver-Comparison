@@ -1,0 +1,31 @@
+{
+  "n_steps": 50,
+  "epochs": 1000,
+  "training_loss_norm": 0.11170933395624161,
+  "measurements": [
+    {
+      "label": "last training batch",
+      "width": 1024,
+      "with_grad_normalised": 0.11159304529428482,
+      "with_grad_absolute": 0.005579652264714241,
+      "no_grad_normalised": 0.11159304529428482,
+      "no_grad_absolute": 0.005579652264714241,
+      "terminal_batch_normalised": 0.11159304529428482,
+      "terminal_batch_absolute": 0.005579652264714241,
+      "max_abs_xT_diff": 0.0,
+      "xT_rms": 0.03581453487277031
+    },
+    {
+      "label": "fresh batch (seed 424242)",
+      "width": 1024,
+      "with_grad_normalised": 0.11162251979112625,
+      "with_grad_absolute": 0.005581125989556313,
+      "no_grad_normalised": 0.11162251979112625,
+      "no_grad_absolute": 0.005581125989556313,
+      "terminal_batch_normalised": 0.11162251979112625,
+      "terminal_batch_absolute": 0.005581125989556313,
+      "max_abs_xT_diff": 0.0,
+      "xT_rms": 0.03574025630950928
+    }
+  ]
+}

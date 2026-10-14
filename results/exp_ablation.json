@@ -1,0 +1,3321 @@
+{
+  "meta": {
+    "timestamp": "2026-09-19 13:40:02",
+    "epochs": 10000,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "split": "test",
+    "data_dir": "data_causal",
+    "note": "Each configuration starts from 'as_published' and fixes exactly one defect, except 'all_fixed' which fixes all of them.",
+    "configs": {
+      "as_published": {
+        "sort_ascending": false,
+        "lag_position": false,
+        "sign_convention": "original",
+        "dollar_scaling": false,
+        "threshold_rule": "gamma",
+        "integrate_position": false,
+        "cost_in_return_units": false,
+        "annualization": "original",
+        "scale_inputs": false,
+        "q_max": 1.0,
+        "gamma": 0.0001,
+        "kappa": 0.0005,
+        "train_price_lo": 20.0,
+        "train_price_hi": 30.0
+      },
+      "fix_D1_ordering": {
+        "sort_ascending": true,
+        "lag_position": false,
+        "sign_convention": "original",
+        "dollar_scaling": false,
+        "threshold_rule": "gamma",
+        "integrate_position": false,
+        "cost_in_return_units": false,
+        "annualization": "original",
+        "scale_inputs": false,
+        "q_max": 1.0,
+        "gamma": 0.0001,
+        "kappa": 0.0005,
+        "train_price_lo": 20.0,
+        "train_price_hi": 30.0
+      },
+      "fix_D2_same_bar_leak": {
+        "sort_ascending": false,
+        "lag_position": true,
+        "sign_convention": "original",
+        "dollar_scaling": false,
+        "threshold_rule": "gamma",
+        "integrate_position": false,
+        "cost_in_return_units": false,
+        "annualization": "original",
+        "scale_inputs": false,
+        "q_max": 1.0,
+        "gamma": 0.0001,
+        "kappa": 0.0005,
+        "train_price_lo": 20.0,
+        "train_price_hi": 30.0
+      },
+      "fix_D3_control_law": {
+        "sort_ascending": false,
+        "lag_position": false,
+        "sign_convention": "hjb",
+        "dollar_scaling": true,
+        "threshold_rule": "gamma_spread_price",
+        "integrate_position": false,
+        "cost_in_return_units": false,
+        "annualization": "original",
+        "scale_inputs": false,
+        "q_max": 1.0,
+        "gamma": 0.0001,
+        "kappa": 0.0005,
+        "train_price_lo": 20.0,
+        "train_price_hi": 30.0
+      },
+      "fix_D5_position_integration": {
+        "sort_ascending": false,
+        "lag_position": false,
+        "sign_convention": "original",
+        "dollar_scaling": false,
+        "threshold_rule": "gamma",
+        "integrate_position": true,
+        "cost_in_return_units": false,
+        "annualization": "original",
+        "scale_inputs": false,
+        "q_max": 1.0,
+        "gamma": 0.0001,
+        "kappa": 0.0005,
+        "train_price_lo": 20.0,
+        "train_price_hi": 30.0
+      },
+      "fix_D6_cost_units": {
+        "sort_ascending": false,
+        "lag_position": false,
+        "sign_convention": "original",
+        "dollar_scaling": false,
+        "threshold_rule": "gamma",
+        "integrate_position": false,
+        "cost_in_return_units": true,
+        "annualization": "original",
+        "scale_inputs": false,
+        "q_max": 1.0,
+        "gamma": 0.0001,
+        "kappa": 0.0005,
+        "train_price_lo": 20.0,
+        "train_price_hi": 30.0
+      },
+      "fix_D7_annualization": {
+        "sort_ascending": false,
+        "lag_position": false,
+        "sign_convention": "original",
+        "dollar_scaling": false,
+        "threshold_rule": "gamma",
+        "integrate_position": false,
+        "cost_in_return_units": false,
+        "annualization": "correct",
+        "scale_inputs": false,
+        "q_max": 1.0,
+        "gamma": 0.0001,
+        "kappa": 0.0005,
+        "train_price_lo": 20.0,
+        "train_price_hi": 30.0
+      },
+      "fix_D8_input_scaling": {
+        "sort_ascending": false,
+        "lag_position": false,
+        "sign_convention": "original",
+        "dollar_scaling": false,
+        "threshold_rule": "gamma",
+        "integrate_position": false,
+        "cost_in_return_units": false,
+        "annualization": "original",
+        "scale_inputs": true,
+        "q_max": 1.0,
+        "gamma": 0.0001,
+        "kappa": 0.0005,
+        "train_price_lo": 20.0,
+        "train_price_hi": 30.0
+      },
+      "all_fixed": {
+        "sort_ascending": true,
+        "lag_position": true,
+        "sign_convention": "hjb",
+        "dollar_scaling": true,
+        "threshold_rule": "gamma_spread_price",
+        "integrate_position": true,
+        "cost_in_return_units": true,
+        "annualization": "correct",
+        "scale_inputs": true,
+        "q_max": 1.0,
+        "gamma": 0.0001,
+        "kappa": 0.0005,
+        "train_price_lo": 20.0,
+        "train_price_hi": 30.0
+      }
+    }
+  },
+  "runs": [
+    {
+      "seed": 0,
+      "config": "as_published",
+      "split": "test",
+      "agg": {
+        "total_return": -0.1292034151573006,
+        "annualized_return": -0.006464368490119036,
+        "annualized_volatility": 0.03291221913719532,
+        "sharpe_ratio": -0.19549139522820574,
+        "max_drawdown": -0.17089719545830714,
+        "mean_abs_position": 1.0,
+        "turnover": 1.0,
+        "no_trade_fraction": 0.0,
+        "gross_sum": -0.1487216315610888
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.15219470211341457,
+          "annualized_return": -0.007571895794763361,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": -0.20826466392852078,
+          "max_drawdown": -0.20161902066232773,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": -0.13595980962454213,
+          "annualized_return": -0.0067049093558609885,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": -0.2037823336652224,
+          "max_drawdown": -0.1487000468920977,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": -0.12142548329318814,
+          "annualized_return": -0.00594182174504887,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": -0.21795304498403809,
+          "max_drawdown": -0.14966807483403965,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.09832128165163878,
+          "annualized_return": -0.004753235706213332,
+          "annualized_volatility": 0.02341293412983915,
+          "sharpe_ratio": -0.2030175150134413,
+          "max_drawdown": -0.12496234783199767,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.10947054867115813
+        },
+        "NVDA": {
+          "total_return": -0.2054074710996544,
+          "annualized_return": -0.010528999095516411,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": -0.23191044270168581,
+          "max_drawdown": -0.2428399946340255,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.25235276889711167
+        },
+        "OXY": {
+          "total_return": 0.018648158960685723,
+          "annualized_return": 0.0008509384423702748,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": 0.026599050643837895,
+          "max_drawdown": -0.15038544943184862,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.13709609203180828,
+          "annualized_return": -0.006765081978852283,
+          "annualized_volatility": 0.026438466029597478,
+          "sharpe_ratio": -0.25588027577995154,
+          "max_drawdown": -0.14758985200845998,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.1550853301531642
+        },
+        "SPY": {
+          "total_return": -0.113205833741986,
+          "annualized_return": -0.0055155842402504485,
+          "annualized_volatility": 0.023372572311036437,
+          "sharpe_ratio": -0.2359853321598672,
+          "max_drawdown": -0.12402463707932598,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.12611697924751117
+        },
+        "TSLA": {
+          "total_return": -0.21786822182015864,
+          "annualized_return": -0.011248726936935904,
+          "annualized_volatility": 0.049072220510545786,
+          "sharpe_ratio": -0.22922799946496236,
+          "max_drawdown": -0.2482853357506417,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "config": "fix_D1_ordering",
+      "split": "test",
+      "agg": {
+        "total_return": 0.14965019960066075,
+        "annualized_return": 0.006291269757231093,
+        "annualized_volatility": 0.03305000345866058,
+        "sharpe_ratio": 0.18885797484598932,
+        "max_drawdown": -0.12562655145262822,
+        "mean_abs_position": 1.0,
+        "turnover": 1.0,
+        "no_trade_fraction": 0.0,
+        "gross_sum": 0.12836971750051693
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": 0.17951610174272115,
+          "annualized_return": 0.007629666837002391,
+          "annualized_volatility": 0.0367179618494367,
+          "sharpe_ratio": 0.20779113144373615,
+          "max_drawdown": -0.1274448339863864,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.150659826802596
+        },
+        "AMZN": {
+          "total_return": 0.15735357120998628,
+          "annualized_return": 0.006750168624625408,
+          "annualized_volatility": 0.03331762002486717,
+          "sharpe_ratio": 0.2026005644937215,
+          "max_drawdown": -0.13856614390663102,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.13428423638935166
+        },
+        "GOOGL": {
+          "total_return": 0.13820738137083088,
+          "annualized_return": 0.0059773380220862204,
+          "annualized_volatility": 0.027372612765401313,
+          "sharpe_ratio": 0.21836929025794394,
+          "max_drawdown": -0.09625850340136188,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.12136147908776605
+        },
+        "MSFT": {
+          "total_return": 0.10904247782595511,
+          "annualized_return": 0.004775936859825913,
+          "annualized_volatility": 0.023473138474346865,
+          "sharpe_ratio": 0.2034639238824157,
+          "max_drawdown": -0.09800872008998207,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.09753376352651563
+        },
+        "NVDA": {
+          "total_return": 0.2585066730792518,
+          "annualized_return": 0.010641038581112428,
+          "annualized_volatility": 0.045478304419258375,
+          "sharpe_ratio": 0.23398054780174132,
+          "max_drawdown": -0.17175824539579676,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.20752490470775065
+        },
+        "OXY": {
+          "total_return": -0.06086631639967044,
+          "annualized_return": -0.0028867561105043738,
+          "annualized_volatility": 0.031888362241872595,
+          "sharpe_ratio": -0.090526948000916,
+          "max_drawdown": -0.1624987819733672,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.029620494194386393
+        },
+        "QQQ": {
+          "total_return": 0.15887758853082135,
+          "annualized_return": 0.006811160034859265,
+          "annualized_volatility": 0.026547464852938105,
+          "sharpe_ratio": 0.25656536594323615,
+          "max_drawdown": -0.08368299366329923,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.1398395892429861
+        },
+        "SPY": {
+          "total_return": 0.1276573956498679,
+          "annualized_return": 0.005546174633653811,
+          "annualized_volatility": 0.023495691804772012,
+          "sharpe_ratio": 0.23605070579481188,
+          "max_drawdown": -0.06810686015830703,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.11418875107119124
+        },
+        "TSLA": {
+          "total_return": 0.2785569233961829,
+          "annualized_return": 0.011376700332418777,
+          "annualized_volatility": 0.049158874695052125,
+          "sharpe_ratio": 0.23142719199721326,
+          "max_drawdown": -0.18431388049852238,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.21955540087088146
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "config": "fix_D2_same_bar_leak",
+      "split": "test",
+      "agg": {
+        "total_return": -0.1292034151573006,
+        "annualized_return": -0.006464368490119036,
+        "annualized_volatility": 0.03291221913719532,
+        "sharpe_ratio": -0.19549139522820574,
+        "max_drawdown": -0.17089719545830714,
+        "mean_abs_position": 1.0,
+        "turnover": 1.0,
+        "no_trade_fraction": 0.0,
+        "gross_sum": -0.1487216315610888
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.15219470211341457,
+          "annualized_return": -0.007571895794763361,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": -0.20826466392852078,
+          "max_drawdown": -0.20161902066232773,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": -0.13595980962454213,
+          "annualized_return": -0.0067049093558609885,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": -0.2037823336652224,
+          "max_drawdown": -0.1487000468920977,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": -0.12142548329318814,
+          "annualized_return": -0.00594182174504887,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": -0.21795304498403809,
+          "max_drawdown": -0.14966807483403965,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.09832128165163878,
+          "annualized_return": -0.004753235706213332,
+          "annualized_volatility": 0.02341293412983915,
+          "sharpe_ratio": -0.2030175150134413,
+          "max_drawdown": -0.12496234783199767,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.10947054867115813
+        },
+        "NVDA": {
+          "total_return": -0.2054074710996544,
+          "annualized_return": -0.010528999095516411,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": -0.23191044270168581,
+          "max_drawdown": -0.2428399946340255,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.25235276889711167
+        },
+        "OXY": {
+          "total_return": 0.018648158960685723,
+          "annualized_return": 0.0008509384423702748,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": 0.026599050643837895,
+          "max_drawdown": -0.15038544943184862,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.13709609203180828,
+          "annualized_return": -0.006765081978852283,
+          "annualized_volatility": 0.026438466029597478,
+          "sharpe_ratio": -0.25588027577995154,
+          "max_drawdown": -0.14758985200845998,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.1550853301531642
+        },
+        "SPY": {
+          "total_return": -0.113205833741986,
+          "annualized_return": -0.0055155842402504485,
+          "annualized_volatility": 0.023372572311036437,
+          "sharpe_ratio": -0.2359853321598672,
+          "max_drawdown": -0.12402463707932598,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.12611697924751117
+        },
+        "TSLA": {
+          "total_return": -0.21786822182015864,
+          "annualized_return": -0.011248726936935904,
+          "annualized_volatility": 0.049072220510545786,
+          "sharpe_ratio": -0.22922799946496236,
+          "max_drawdown": -0.2482853357506417,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "config": "fix_D3_control_law",
+      "split": "test",
+      "agg": {
+        "total_return": 0.01495512578763742,
+        "annualized_return": 0.0003115879466767637,
+        "annualized_volatility": 0.025847222525039116,
+        "sharpe_ratio": -0.23328014208340564,
+        "max_drawdown": -0.14559018638251986,
+        "mean_abs_position": 0.7123142633141291,
+        "turnover": 3.2470588090408308,
+        "no_trade_fraction": 0.0,
+        "gross_sum": 0.1138567358690617
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": 0.1461156354540012,
+          "annualized_return": 0.0062980446916856,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": 0.17322744483988214,
+          "max_drawdown": -0.1326517668733994,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": 0.13044523285964593,
+          "annualized_return": 0.0056604825741026765,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": 0.172039066809106,
+          "max_drawdown": -0.1440027342735598,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": 0.11997768317262825,
+          "annualized_return": 0.005229888392516813,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": 0.19183848809088438,
+          "max_drawdown": -0.09844007879960415,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.09562237784153194,
+          "annualized_return": -0.00461629176249867,
+          "annualized_volatility": 0.006315372932525367,
+          "sharpe_ratio": -0.7309610709961232,
+          "max_drawdown": -0.10569018787952889,
+          "mean_abs_position": 0.2594568347415304,
+          "turnover": 3.7065286720688477,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.03370646399584448
+        },
+        "NVDA": {
+          "total_return": 0.20336982974049955,
+          "annualized_return": 0.008558835100085593,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": 0.18851585217789646,
+          "max_drawdown": -0.18465040408899214,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.25235276889711167
+        },
+        "OXY": {
+          "total_return": -0.03989098116947465,
+          "annualized_return": -0.0018722908893301637,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": -0.05852498571643915,
+          "max_drawdown": -0.15010983646570686,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.0723263107805937,
+          "annualized_return": -0.0034501833649442926,
+          "annualized_volatility": 0.00432317873206461,
+          "sharpe_ratio": -0.7980663254458131,
+          "max_drawdown": -0.08274325946758054,
+          "mean_abs_position": 0.15733511238661363,
+          "turnover": 2.422690079449473,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.02921614036000488
+        },
+        "SPY": {
+          "total_return": -0.0502063594829516,
+          "annualized_return": -0.0023685197578796613,
+          "annualized_volatility": 0.0023568718669855953,
+          "sharpe_ratio": -1.0049420976410413,
+          "max_drawdown": -0.05547956902038165,
+          "mean_abs_position": 0.09916854013898013,
+          "turnover": 1.3320286231738314,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.014817621252405641
+        },
+        "TSLA": {
+          "total_return": -0.20726621986348626,
+          "annualized_return": -0.010635673463647022,
+          "annualized_volatility": 0.04571579994003746,
+          "sharpe_ratio": -0.23264765086900296,
+          "max_drawdown": -0.3565438405739253,
+          "mean_abs_position": 0.8948678825600369,
+          "turnover": 16.762281906675327,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.27108882884749275
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "config": "fix_D5_position_integration",
+      "split": "test",
+      "agg": {
+        "total_return": -0.15397404262401052,
+        "annualized_return": -0.007815651256241642,
+        "annualized_volatility": 0.03329519539453007,
+        "sharpe_ratio": -0.2409183218841259,
+        "max_drawdown": -0.19307714994473926,
+        "mean_abs_position": 0.9998229210443935,
+        "turnover": 1.0,
+        "no_trade_fraction": 0.0,
+        "gross_sum": -0.14876120224369516
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.15835477601188463,
+          "annualized_return": -0.007905010856835704,
+          "annualized_volatility": 0.036386309503623385,
+          "sharpe_ratio": -0.21725233926371443,
+          "max_drawdown": -0.20161902066232917,
+          "mean_abs_position": 0.9999667649860198,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": -0.13595980962454213,
+          "annualized_return": -0.0067049093558609885,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": -0.2037823336652224,
+          "max_drawdown": -0.1487000468920977,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": -0.12142548329318814,
+          "annualized_return": -0.00594182174504887,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": -0.21795304498403809,
+          "max_drawdown": -0.14966807483403965,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.1538148353711496,
+          "annualized_return": -0.007659282544255852,
+          "annualized_volatility": 0.02446997838835567,
+          "sharpe_ratio": -0.3130073277016302,
+          "max_drawdown": -0.1724594916310933,
+          "mean_abs_position": 0.9996876058704253,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.11007659982593915
+        },
+        "NVDA": {
+          "total_return": -0.2054074710996544,
+          "annualized_return": -0.010528999095516411,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": -0.23191044270168581,
+          "max_drawdown": -0.2428399946340255,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.25235276889711167
+        },
+        "OXY": {
+          "total_return": 0.018648158960685723,
+          "annualized_return": 0.0008509384423702748,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": 0.026599050643837895,
+          "max_drawdown": -0.15038544943184862,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.1962176128429748,
+          "annualized_return": -0.010005062524235386,
+          "annualized_volatility": 0.027277105384758627,
+          "sharpe_ratio": -0.3667934109249665,
+          "max_drawdown": -0.20579090631579244,
+          "mean_abs_position": 0.9995264284673658,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.15467448707057235
+        },
+        "SPY": {
+          "total_return": -0.18004374419548852,
+          "annualized_return": -0.009096677350675098,
+          "annualized_volatility": 0.024198350235863853,
+          "sharpe_ratio": -0.3759213856320299,
+          "max_drawdown": -0.1894816546481598,
+          "mean_abs_position": 0.9993540735775583,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.12616796624055532
+        },
+        "TSLA": {
+          "total_return": -0.253190810137898,
+          "annualized_return": -0.01335003627611675,
+          "annualized_volatility": 0.049768319371889434,
+          "sharpe_ratio": -0.2682436627276836,
+          "max_drawdown": -0.276749710453267,
+          "mean_abs_position": 0.999871416498173,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.2720501986903823
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "config": "fix_D6_cost_units",
+      "split": "test",
+      "agg": {
+        "total_return": -0.1292034151573006,
+        "annualized_return": -0.006464368490119036,
+        "annualized_volatility": 0.03291221913719532,
+        "sharpe_ratio": -0.19549139522820574,
+        "max_drawdown": -0.17089719545830714,
+        "mean_abs_position": 1.0,
+        "turnover": 1.0,
+        "no_trade_fraction": 0.0,
+        "gross_sum": -0.1487216315610888
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.15219470211341457,
+          "annualized_return": -0.007571895794763361,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": -0.20826466392852078,
+          "max_drawdown": -0.20161902066232773,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": -0.13595980962454213,
+          "annualized_return": -0.0067049093558609885,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": -0.2037823336652224,
+          "max_drawdown": -0.1487000468920977,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": -0.12142548329318814,
+          "annualized_return": -0.00594182174504887,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": -0.21795304498403809,
+          "max_drawdown": -0.14966807483403965,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.09832128165163878,
+          "annualized_return": -0.004753235706213332,
+          "annualized_volatility": 0.02341293412983915,
+          "sharpe_ratio": -0.2030175150134413,
+          "max_drawdown": -0.12496234783199767,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.10947054867115813
+        },
+        "NVDA": {
+          "total_return": -0.2054074710996544,
+          "annualized_return": -0.010528999095516411,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": -0.23191044270168581,
+          "max_drawdown": -0.2428399946340255,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.25235276889711167
+        },
+        "OXY": {
+          "total_return": 0.018648158960685723,
+          "annualized_return": 0.0008509384423702748,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": 0.026599050643837895,
+          "max_drawdown": -0.15038544943184862,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.13709609203180828,
+          "annualized_return": -0.006765081978852283,
+          "annualized_volatility": 0.026438466029597478,
+          "sharpe_ratio": -0.25588027577995154,
+          "max_drawdown": -0.14758985200845998,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.1550853301531642
+        },
+        "SPY": {
+          "total_return": -0.113205833741986,
+          "annualized_return": -0.0055155842402504485,
+          "annualized_volatility": 0.023372572311036437,
+          "sharpe_ratio": -0.2359853321598672,
+          "max_drawdown": -0.12402463707932598,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.12611697924751117
+        },
+        "TSLA": {
+          "total_return": -0.21786822182015864,
+          "annualized_return": -0.011248726936935904,
+          "annualized_volatility": 0.049072220510545786,
+          "sharpe_ratio": -0.22922799946496236,
+          "max_drawdown": -0.2482853357506417,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "config": "fix_D7_annualization",
+      "split": "test",
+      "agg": {
+        "total_return": -0.1292034151573006,
+        "annualized_return": -0.7795965638101684,
+        "annualized_volatility": 0.7268150945058872,
+        "sharpe_ratio": -3.0723437604532866,
+        "max_drawdown": -0.17089719545830714,
+        "mean_abs_position": 1.0,
+        "turnover": 1.0,
+        "no_trade_fraction": 0.0,
+        "gross_sum": -0.1487216315610888
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.15219470211341457,
+          "annualized_return": -0.948792889510329,
+          "annualized_volatility": 0.7936661719502554,
+          "sharpe_ratio": -3.341918210204065,
+          "max_drawdown": -0.20161902066232773,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": -0.13595980962454213,
+          "annualized_return": -0.9279538147054124,
+          "annualized_volatility": 0.8020988159325778,
+          "sharpe_ratio": -2.8786347955307243,
+          "max_drawdown": -0.1487000468920977,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": -0.12142548329318814,
+          "annualized_return": -0.9027219534110095,
+          "annualized_volatility": 0.6341069022856205,
+          "sharpe_ratio": -3.3587137624053915,
+          "max_drawdown": -0.14966807483403965,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.09832128165163878,
+          "annualized_return": -0.8447853355345287,
+          "annualized_volatility": 0.4888852367280743,
+          "sharpe_ratio": -3.5658273510481884,
+          "max_drawdown": -0.12496234783199767,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.10947054867115813
+        },
+        "NVDA": {
+          "total_return": -0.2054074710996544,
+          "annualized_return": -0.984055878628709,
+          "annualized_volatility": 0.9587282747275886,
+          "sharpe_ratio": -3.8126811606773283,
+          "max_drawdown": -0.2428399946340255,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.25235276889711167
+        },
+        "OXY": {
+          "total_return": 0.018648158960685723,
+          "annualized_return": 0.394555114968544,
+          "annualized_volatility": 0.6845227856870243,
+          "sharpe_ratio": 0.8125225648085334,
+          "max_drawdown": -0.15038544943184862,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.13709609203180828,
+          "annualized_return": -0.9296403216642741,
+          "annualized_volatility": 0.6104399131475405,
+          "sharpe_ratio": -4.034888785352088,
+          "max_drawdown": -0.14758985200845998,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.1550853301531642
+        },
+        "SPY": {
+          "total_return": -0.113205833741986,
+          "annualized_return": -0.8849700597209443,
+          "annualized_volatility": 0.5505847121550513,
+          "sharpe_ratio": -3.650791987342113,
+          "max_drawdown": -0.12402463707932598,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.12611697924751117
+        },
+        "TSLA": {
+          "total_return": -0.21786822182015864,
+          "annualized_return": -0.9880039360848526,
+          "annualized_volatility": 1.0183030379392517,
+          "sharpe_ratio": -3.820160356328212,
+          "max_drawdown": -0.2482853357506417,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "config": "fix_D8_input_scaling",
+      "split": "test",
+      "agg": {
+        "total_return": -0.8528245573312184,
+        "annualized_return": -0.35356686076946653,
+        "annualized_volatility": 0.315142795622993,
+        "sharpe_ratio": -0.9279824061836324,
+        "max_drawdown": -0.8696022558175066,
+        "mean_abs_position": 0.9996945459372074,
+        "turnover": 24.776529880757963,
+        "no_trade_fraction": 0.00010148987131084317,
+        "gross_sum": -0.08778155932716664
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.996021754294208,
+          "annualized_return": -0.22464629020230265,
+          "annualized_volatility": 0.2698284185835178,
+          "sharpe_ratio": -0.8325523730287501,
+          "max_drawdown": -0.9961148822396795,
+          "mean_abs_position": 0.9998112229124964,
+          "turnover": 25.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.12094715722037835
+        },
+        "AMZN": {
+          "total_return": -0.95763484281423,
+          "annualized_return": -0.13544376933220525,
+          "annualized_volatility": 0.2043838221584212,
+          "sharpe_ratio": -0.6626932009678368,
+          "max_drawdown": -0.9586383622310711,
+          "mean_abs_position": 0.999960795511496,
+          "turnover": 15.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.06857896863993695
+        },
+        "GOOGL": {
+          "total_return": -0.9999928535516017,
+          "annualized_return": -0.4204326659014941,
+          "annualized_volatility": 0.3693000585622809,
+          "sharpe_ratio": -1.1384581620113388,
+          "max_drawdown": -0.999993117528664,
+          "mean_abs_position": 0.9995643210892606,
+          "turnover": 66.63391217170283,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.010356262350144502
+        },
+        "MSFT": {
+          "total_return": -0.9999987587988619,
+          "annualized_return": -0.4653060551987903,
+          "annualized_volatility": 0.4996048484925628,
+          "sharpe_ratio": -0.9313481576544727,
+          "max_drawdown": -0.9999987683332098,
+          "mean_abs_position": 0.9999494394244083,
+          "turnover": 20.446462818421423,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.05478408407734977
+        },
+        "NVDA": {
+          "total_return": -0.2405976410874371,
+          "annualized_return": -0.012590208437861183,
+          "annualized_volatility": 0.04781921150294888,
+          "sharpe_ratio": -0.26328766289014993,
+          "max_drawdown": -0.28059951518443316,
+          "mean_abs_position": 0.9998362416203596,
+          "turnover": 3.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.18373404069457366
+        },
+        "OXY": {
+          "total_return": -0.48117964177106853,
+          "annualized_return": -0.029756865273614208,
+          "annualized_volatility": 0.054688876435696525,
+          "sharpe_ratio": -0.5441118416210743,
+          "max_drawdown": -0.5284730257212412,
+          "mean_abs_position": 1.0,
+          "turnover": 17.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.012534405982456732
+        },
+        "QQQ": {
+          "total_return": -0.9999939300368956,
+          "annualized_return": -0.42477233204672327,
+          "annualized_volatility": 0.43590407972334244,
+          "sharpe_ratio": -0.9744628504425005,
+          "max_drawdown": -0.9999940051438208,
+          "mean_abs_position": 1.0,
+          "turnover": 11.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.11888821414961914
+        },
+        "SPY": {
+          "total_return": -1.000002654622106,
+          "annualized_return": -1.0,
+          "annualized_volatility": 0.5178051921840913,
+          "sharpe_ratio": -1.9312282207561908,
+          "max_drawdown": -1.0626096789251915,
+          "mean_abs_position": 1.0,
+          "turnover": 11.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.1003077153444328
+        },
+        "TSLA": {
+          "total_return": -0.9999989390045577,
+          "annualized_return": -0.4691535605322077,
+          "annualized_volatility": 0.4369506529640757,
+          "sharpe_ratio": -1.0736991862803775,
+          "max_drawdown": -0.9999989470502487,
+          "mean_abs_position": 0.9981288928768457,
+          "turnover": 53.908393936697394,
+          "no_trade_fraction": 0.0009134088417975886,
+          "gross_sum": -0.11990318548560777
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "config": "all_fixed",
+      "split": "test",
+      "agg": {
+        "total_return": -0.09158455479742071,
+        "annualized_return": -0.7421725361267723,
+        "annualized_volatility": 0.579818266428831,
+        "sharpe_ratio": -2.772670325866416,
+        "max_drawdown": -0.14347805055964497,
+        "mean_abs_position": 0.8913941398421993,
+        "turnover": 1.6225191011182876,
+        "no_trade_fraction": 2.0297974262168634e-05,
+        "gross_sum": -0.07189200120498422
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.14340961797350982,
+          "annualized_return": -0.9383522135418734,
+          "annualized_volatility": 0.7291750449516953,
+          "sharpe_ratio": -3.446254245663503,
+          "max_drawdown": -0.20711120617044365,
+          "mean_abs_position": 0.9246212379130871,
+          "turnover": 1.1253023652695113,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.12027662519803974
+        },
+        "AMZN": {
+          "total_return": -0.08436100096374033,
+          "annualized_return": -0.7953380655166662,
+          "annualized_volatility": 0.6569553861106523,
+          "sharpe_ratio": -2.0920629109434588,
+          "max_drawdown": -0.12390347846659766,
+          "mean_abs_position": 0.9508447460171086,
+          "turnover": 1.6577175026122883,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.058893954274909704
+        },
+        "GOOGL": {
+          "total_return": -0.08717657424601188,
+          "annualized_return": -0.8063747537682262,
+          "annualized_volatility": 0.5348283366539566,
+          "sharpe_ratio": -2.8041754638343925,
+          "max_drawdown": -0.14457773935562312,
+          "mean_abs_position": 0.9401452334154977,
+          "turnover": 1.1919135849491742,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.07409997923038297
+        },
+        "MSFT": {
+          "total_return": -0.06157990630236454,
+          "annualized_return": -0.681469244392587,
+          "annualized_volatility": 0.39325263122924026,
+          "sharpe_ratio": -2.717734631683216,
+          "max_drawdown": -0.09376420299870358,
+          "mean_abs_position": 0.8535288534297716,
+          "turnover": 1.0262057121987458,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.0542497026212576
+        },
+        "NVDA": {
+          "total_return": -0.15893294554685067,
+          "annualized_return": -0.9556441213084174,
+          "annualized_volatility": 0.9003684170506671,
+          "sharpe_ratio": -2.9971102195852466,
+          "max_drawdown": -0.18260806632500293,
+          "mean_abs_position": 0.9734846081529752,
+          "turnover": 1.152781964642352,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.11971315027676828
+        },
+        "OXY": {
+          "total_return": -0.011055845112941554,
+          "annualized_return": -0.18136214590788324,
+          "annualized_volatility": 0.6412676209092663,
+          "sharpe_ratio": -0.02348622632107492,
+          "max_drawdown": -0.13733945235667722,
+          "mean_abs_position": 0.9862809232515324,
+          "turnover": 5.285708044306615,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.019094719229468177
+        },
+        "QQQ": {
+          "total_return": -0.0722381450439733,
+          "annualized_return": -0.740667334063382,
+          "annualized_volatility": 0.34367280205658735,
+          "sharpe_ratio": -3.7563068958483736,
+          "max_drawdown": -0.09665518443007637,
+          "mean_abs_position": 0.794080361255201,
+          "turnover": 1.0157548521444575,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.06540357079030197
+        },
+        "SPY": {
+          "total_return": -0.05407939760442415,
+          "annualized_return": -0.6323925340802139,
+          "annualized_volatility": 0.27302553023082393,
+          "sharpe_ratio": -3.5310238467789588,
+          "max_drawdown": -0.07807767363243956,
+          "mean_abs_position": 0.771969665268007,
+          "turnover": 1.0128673195393887,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.049180590232920186
+        },
+        "TSLA": {
+          "total_return": -0.15142756038297012,
+          "annualized_return": -0.9479524125617015,
+          "annualized_volatility": 0.7458186286665911,
+          "sharpe_ratio": -3.5858784921395186,
+          "max_drawdown": -0.22726545130124043,
+          "mean_abs_position": 0.8275916298766128,
+          "turnover": 1.1344205644020544,
+          "no_trade_fraction": 0.00018268176835951772,
+          "gross_sum": -0.1243051574497457
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "config": "as_published",
+      "split": "test",
+      "agg": {
+        "total_return": -0.23404923805993988,
+        "annualized_return": -0.034375000804254006,
+        "annualized_volatility": 0.044724703435623486,
+        "sharpe_ratio": -0.39634023299548243,
+        "max_drawdown": -0.26802235585045076,
+        "mean_abs_position": 0.9915499449575855,
+        "turnover": 7.811127339049967,
+        "no_trade_fraction": 0.0018065197093330085,
+        "gross_sum": -0.14981489730641828
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.15219470211341457,
+          "annualized_return": -0.007571895794763361,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": -0.20826466392852078,
+          "max_drawdown": -0.20161902066232773,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": -0.13595980962454213,
+          "annualized_return": -0.0067049093558609885,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": -0.2037823336652224,
+          "max_drawdown": -0.1487000468920977,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": -0.12142548329318814,
+          "annualized_return": -0.00594182174504887,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": -0.21795304498403809,
+          "max_drawdown": -0.14966807483403965,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.09832128165163878,
+          "annualized_return": -0.004753235706213332,
+          "annualized_volatility": 0.02341293412983915,
+          "sharpe_ratio": -0.2030175150134413,
+          "max_drawdown": -0.12496234783199767,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.10947054867115813
+        },
+        "NVDA": {
+          "total_return": -0.2054074710996544,
+          "annualized_return": -0.010528999095516411,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": -0.23191044270168581,
+          "max_drawdown": -0.2428399946340255,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.25235276889711167
+        },
+        "OXY": {
+          "total_return": -0.03989098116947465,
+          "annualized_return": -0.0018722908893301637,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": -0.05852498571643915,
+          "max_drawdown": -0.15010983646570686,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.13709609203180828,
+          "annualized_return": -0.006765081978852283,
+          "annualized_volatility": 0.026438466029597478,
+          "sharpe_ratio": -0.25588027577995154,
+          "max_drawdown": -0.14758985200845998,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.1550853301531642
+        },
+        "SPY": {
+          "total_return": -0.9982790997355794,
+          "annualized_return": -0.2539880457357647,
+          "annualized_volatility": 0.12968493099688996,
+          "sharpe_ratio": -1.9585008357050808,
+          "max_drawdown": -0.9984266935747601,
+          "mean_abs_position": 0.9239495046182689,
+          "turnover": 62.3001460514497,
+          "no_trade_fraction": 0.016258677383997076,
+          "gross_sum": -0.032411063452179256
+        },
+        "TSLA": {
+          "total_return": -0.21786822182015864,
+          "annualized_return": -0.011248726936935904,
+          "annualized_volatility": 0.049072220510545786,
+          "sharpe_ratio": -0.22922799946496236,
+          "max_drawdown": -0.2482853357506417,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "config": "fix_D1_ordering",
+      "split": "test",
+      "agg": {
+        "total_return": 0.03589787413163191,
+        "annualized_return": -0.02261130807029109,
+        "annualized_volatility": 0.045170946250597095,
+        "sharpe_ratio": -0.03811279378307327,
+        "max_drawdown": -0.22716797696883073,
+        "mean_abs_position": 0.9915499449575855,
+        "turnover": 7.811127339049967,
+        "no_trade_fraction": 0.0018065197093330085,
+        "gross_sum": 0.1033897695373756
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": 0.17951610174272115,
+          "annualized_return": 0.007629666837002391,
+          "annualized_volatility": 0.0367179618494367,
+          "sharpe_ratio": 0.20779113144373615,
+          "max_drawdown": -0.1274448339863864,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.150659826802596
+        },
+        "AMZN": {
+          "total_return": 0.15735357120998628,
+          "annualized_return": 0.006750168624625408,
+          "annualized_volatility": 0.03331762002486717,
+          "sharpe_ratio": 0.2026005644937215,
+          "max_drawdown": -0.13856614390663102,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.13428423638935166
+        },
+        "GOOGL": {
+          "total_return": 0.13820738137083088,
+          "annualized_return": 0.0059773380220862204,
+          "annualized_volatility": 0.027372612765401313,
+          "sharpe_ratio": 0.21836929025794394,
+          "max_drawdown": -0.09625850340136188,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.12136147908776605
+        },
+        "MSFT": {
+          "total_return": 0.10904247782595511,
+          "annualized_return": 0.004775936859825913,
+          "annualized_volatility": 0.023473138474346865,
+          "sharpe_ratio": 0.2034639238824157,
+          "max_drawdown": -0.09800872008998207,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.09753376352651563
+        },
+        "NVDA": {
+          "total_return": 0.2585066730792518,
+          "annualized_return": 0.010641038581112428,
+          "annualized_volatility": 0.045478304419258375,
+          "sharpe_ratio": 0.23398054780174132,
+          "max_drawdown": -0.17175824539579676,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.20752490470775065
+        },
+        "OXY": {
+          "total_return": 0.04154838709676856,
+          "annualized_return": 0.0018758029380812058,
+          "annualized_volatility": 0.031888362241872595,
+          "sharpe_ratio": 0.05882406013370262,
+          "max_drawdown": -0.14594064262939,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.029620494194386393
+        },
+        "QQQ": {
+          "total_return": 0.15887758853082135,
+          "annualized_return": 0.006811160034859265,
+          "annualized_volatility": 0.026547464852938105,
+          "sharpe_ratio": 0.25656536594323615,
+          "max_drawdown": -0.08368299366329923,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.1398395892429861
+        },
+        "SPY": {
+          "total_return": -0.9985282370678308,
+          "annualized_return": -0.2593395848626314,
+          "annualized_volatility": 0.1325841769322006,
+          "sharpe_ratio": -1.95603722000137,
+          "max_drawdown": -0.9985378291481071,
+          "mean_abs_position": 0.9239495046182689,
+          "turnover": 62.3001460514497,
+          "no_trade_fraction": 0.016258677383997076,
+          "gross_sum": -0.16987176898585368
+        },
+        "TSLA": {
+          "total_return": 0.2785569233961829,
+          "annualized_return": 0.011376700332418777,
+          "annualized_volatility": 0.049158874695052125,
+          "sharpe_ratio": 0.23142719199721326,
+          "max_drawdown": -0.18431388049852238,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.21955540087088146
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "config": "fix_D2_same_bar_leak",
+      "split": "test",
+      "agg": {
+        "total_return": -0.23399876573303036,
+        "annualized_return": -0.03347628252683951,
+        "annualized_volatility": 0.04398246373412517,
+        "sharpe_ratio": -0.4008519180435102,
+        "max_drawdown": -0.26797621230694313,
+        "mean_abs_position": 0.9915499449575855,
+        "turnover": 7.811127339049967,
+        "no_trade_fraction": 0.0018065197093330085,
+        "gross_sum": -0.14981489730641828
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.15219470211341457,
+          "annualized_return": -0.007571895794763361,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": -0.20826466392852078,
+          "max_drawdown": -0.20161902066232773,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": -0.13595980962454213,
+          "annualized_return": -0.0067049093558609885,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": -0.2037823336652224,
+          "max_drawdown": -0.1487000468920977,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": -0.12142548329318814,
+          "annualized_return": -0.00594182174504887,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": -0.21795304498403809,
+          "max_drawdown": -0.14966807483403965,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.09832128165163878,
+          "annualized_return": -0.004753235706213332,
+          "annualized_volatility": 0.02341293412983915,
+          "sharpe_ratio": -0.2030175150134413,
+          "max_drawdown": -0.12496234783199767,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.10947054867115813
+        },
+        "NVDA": {
+          "total_return": -0.2054074710996544,
+          "annualized_return": -0.010528999095516411,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": -0.23191044270168581,
+          "max_drawdown": -0.2428399946340255,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.25235276889711167
+        },
+        "OXY": {
+          "total_return": -0.03989098116947465,
+          "annualized_return": -0.0018722908893301637,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": -0.05852498571643915,
+          "max_drawdown": -0.15010983646570686,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.13709609203180828,
+          "annualized_return": -0.006765081978852283,
+          "annualized_volatility": 0.026438466029597478,
+          "sharpe_ratio": -0.25588027577995154,
+          "max_drawdown": -0.14758985200845998,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.1550853301531642
+        },
+        "SPY": {
+          "total_return": -0.9978248487933936,
+          "annualized_return": -0.24589958123903433,
+          "annualized_volatility": 0.12300477368340511,
+          "sharpe_ratio": -1.9991060011373305,
+          "max_drawdown": -0.9980114016831915,
+          "mean_abs_position": 0.9239495046182689,
+          "turnover": 62.3001460514497,
+          "no_trade_fraction": 0.016258677383997076,
+          "gross_sum": -0.032411063452179256
+        },
+        "TSLA": {
+          "total_return": -0.21786822182015864,
+          "annualized_return": -0.011248726936935904,
+          "annualized_volatility": 0.049072220510545786,
+          "sharpe_ratio": -0.22922799946496236,
+          "max_drawdown": -0.2482853357506417,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "config": "fix_D3_control_law",
+      "split": "test",
+      "agg": {
+        "total_return": 0.017298824283359975,
+        "annualized_return": 0.00028337926604737884,
+        "annualized_volatility": 0.023467589268255356,
+        "sharpe_ratio": -1.247097186352611,
+        "max_drawdown": -0.13852006392687244,
+        "mean_abs_position": 0.6411968348173221,
+        "turnover": 3.4349167738931876,
+        "no_trade_fraction": 0.0,
+        "gross_sum": 0.11450189619795685
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": 0.1461156354540012,
+          "annualized_return": 0.0062980446916856,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": 0.17322744483988214,
+          "max_drawdown": -0.1326517668733994,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": 0.13044523285964593,
+          "annualized_return": 0.0056604825741026765,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": 0.172039066809106,
+          "max_drawdown": -0.1440027342735598,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": 0.11997768317262825,
+          "annualized_return": 0.005229888392516813,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": 0.19183848809088438,
+          "max_drawdown": -0.09844007879960415,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.08884038828936092,
+          "annualized_return": -0.004273882948580443,
+          "annualized_volatility": 0.002420111553365246,
+          "sharpe_ratio": -1.7659859284740267,
+          "max_drawdown": -0.09057780287617745,
+          "mean_abs_position": 0.09458443089514061,
+          "turnover": 2.9110672675086424,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.014595996680189136
+        },
+        "NVDA": {
+          "total_return": 0.20336982974049955,
+          "annualized_return": 0.008558835100085593,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": 0.18851585217789646,
+          "max_drawdown": -0.18465040408899214,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.25235276889711167
+        },
+        "OXY": {
+          "total_return": 0.018648158960685723,
+          "annualized_return": 0.0008509384423702748,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": 0.026599050643837895,
+          "max_drawdown": -0.15038544943184862,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.053794502142140765,
+          "annualized_return": -0.0025423359120687605,
+          "annualized_volatility": 0.0007348649801428806,
+          "sharpe_ratio": -3.4595959540410424,
+          "max_drawdown": -0.05418657610918054,
+          "mean_abs_position": 0.020953576566357646,
+          "turnover": 1.3944309934015653,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.0062701135270186855
+        },
+        "SPY": {
+          "total_return": -0.019934393549064455,
+          "annualized_return": -0.0009265366264825659,
+          "annualized_volatility": 0.0001477532506546101,
+          "sharpe_ratio": -6.270837510360091,
+          "max_drawdown": -0.0199347338135778,
+          "mean_abs_position": 0.005730693773527327,
+          "turnover": 0.40000443916976325,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.00010876697964373204
+        },
+        "TSLA": {
+          "total_return": -0.30029783765665474,
+          "annualized_return": -0.01630502031920278,
+          "annualized_volatility": 0.03399179437639645,
+          "sharpe_ratio": -0.47967518685994454,
+          "max_drawdown": -0.37185102907551193,
+          "mean_abs_position": 0.6495028121208725,
+          "turnover": 21.20874826495872,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.2301153127256554
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "config": "fix_D5_position_integration",
+      "split": "test",
+      "agg": {
+        "total_return": -0.13819913134619727,
+        "annualized_return": -0.007007874362616024,
+        "annualized_volatility": 0.03305252503939498,
+        "sharpe_ratio": -0.2040643059815469,
+        "max_drawdown": -0.17866752598124988,
+        "mean_abs_position": 0.9976486049348527,
+        "turnover": 1.0542000336592428,
+        "no_trade_fraction": 0.0018065197093330085,
+        "gross_sum": -0.13175904650321874
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.1765093825400933,
+          "annualized_return": -0.008900451593997216,
+          "annualized_volatility": 0.036858182414376404,
+          "sharpe_ratio": -0.24147830986168287,
+          "max_drawdown": -0.21398561338103417,
+          "mean_abs_position": 0.9999208691847892,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": -0.1502180434589927,
+          "annualized_return": -0.0074654942712441,
+          "annualized_volatility": 0.0331095951641024,
+          "sharpe_ratio": -0.22547827100399673,
+          "max_drawdown": -0.1502180434589927,
+          "mean_abs_position": 0.9999397936371696,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": -0.12845081248247336,
+          "annualized_return": -0.006309152724351064,
+          "annualized_volatility": 0.02731969699880756,
+          "sharpe_ratio": -0.23093787330900645,
+          "max_drawdown": -0.14966807483403832,
+          "mean_abs_position": 0.9999580179682429,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.14154529446269393,
+          "annualized_return": -0.007001422300969229,
+          "annualized_volatility": 0.02360735540010937,
+          "sharpe_ratio": -0.2965780021652401,
+          "max_drawdown": -0.160460295066013,
+          "mean_abs_position": 0.9987869815466229,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.1094687807371156
+        },
+        "NVDA": {
+          "total_return": -0.2054074710996544,
+          "annualized_return": -0.010528999095516411,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": -0.23191044270168581,
+          "max_drawdown": -0.2428399946340255,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.25235276889711167
+        },
+        "OXY": {
+          "total_return": -0.03989098116947465,
+          "annualized_return": -0.0018722908893301637,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": -0.05852498571643915,
+          "max_drawdown": -0.15010983646570686,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.1765326397087401,
+          "annualized_return": -0.008901740190840668,
+          "annualized_volatility": 0.02644358365597828,
+          "sharpe_ratio": -0.3366313850138157,
+          "max_drawdown": -0.18634038721766188,
+          "mean_abs_position": 0.9909623504805773,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.1527840870427743
+        },
+        "SPY": {
+          "total_return": 0.028657345900672038,
+          "annualized_return": 0.0013015605562189947,
+          "annualized_volatility": 0.023302422975750744,
+          "sharpe_ratio": 0.05585515967903599,
+          "max_drawdown": -0.07695389673480257,
+          "mean_abs_position": 0.9895108773397868,
+          "turnover": 1.4878003029331845,
+          "no_trade_fraction": 0.016258677383997076,
+          "gross_sum": 0.12810192397932213
+        },
+        "TSLA": {
+          "total_return": -0.25389490309432494,
+          "annualized_return": -0.013392878753514359,
+          "annualized_volatility": 0.04943943729767751,
+          "sharpe_ratio": -0.27089464374109107,
+          "max_drawdown": -0.27743159203897383,
+          "mean_abs_position": 0.9997585542564862,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.2722535988592962
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "config": "fix_D6_cost_units",
+      "split": "test",
+      "agg": {
+        "total_return": -0.12865609813695017,
+        "annualized_return": -0.006414775177064902,
+        "annualized_volatility": 0.03253460168425258,
+        "sharpe_ratio": -0.1917794017445246,
+        "max_drawdown": -0.17166830928234666,
+        "mean_abs_position": 0.9915499449575855,
+        "turnover": 7.811127339049967,
+        "no_trade_fraction": 0.0018065197093330085,
+        "gross_sum": -0.14981489730641828
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.15219470211341457,
+          "annualized_return": -0.007571895794763361,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": -0.20826466392852078,
+          "max_drawdown": -0.20161902066232773,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": -0.13595980962454213,
+          "annualized_return": -0.0067049093558609885,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": -0.2037823336652224,
+          "max_drawdown": -0.1487000468920977,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": -0.12142548329318814,
+          "annualized_return": -0.00594182174504887,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": -0.21795304498403809,
+          "max_drawdown": -0.14966807483403965,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.09832128165163878,
+          "annualized_return": -0.004753235706213332,
+          "annualized_volatility": 0.02341293412983915,
+          "sharpe_ratio": -0.2030175150134413,
+          "max_drawdown": -0.12496234783199767,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.10947054867115813
+        },
+        "NVDA": {
+          "total_return": -0.2054074710996544,
+          "annualized_return": -0.010528999095516411,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": -0.23191044270168581,
+          "max_drawdown": -0.2428399946340255,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.25235276889711167
+        },
+        "OXY": {
+          "total_return": -0.03989098116947465,
+          "annualized_return": -0.0018722908893301637,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": -0.05852498571643915,
+          "max_drawdown": -0.15010983646570686,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.13709609203180828,
+          "annualized_return": -0.006765081978852283,
+          "annualized_volatility": 0.026438466029597478,
+          "sharpe_ratio": -0.25588027577995154,
+          "max_drawdown": -0.14758985200845998,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.1550853301531642
+        },
+        "SPY": {
+          "total_return": -0.049740840428671995,
+          "annualized_return": -0.002346015091062803,
+          "annualized_volatility": 0.01997401523455183,
+          "sharpe_ratio": -0.11745335444645975,
+          "max_drawdown": -0.13124027446182318,
+          "mean_abs_position": 0.9239495046182689,
+          "turnover": 62.3001460514497,
+          "no_trade_fraction": 0.016258677383997076,
+          "gross_sum": -0.032411063452179256
+        },
+        "TSLA": {
+          "total_return": -0.21786822182015864,
+          "annualized_return": -0.011248726936935904,
+          "annualized_volatility": 0.049072220510545786,
+          "sharpe_ratio": -0.22922799946496236,
+          "max_drawdown": -0.2482853357506417,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "config": "fix_D7_annualization",
+      "split": "test",
+      "agg": {
+        "total_return": -0.23404923805993988,
+        "annualized_return": -0.8939299431811212,
+        "annualized_volatility": 1.2773403112162514,
+        "sharpe_ratio": -3.6832232954368984,
+        "max_drawdown": -0.26802235585045076,
+        "mean_abs_position": 0.9915499449575855,
+        "turnover": 7.811127339049967,
+        "no_trade_fraction": 0.0018065197093330085,
+        "gross_sum": -0.14981489730641828
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.15219470211341457,
+          "annualized_return": -0.948792889510329,
+          "annualized_volatility": 0.7936661719502554,
+          "sharpe_ratio": -3.341918210204065,
+          "max_drawdown": -0.20161902066232773,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": -0.13595980962454213,
+          "annualized_return": -0.9279538147054124,
+          "annualized_volatility": 0.8020988159325778,
+          "sharpe_ratio": -2.8786347955307243,
+          "max_drawdown": -0.1487000468920977,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": -0.12142548329318814,
+          "annualized_return": -0.9027219534110095,
+          "annualized_volatility": 0.6341069022856205,
+          "sharpe_ratio": -3.3587137624053915,
+          "max_drawdown": -0.14966807483403965,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.09832128165163878,
+          "annualized_return": -0.8447853355345287,
+          "annualized_volatility": 0.4888852367280743,
+          "sharpe_ratio": -3.5658273510481884,
+          "max_drawdown": -0.12496234783199767,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.10947054867115813
+        },
+        "NVDA": {
+          "total_return": -0.2054074710996544,
+          "annualized_return": -0.984055878628709,
+          "annualized_volatility": 0.9587282747275886,
+          "sharpe_ratio": -3.8126811606773283,
+          "max_drawdown": -0.2428399946340255,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.25235276889711167
+        },
+        "OXY": {
+          "total_return": -0.03989098116947465,
+          "annualized_return": -0.5194153590909736,
+          "annualized_volatility": 0.7213692086021778,
+          "sharpe_ratio": -0.6883864989081642,
+          "max_drawdown": -0.15010983646570686,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.13709609203180828,
+          "annualized_return": -0.9296403216642741,
+          "annualized_volatility": 0.6104399131475405,
+          "sharpe_ratio": -4.034888785352088,
+          "max_drawdown": -0.14758985200845998,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.1550853301531642
+        },
+        "SPY": {
+          "total_return": -0.9982790997355794,
+          "annualized_return": -1.0,
+          "annualized_volatility": 5.468465239633176,
+          "sharpe_ratio": -7.647798738477929,
+          "max_drawdown": -0.9984266935747601,
+          "mean_abs_position": 0.9239495046182689,
+          "turnover": 62.3001460514497,
+          "no_trade_fraction": 0.016258677383997076,
+          "gross_sum": -0.032411063452179256
+        },
+        "TSLA": {
+          "total_return": -0.21786822182015864,
+          "annualized_return": -0.9880039360848526,
+          "annualized_volatility": 1.0183030379392517,
+          "sharpe_ratio": -3.820160356328212,
+          "max_drawdown": -0.2482853357506417,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "config": "fix_D8_input_scaling",
+      "split": "test",
+      "agg": {
+        "total_return": -0.9528947111971411,
+        "annualized_return": -0.6435879119381089,
+        "annualized_volatility": 0.5648564778402069,
+        "sharpe_ratio": -1.0976830552072392,
+        "max_drawdown": -0.9553367941963684,
+        "mean_abs_position": 0.9989484336956715,
+        "turnover": 70.8057884091201,
+        "no_trade_fraction": 0.00012178784557301182,
+        "gross_sum": 0.13736928293273223
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.9999974844146932,
+          "annualized_return": -0.44763149541049296,
+          "annualized_volatility": 0.42972850856986594,
+          "sharpe_ratio": -1.041661156948158,
+          "max_drawdown": -0.9999976306130068,
+          "mean_abs_position": 0.9997622148865993,
+          "turnover": 52.295566368848085,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.053392816622380074
+        },
+        "AMZN": {
+          "total_return": -0.9999999999629957,
+          "annualized_return": -0.6690471850143049,
+          "annualized_volatility": 0.5694868665174908,
+          "sharpe_ratio": -1.1748246085210752,
+          "max_drawdown": -0.9999999999650302,
+          "mean_abs_position": 0.9995846206508696,
+          "turnover": 105.6301279491745,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.2917355886825602
+        },
+        "GOOGL": {
+          "total_return": -0.9999997934608829,
+          "annualized_return": -0.5076762963563131,
+          "annualized_volatility": 0.4282976539136184,
+          "sharpe_ratio": -1.1853352259050762,
+          "max_drawdown": -0.999999809542226,
+          "mean_abs_position": 0.999357838048809,
+          "turnover": 83.52359781693667,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.13414912873495305
+        },
+        "MSFT": {
+          "total_return": -1.0,
+          "annualized_return": -1.0,
+          "annualized_volatility": 0.8970824995775272,
+          "sharpe_ratio": -1.114724677463824,
+          "max_drawdown": -1.0,
+          "mean_abs_position": 0.9987738389360166,
+          "turnover": 69.54335233289748,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.09590348142894639
+        },
+        "NVDA": {
+          "total_return": -0.9999342913573035,
+          "annualized_return": -0.3581095975126686,
+          "annualized_volatility": 0.28282502546573235,
+          "sharpe_ratio": -1.2661878025926594,
+          "max_drawdown": -0.9999413613870584,
+          "mean_abs_position": 0.9990914567975718,
+          "turnover": 89.8450842211023,
+          "no_trade_fraction": 0.00018268176835951772,
+          "gross_sum": 0.31071331229555643
+        },
+        "OXY": {
+          "total_return": -0.5761208315784074,
+          "annualized_return": -0.03874239542428759,
+          "annualized_volatility": 0.06130172347228801,
+          "sharpe_ratio": -0.6319952071461977,
+          "max_drawdown": -0.5976799134083035,
+          "mean_abs_position": 0.9999478549404212,
+          "turnover": 21.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.022594212607706804
+        },
+        "QQQ": {
+          "total_return": -0.9999999999999877,
+          "annualized_return": -0.7710842377249132,
+          "annualized_volatility": 0.6733489654810654,
+          "sharpe_ratio": -1.1451480246561634,
+          "max_drawdown": -0.9999999999999883,
+          "mean_abs_position": 0.9984044224078645,
+          "turnover": 40.09777783532627,
+          "no_trade_fraction": 0.00018268176835951772,
+          "gross_sum": 0.0565392618828186
+        },
+        "SPY": {
+          "total_return": -1.0,
+          "annualized_return": -1.0,
+          "annualized_volatility": 0.9567443748170417,
+          "sharpe_ratio": -1.0452112667934212,
+          "max_drawdown": -1.0004124328517021,
+          "mean_abs_position": 0.9978663444650132,
+          "turnover": 51.93583285342902,
+          "no_trade_fraction": 0.00036536353671903543,
+          "gross_sum": 0.04979288783741269
+        },
+        "TSLA": {
+          "total_return": -1.0,
+          "annualized_return": -1.0,
+          "annualized_volatility": 0.7848926827472319,
+          "sharpe_ratio": -1.2740595268385775,
+          "max_drawdown": -1.0,
+          "mean_abs_position": 0.9977473121278788,
+          "turnover": 123.38075630436651,
+          "no_trade_fraction": 0.00036536353671903543,
+          "gross_sum": 0.2666912815176695
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "config": "all_fixed",
+      "split": "test",
+      "agg": {
+        "total_return": 0.10212650666598706,
+        "annualized_return": 19.05071372198183,
+        "annualized_volatility": 0.5597453388984458,
+        "sharpe_ratio": 3.0306024543166106,
+        "max_drawdown": -0.0903816274926661,
+        "mean_abs_position": 0.7623772975853228,
+        "turnover": 4.99138236264977,
+        "no_trade_fraction": 2.0297974262168634e-05,
+        "gross_sum": 0.09843736062516001
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": 0.02716460261330944,
+          "annualized_return": 0.6200215946195702,
+          "annualized_volatility": 0.7524366081919024,
+          "sharpe_ratio": 0.9706538175164199,
+          "max_drawdown": -0.09886135800196238,
+          "mean_abs_position": 0.8629160497357656,
+          "turnover": 3.173467200658033,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.03274031818139812
+        },
+        "AMZN": {
+          "total_return": 0.2628567217746254,
+          "annualized_return": 65.73803930885794,
+          "annualized_volatility": 0.47703243320869976,
+          "sharpe_ratio": 9.096958634815467,
+          "max_drawdown": -0.05913678577784298,
+          "mean_abs_position": 0.7590906773730641,
+          "turnover": 7.585340464698163,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.23721661502259134
+        },
+        "GOOGL": {
+          "total_return": 0.1500664495039581,
+          "annualized_return": 11.388331380786395,
+          "annualized_volatility": 0.45885001308564155,
+          "sharpe_ratio": 5.72100584212335,
+          "max_drawdown": -0.0690029860519562,
+          "mean_abs_position": 0.8739383945043252,
+          "turnover": 7.28130104178702,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.143250505157372
+        },
+        "MSFT": {
+          "total_return": 0.03971325347636245,
+          "annualized_return": 1.0157860767368976,
+          "annualized_volatility": 0.35409203590672716,
+          "sharpe_ratio": 2.144640548384096,
+          "max_drawdown": -0.07701273844412992,
+          "mean_abs_position": 0.7469445637649497,
+          "turnover": 3.0769790363363234,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.040992305992575716
+        },
+        "NVDA": {
+          "total_return": 0.10517171407765913,
+          "annualized_return": 5.049725895809537,
+          "annualized_volatility": 0.9889779046385689,
+          "sharpe_ratio": 2.298236677588445,
+          "max_drawdown": -0.15516009013466636,
+          "mean_abs_position": 0.8308169587622561,
+          "turnover": 5.969331102039158,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.12575850029167446
+        },
+        "OXY": {
+          "total_return": 0.07051101165907281,
+          "annualized_return": 2.4091059707188514,
+          "annualized_volatility": 0.45602115936473175,
+          "sharpe_ratio": 2.902952213633678,
+          "max_drawdown": -0.09106332749500401,
+          "mean_abs_position": 0.9751164132689093,
+          "turnover": 9.061162847641587,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.08500456967150027
+        },
+        "QQQ": {
+          "total_return": -0.00948012141072041,
+          "annualized_return": -0.15756282423437562,
+          "annualized_volatility": 0.3205141119549723,
+          "sharpe_ratio": -0.38692551806257186,
+          "max_drawdown": -0.09626502752477395,
+          "mean_abs_position": 0.6873303852551269,
+          "turnover": 1.9160688555262029,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.005926065902011179
+        },
+        "SPY": {
+          "total_return": -0.008074202273784303,
+          "annualized_return": -0.13577796058910796,
+          "annualized_volatility": 0.24873584585634462,
+          "sharpe_ratio": -0.4712433218612653,
+          "max_drawdown": -0.07806836528024896,
+          "mean_abs_position": 0.672729850427427,
+          "turnover": 1.737712780548842,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.005674826780257981
+        },
+        "TSLA": {
+          "total_return": 0.281209130573401,
+          "annualized_return": 85.52875405513075,
+          "annualized_volatility": 0.9810479378784245,
+          "sharpe_ratio": 4.999143194711881,
+          "max_drawdown": -0.08886396872341007,
+          "mean_abs_position": 0.4525123851760809,
+          "turnover": 5.121077934612609,
+          "no_trade_fraction": 0.00018268176835951772,
+          "gross_sum": 0.23257432399159744
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "config": "as_published",
+      "split": "test",
+      "agg": {
+        "total_return": 0.12500802257281954,
+        "annualized_return": 0.005349785864178829,
+        "annualized_volatility": 0.03291221913719532,
+        "sharpe_ratio": 0.163846352004278,
+        "max_drawdown": -0.12966513379988648,
+        "mean_abs_position": 1.0,
+        "turnover": 1.0,
+        "no_trade_fraction": 0.0,
+        "gross_sum": 0.1487216315610888
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": 0.1461156354540012,
+          "annualized_return": 0.0062980446916856,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": 0.17322744483988214,
+          "max_drawdown": -0.1326517668733994,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": 0.13044523285964593,
+          "annualized_return": 0.0056604825741026765,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": 0.172039066809106,
+          "max_drawdown": -0.1440027342735598,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": 0.11997768317262825,
+          "annualized_return": 0.005229888392516813,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": 0.19183848809088438,
+          "max_drawdown": -0.09844007879960415,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": 0.09591438292122767,
+          "annualized_return": 0.00422527793990124,
+          "annualized_volatility": 0.02341293412983915,
+          "sharpe_ratio": 0.18046768151610001,
+          "max_drawdown": -0.09913766664157864,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.10947054867115813
+        },
+        "NVDA": {
+          "total_return": 0.20336982974049955,
+          "annualized_return": 0.008558835100085593,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": 0.18851585217789646,
+          "max_drawdown": -0.18465040408899214,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.25235276889711167
+        },
+        "OXY": {
+          "total_return": -0.03989098116947465,
+          "annualized_return": -0.0018722908893301637,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": -0.05852498571643915,
+          "max_drawdown": -0.15010983646570686,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": 0.1414115222583605,
+          "annualized_return": 0.006107532235710478,
+          "annualized_volatility": 0.026438466029597478,
+          "sharpe_ratio": 0.23100932667096435,
+          "max_drawdown": -0.08800715231708989,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.1550853301531642
+        },
+        "SPY": {
+          "total_return": 0.11435370397781797,
+          "annualized_return": 0.004996951729686172,
+          "annualized_volatility": 0.023372572311036437,
+          "sharpe_ratio": 0.21379554048172228,
+          "max_drawdown": -0.07121141518978191,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.12611697924751117
+        },
+        "TSLA": {
+          "total_return": 0.21337519394066962,
+          "annualized_return": 0.008943351003251054,
+          "annualized_volatility": 0.049072220510545786,
+          "sharpe_ratio": 0.18224875316838574,
+          "max_drawdown": -0.19877514954926534,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "config": "fix_D1_ordering",
+      "split": "test",
+      "agg": {
+        "total_return": -0.14539487211996033,
+        "annualized_return": -0.007396653721292538,
+        "annualized_volatility": 0.03305000345866058,
+        "sharpe_ratio": -0.22016571559541923,
+        "max_drawdown": -0.18414254399854496,
+        "mean_abs_position": 1.0,
+        "turnover": 1.0,
+        "no_trade_fraction": 0.0,
+        "gross_sum": -0.12836971750051693
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.17667749559368962,
+          "annualized_return": -0.008909766920897289,
+          "annualized_volatility": 0.0367179618494367,
+          "sharpe_ratio": -0.24265417991968352,
+          "max_drawdown": -0.21441841199916323,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.150659826802596
+        },
+        "AMZN": {
+          "total_return": -0.15655538785054812,
+          "annualized_return": -0.007807466463134016,
+          "annualized_volatility": 0.03331762002486717,
+          "sharpe_ratio": -0.2343344589831681,
+          "max_drawdown": -0.1598458212932169,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.13428423638935166
+        },
+        "GOOGL": {
+          "total_return": -0.13561115812034452,
+          "annualized_return": -0.006686461408025979,
+          "annualized_volatility": 0.027372612765401313,
+          "sharpe_ratio": -0.24427560004347096,
+          "max_drawdown": -0.16299036571945036,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.12136147908776605
+        },
+        "MSFT": {
+          "total_return": -0.10904980730582847,
+          "annualized_return": -0.005301502192856078,
+          "annualized_volatility": 0.023473138474346865,
+          "sharpe_ratio": -0.22585399897205655,
+          "max_drawdown": -0.13285741839103282,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.09753376352651563
+        },
+        "NVDA": {
+          "total_return": -0.24033848284050352,
+          "annualized_return": -0.012574698302594833,
+          "annualized_volatility": 0.045478304419258375,
+          "sharpe_ratio": -0.27649883748238235,
+          "max_drawdown": -0.2608091758906701,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.20752490470775065
+        },
+        "OXY": {
+          "total_return": 0.04154838709676856,
+          "annualized_return": 0.0018758029380812058,
+          "annualized_volatility": 0.031888362241872595,
+          "sharpe_ratio": 0.05882406013370262,
+          "max_drawdown": -0.14594064262939,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.029620494194386393
+        },
+        "QQQ": {
+          "total_return": -0.15020877746981298,
+          "annualized_return": -0.007464996048687111,
+          "annualized_volatility": 0.026547464852938105,
+          "sharpe_ratio": -0.28119430951467794,
+          "max_drawdown": -0.16039346881556438,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.1398395892429861
+        },
+        "SPY": {
+          "total_return": -0.12377827660498975,
+          "annualized_return": -0.006064528390054669,
+          "annualized_volatility": 0.023495691804772012,
+          "sharpe_ratio": -0.25811235695656143,
+          "max_drawdown": -0.13437123980175558,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.11418875107119124
+        },
+        "TSLA": {
+          "total_return": -0.25788285039069436,
+          "annualized_return": -0.013636266703464073,
+          "annualized_volatility": 0.049158874695052125,
+          "sharpe_ratio": -0.27739175862047494,
+          "max_drawdown": -0.28565635144666135,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.21955540087088146
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "config": "fix_D2_same_bar_leak",
+      "split": "test",
+      "agg": {
+        "total_return": 0.12500802257281954,
+        "annualized_return": 0.005349785864178829,
+        "annualized_volatility": 0.03291221913719532,
+        "sharpe_ratio": 0.163846352004278,
+        "max_drawdown": -0.12966513379988648,
+        "mean_abs_position": 1.0,
+        "turnover": 1.0,
+        "no_trade_fraction": 0.0,
+        "gross_sum": 0.1487216315610888
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": 0.1461156354540012,
+          "annualized_return": 0.0062980446916856,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": 0.17322744483988214,
+          "max_drawdown": -0.1326517668733994,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": 0.13044523285964593,
+          "annualized_return": 0.0056604825741026765,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": 0.172039066809106,
+          "max_drawdown": -0.1440027342735598,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": 0.11997768317262825,
+          "annualized_return": 0.005229888392516813,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": 0.19183848809088438,
+          "max_drawdown": -0.09844007879960415,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": 0.09591438292122767,
+          "annualized_return": 0.00422527793990124,
+          "annualized_volatility": 0.02341293412983915,
+          "sharpe_ratio": 0.18046768151610001,
+          "max_drawdown": -0.09913766664157864,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.10947054867115813
+        },
+        "NVDA": {
+          "total_return": 0.20336982974049955,
+          "annualized_return": 0.008558835100085593,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": 0.18851585217789646,
+          "max_drawdown": -0.18465040408899214,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.25235276889711167
+        },
+        "OXY": {
+          "total_return": -0.03989098116947465,
+          "annualized_return": -0.0018722908893301637,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": -0.05852498571643915,
+          "max_drawdown": -0.15010983646570686,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": 0.1414115222583605,
+          "annualized_return": 0.006107532235710478,
+          "annualized_volatility": 0.026438466029597478,
+          "sharpe_ratio": 0.23100932667096435,
+          "max_drawdown": -0.08800715231708989,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.1550853301531642
+        },
+        "SPY": {
+          "total_return": 0.11435370397781797,
+          "annualized_return": 0.004996951729686172,
+          "annualized_volatility": 0.023372572311036437,
+          "sharpe_ratio": 0.21379554048172228,
+          "max_drawdown": -0.07121141518978191,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.12611697924751117
+        },
+        "TSLA": {
+          "total_return": 0.21337519394066962,
+          "annualized_return": 0.008943351003251054,
+          "annualized_volatility": 0.049072220510545786,
+          "sharpe_ratio": 0.18224875316838574,
+          "max_drawdown": -0.19877514954926534,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "config": "fix_D3_control_law",
+      "split": "test",
+      "agg": {
+        "total_return": -0.15746855698525028,
+        "annualized_return": -0.008024421014061126,
+        "annualized_volatility": 0.027849739371955735,
+        "sharpe_ratio": -0.4973580534080655,
+        "max_drawdown": -0.19534427977652136,
+        "mean_abs_position": 0.7837416477306255,
+        "turnover": 2.1637235651156814,
+        "no_trade_fraction": 0.0,
+        "gross_sum": -0.12258382833499626
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.15219470211341457,
+          "annualized_return": -0.007571895794763361,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": -0.20826466392852078,
+          "max_drawdown": -0.20161902066232773,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": -0.13595980962454213,
+          "annualized_return": -0.0067049093558609885,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": -0.2037823336652224,
+          "max_drawdown": -0.1487000468920977,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": -0.12142548329318814,
+          "annualized_return": -0.00594182174504887,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": -0.21795304498403809,
+          "max_drawdown": -0.14966807483403965,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": -0.25691941405278806,
+          "annualized_return": -0.013577353232082423,
+          "annualized_volatility": 0.01260767339025058,
+          "sharpe_ratio": -1.0769118783313096,
+          "max_drawdown": -0.26588961509942677,
+          "mean_abs_position": 0.5053159176288831,
+          "turnover": 6.726723450093969,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.06382284349665909
+        },
+        "NVDA": {
+          "total_return": -0.2054074710996544,
+          "annualized_return": -0.010528999095516411,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": -0.23191044270168581,
+          "max_drawdown": -0.2428399946340255,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.25235276889711167
+        },
+        "OXY": {
+          "total_return": 0.018648158960685723,
+          "annualized_return": 0.0008509384423702748,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": 0.026599050643837895,
+          "max_drawdown": -0.15038544943184862,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": -0.20831030051955002,
+          "annualized_return": -0.01069569839312201,
+          "annualized_volatility": 0.009332105536486402,
+          "sharpe_ratio": -1.1461184564731155,
+          "max_drawdown": -0.21094315350946335,
+          "mean_abs_position": 0.32527834810087364,
+          "turnover": 4.293777642719236,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.05897960418761821
+        },
+        "SPY": {
+          "total_return": -0.1377797693046423,
+          "annualized_return": -0.006801323015590444,
+          "annualized_volatility": 0.005721875656579802,
+          "sharpe_ratio": -1.188652711767573,
+          "max_drawdown": -0.1397678271748214,
+          "mean_abs_position": 0.22308056384587296,
+          "turnover": 2.453010993227926,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.03263018135272322
+        },
+        "TSLA": {
+          "total_return": -0.21786822182015864,
+          "annualized_return": -0.011248726936935904,
+          "annualized_volatility": 0.049072220510545786,
+          "sharpe_ratio": -0.22922799946496236,
+          "max_drawdown": -0.2482853357506417,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "config": "fix_D5_position_integration",
+      "split": "test",
+      "agg": {
+        "total_return": 0.09491802850362017,
+        "annualized_return": 0.004062466394864307,
+        "annualized_volatility": 0.03390718915505125,
+        "sharpe_ratio": 0.11011310486473778,
+        "max_drawdown": -0.13154384874645797,
+        "mean_abs_position": 0.9999377406157173,
+        "turnover": 1.0,
+        "no_trade_fraction": 0.0,
+        "gross_sum": 0.14870158707337858
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": 0.1461156354540012,
+          "annualized_return": 0.0062980446916856,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": 0.17322744483988214,
+          "max_drawdown": -0.1326517668733994,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": 0.13044523285964593,
+          "annualized_return": 0.0056604825741026765,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": 0.172039066809106,
+          "max_drawdown": -0.1440027342735598,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": 0.11997768317262825,
+          "annualized_return": 0.005229888392516813,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": 0.19183848809088438,
+          "max_drawdown": -0.09844007879960415,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": 0.026708630139059997,
+          "annualized_return": 0.001214156588944304,
+          "annualized_volatility": 0.02664796260524678,
+          "sharpe_ratio": 0.04556282995928724,
+          "max_drawdown": -0.09913766664157364,
+          "mean_abs_position": 0.9998843421034719,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.1095272990537565
+        },
+        "NVDA": {
+          "total_return": 0.20336982974049955,
+          "annualized_return": 0.008558835100085593,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": 0.18851585217789646,
+          "max_drawdown": -0.18465040408899214,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.25235276889711167
+        },
+        "OXY": {
+          "total_return": -0.03989098116947465,
+          "annualized_return": -0.0018722908893301637,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": -0.05852498571643915,
+          "max_drawdown": -0.15010983646570686,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": 0.049884682750426235,
+          "annualized_return": 0.0022435513136087604,
+          "annualized_volatility": 0.02920034799602024,
+          "sharpe_ratio": 0.07683303342530498,
+          "max_drawdown": -0.08800715231708978,
+          "mean_abs_position": 0.9998242417863523,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.15485723355723086
+        },
+        "SPY": {
+          "total_return": 0.01690295738681713,
+          "annualized_return": 0.0007719357862991938,
+          "annualized_volatility": 0.0262714408625366,
+          "sharpe_ratio": 0.029383077629365345,
+          "max_drawdown": -0.08811984970893216,
+          "mean_abs_position": 0.999765443225394,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.12610792507145413
+        },
+        "TSLA": {
+          "total_return": 0.20074858619897795,
+          "annualized_return": 0.008457593995865986,
+          "annualized_volatility": 0.049131171677918556,
+          "sharpe_ratio": 0.17214313656735272,
+          "max_drawdown": -0.19877514954926379,
+          "mean_abs_position": 0.9999656384262374,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "config": "fix_D6_cost_units",
+      "split": "test",
+      "agg": {
+        "total_return": 0.12500802257281954,
+        "annualized_return": 0.005349785864178829,
+        "annualized_volatility": 0.03291221913719532,
+        "sharpe_ratio": 0.163846352004278,
+        "max_drawdown": -0.12966513379988648,
+        "mean_abs_position": 1.0,
+        "turnover": 1.0,
+        "no_trade_fraction": 0.0,
+        "gross_sum": 0.1487216315610888
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": 0.1461156354540012,
+          "annualized_return": 0.0062980446916856,
+          "annualized_volatility": 0.03635708358745936,
+          "sharpe_ratio": 0.17322744483988214,
+          "max_drawdown": -0.1326517668733994,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": 0.13044523285964593,
+          "annualized_return": 0.0056604825741026765,
+          "annualized_volatility": 0.032902309220169915,
+          "sharpe_ratio": 0.172039066809106,
+          "max_drawdown": -0.1440027342735598,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": 0.11997768317262825,
+          "annualized_return": 0.005229888392516813,
+          "annualized_volatility": 0.027261934998357204,
+          "sharpe_ratio": 0.19183848809088438,
+          "max_drawdown": -0.09844007879960415,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": 0.09591438292122767,
+          "annualized_return": 0.00422527793990124,
+          "annualized_volatility": 0.02341293412983915,
+          "sharpe_ratio": 0.18046768151610001,
+          "max_drawdown": -0.09913766664157864,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.10947054867115813
+        },
+        "NVDA": {
+          "total_return": 0.20336982974049955,
+          "annualized_return": 0.008558835100085593,
+          "annualized_volatility": 0.045401142668940596,
+          "sharpe_ratio": 0.18851585217789646,
+          "max_drawdown": -0.18465040408899214,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.25235276889711167
+        },
+        "OXY": {
+          "total_return": -0.03989098116947465,
+          "annualized_return": -0.0018722908893301637,
+          "annualized_volatility": 0.03199130877881195,
+          "sharpe_ratio": -0.05852498571643915,
+          "max_drawdown": -0.15010983646570686,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": 0.1414115222583605,
+          "annualized_return": 0.006107532235710478,
+          "annualized_volatility": 0.026438466029597478,
+          "sharpe_ratio": 0.23100932667096435,
+          "max_drawdown": -0.08800715231708989,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.1550853301531642
+        },
+        "SPY": {
+          "total_return": 0.11435370397781797,
+          "annualized_return": 0.004996951729686172,
+          "annualized_volatility": 0.023372572311036437,
+          "sharpe_ratio": 0.21379554048172228,
+          "max_drawdown": -0.07121141518978191,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.12611697924751117
+        },
+        "TSLA": {
+          "total_return": 0.21337519394066962,
+          "annualized_return": 0.008943351003251054,
+          "annualized_volatility": 0.049072220510545786,
+          "sharpe_ratio": 0.18224875316838574,
+          "max_drawdown": -0.19877514954926534,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "config": "fix_D7_annualization",
+      "split": "test",
+      "agg": {
+        "total_return": 0.12500802257281954,
+        "annualized_return": 11.493188257329754,
+        "annualized_volatility": 0.7422675319940762,
+        "sharpe_ratio": 3.1651582435621197,
+        "max_drawdown": -0.12966513379988648,
+        "mean_abs_position": 1.0,
+        "turnover": 1.0,
+        "no_trade_fraction": 0.0,
+        "gross_sum": 0.1487216315610888
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": 0.1461156354540012,
+          "annualized_return": 10.644259377999793,
+          "annualized_volatility": 0.8095177781029749,
+          "sharpe_ratio": 3.4110356941997444,
+          "max_drawdown": -0.1326517668733994,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.17964437103655612
+        },
+        "AMZN": {
+          "total_return": 0.13044523285964593,
+          "annualized_return": 8.088484721986031,
+          "annualized_volatility": 0.8168167026097376,
+          "sharpe_ratio": 3.0821017648669478,
+          "max_drawdown": -0.1440027342735598,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.15808744528585308
+        },
+        "GOOGL": {
+          "total_return": 0.11997768317262825,
+          "annualized_return": 6.687208153623086,
+          "annualized_volatility": 0.6406204058503677,
+          "sharpe_ratio": 3.4895171908679425,
+          "max_drawdown": -0.09844007879960415,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.13756963689793522
+        },
+        "MSFT": {
+          "total_return": 0.09591438292122767,
+          "annualized_return": 4.199711891822243,
+          "annualized_volatility": 0.49156763830401057,
+          "sharpe_ratio": 3.5893733602062166,
+          "max_drawdown": -0.09913766664157864,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.10947054867115813
+        },
+        "NVDA": {
+          "total_return": 0.20336982974049955,
+          "annualized_return": 27.00168333675164,
+          "annualized_volatility": 0.9942606226400232,
+          "sharpe_ratio": 3.813764932597306,
+          "max_drawdown": -0.18465040408899214,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.25235276889711167
+        },
+        "OXY": {
+          "total_return": -0.03989098116947465,
+          "annualized_return": -0.5194153590909736,
+          "annualized_volatility": 0.7213692086021778,
+          "sharpe_ratio": -0.6883864989081642,
+          "max_drawdown": -0.15010983646570686,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.051772653751648655
+        },
+        "QQQ": {
+          "total_return": 0.1414115222583605,
+          "annualized_return": 9.81335701367407,
+          "annualized_volatility": 0.6191942166814187,
+          "sharpe_ratio": 4.144123761914332,
+          "max_drawdown": -0.08800715231708989,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.1550853301531642
+        },
+        "SPY": {
+          "total_return": 0.11435370397781797,
+          "annualized_return": 6.021260673574313,
+          "annualized_volatility": 0.5541682727407067,
+          "sharpe_ratio": 3.7834233615912205,
+          "max_drawdown": -0.07121141518978191,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.12611697924751117
+        },
+        "TSLA": {
+          "total_return": 0.21337519394066962,
+          "annualized_return": 31.502144505627577,
+          "annualized_volatility": 1.0328929424152684,
+          "sharpe_ratio": 3.861470624723531,
+          "max_drawdown": -0.19877514954926534,
+          "mean_abs_position": 1.0,
+          "turnover": 1.0,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.27194025761215823
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "config": "fix_D8_input_scaling",
+      "split": "test",
+      "agg": {
+        "total_return": -0.9829588155026759,
+        "annualized_return": -0.6034625254402174,
+        "annualized_volatility": 0.5673752236121073,
+        "sharpe_ratio": -1.0698774256153978,
+        "max_drawdown": -0.9918563139122971,
+        "mean_abs_position": 0.9982285723118446,
+        "turnover": 77.10086620655946,
+        "no_trade_fraction": 0.0002841716396703609,
+        "gross_sum": 0.13480688903361016
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": -0.9982063147366462,
+          "annualized_return": -0.2525640274626034,
+          "annualized_volatility": 0.2902958167917449,
+          "sharpe_ratio": -0.8700229657246152,
+          "max_drawdown": -0.9982929297332226,
+          "mean_abs_position": 0.9994800520322351,
+          "turnover": 29.312629701104015,
+          "no_trade_fraction": 0.00018268176835951772,
+          "gross_sum": -0.00404959617593828
+        },
+        "AMZN": {
+          "total_return": -1.0,
+          "annualized_return": -1.0,
+          "annualized_volatility": 0.6879458579225937,
+          "sharpe_ratio": -1.4536027631879689,
+          "max_drawdown": -1.0,
+          "mean_abs_position": 0.9955506554988404,
+          "turnover": 194.35411918140016,
+          "no_trade_fraction": 0.0009134088417975886,
+          "gross_sum": 0.355025868950365
+        },
+        "GOOGL": {
+          "total_return": -0.9999840531948844,
+          "annualized_return": -0.39861690155618046,
+          "annualized_volatility": 0.36470173525228267,
+          "sharpe_ratio": -1.0929942553753877,
+          "max_drawdown": -0.9999851403149471,
+          "mean_abs_position": 0.9997309131248285,
+          "turnover": 59.23885562364012,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.11474171413769894
+        },
+        "MSFT": {
+          "total_return": -0.9999999996573028,
+          "annualized_return": -0.6333370887514032,
+          "annualized_volatility": 0.6149420032128377,
+          "sharpe_ratio": -1.0299135291498356,
+          "max_drawdown": -0.9999999996663135,
+          "mean_abs_position": 0.9991228010493188,
+          "turnover": 36.22200763830915,
+          "no_trade_fraction": 0.00036536353671903543,
+          "gross_sum": 0.04261085795226381
+        },
+        "NVDA": {
+          "total_return": -0.99891883773401,
+          "annualized_return": -0.2697815915956254,
+          "annualized_volatility": 0.2294802128851984,
+          "sharpe_ratio": -1.1756202776863751,
+          "max_drawdown": -0.9990268085798485,
+          "mean_abs_position": 0.9988579650262225,
+          "turnover": 68.32545522460714,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.10814849857584626
+        },
+        "OXY": {
+          "total_return": -0.8495201342012416,
+          "annualized_return": -0.08349559790389749,
+          "annualized_volatility": 0.08545824650869009,
+          "sharpe_ratio": -0.9770338301454263,
+          "max_drawdown": -0.8583787913785698,
+          "mean_abs_position": 0.9998173182316404,
+          "turnover": 47.0,
+          "no_trade_fraction": 0.00018268176835951772,
+          "gross_sum": 0.013425929240441774
+        },
+        "QQQ": {
+          "total_return": -1.0,
+          "annualized_return": -1.0,
+          "annualized_volatility": 0.9608866378717963,
+          "sharpe_ratio": -1.04070549072764,
+          "max_drawdown": -1.0,
+          "mean_abs_position": 0.9983606438788076,
+          "turnover": 65.8801533181686,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.08865267518093463
+        },
+        "SPY": {
+          "total_return": -1.0,
+          "annualized_return": -1.0,
+          "annualized_volatility": 1.175844429752818,
+          "sharpe_ratio": -0.8504526404145287,
+          "max_drawdown": -1.071023155537775,
+          "mean_abs_position": 0.9990253074741892,
+          "turnover": 62.1790248604957,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.11743793180716793
+        },
+        "TSLA": {
+          "total_return": -0.9999999999999987,
+          "annualized_return": -0.7933675216922468,
+          "annualized_volatility": 0.6968220723110047,
+          "sharpe_ratio": -1.138551078126802,
+          "max_drawdown": -0.9999999999999988,
+          "mean_abs_position": 0.994111494490518,
+          "turnover": 131.39555031131022,
+          "no_trade_fraction": 0.0009134088417975886,
+          "gross_sum": 0.3772681216337112
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "config": "all_fixed",
+      "split": "test",
+      "agg": {
+        "total_return": 0.0225899922765685,
+        "annualized_return": 1.3081006483181554,
+        "annualized_volatility": 0.508010904722469,
+        "sharpe_ratio": 0.7514472232005992,
+        "max_drawdown": -0.10475371484938682,
+        "mean_abs_position": 0.7512767649253141,
+        "turnover": 3.5066872155908952,
+        "no_trade_fraction": 0.0,
+        "gross_sum": 0.03119507546935281
+      },
+      "per_asset": {
+        "AAPL": {
+          "total_return": 0.03165216579813812,
+          "annualized_return": 0.7522630234898955,
+          "annualized_volatility": 0.6055156106979828,
+          "sharpe_ratio": 1.1951710060239216,
+          "max_drawdown": -0.09606761546609643,
+          "mean_abs_position": 0.7806231658275475,
+          "turnover": 2.9387471397314084,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.03731340893920618
+        },
+        "AMZN": {
+          "total_return": 0.10892931930542527,
+          "annualized_return": 5.43086790842797,
+          "annualized_volatility": 0.5506608306712726,
+          "sharpe_ratio": 3.651225271755155,
+          "max_drawdown": -0.08377154264936615,
+          "mean_abs_position": 0.7618620677335062,
+          "turnover": 4.63178988353819,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.11538877823129232
+        },
+        "GOOGL": {
+          "total_return": 0.05232518880148551,
+          "annualized_return": 1.5043751563381114,
+          "annualized_volatility": 0.45578470834120893,
+          "sharpe_ratio": 2.223381897279475,
+          "max_drawdown": -0.08907584934884116,
+          "mean_abs_position": 0.85067125059839,
+          "turnover": 4.67971395355365,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.05623586479307858
+        },
+        "MSFT": {
+          "total_return": -0.007528330862738186,
+          "annualized_return": -0.12717710401031335,
+          "annualized_volatility": 0.2905595550005441,
+          "sharpe_ratio": -0.3333768257182224,
+          "max_drawdown": -0.09117052834369277,
+          "mean_abs_position": 0.7408386828307507,
+          "turnover": 1.7399628763323187,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.003221901706416147
+        },
+        "NVDA": {
+          "total_return": -0.03666083477089366,
+          "annualized_return": -0.489464543043596,
+          "annualized_volatility": 1.0029272405767977,
+          "sharpe_ratio": -0.18335012801455933,
+          "max_drawdown": -0.18013036679157002,
+          "mean_abs_position": 0.9232615203229045,
+          "turnover": 2.674785841291671,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.0005768671989821103
+        },
+        "OXY": {
+          "total_return": 0.10950006454436334,
+          "annualized_return": 5.490706523306352,
+          "annualized_volatility": 0.5440879931930448,
+          "sharpe_ratio": 3.6951062692256933,
+          "max_drawdown": -0.09365132914940655,
+          "mean_abs_position": 0.9687797047979105,
+          "turnover": 9.328747714688692,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.11989170853897607
+        },
+        "QQQ": {
+          "total_return": -0.031109395028110054,
+          "annualized_return": -0.4338318885285538,
+          "annualized_volatility": 0.2701103911168287,
+          "sharpe_ratio": -1.978284952088002,
+          "max_drawdown": -0.09665518443007803,
+          "mean_abs_position": 0.6709143696897024,
+          "turnover": 1.3431453135759779,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.026450437067527158
+        },
+        "SPY": {
+          "total_return": -0.023284645311091978,
+          "annualized_return": -0.3456286544130803,
+          "annualized_volatility": 0.22479740528450923,
+          "sharpe_ratio": -1.7805276808987798,
+          "max_drawdown": -0.07807767363243734,
+          "mean_abs_position": 0.6603819239364108,
+          "turnover": 1.282805817925962,
+          "no_trade_fraction": 0.0,
+          "gross_sum": -0.020057215627798677
+        },
+        "TSLA": {
+          "total_return": -0.0005136019874618647,
+          "annualized_return": -0.009204586703387418,
+          "annualized_volatility": 0.6276544076200323,
+          "sharpe_ratio": 0.2736801512407111,
+          "max_drawdown": -0.1341833438329929,
+          "mean_abs_position": 0.40415819859070323,
+          "turnover": 2.940486399680185,
+          "no_trade_fraction": 0.0,
+          "gross_sum": 0.0022323403223462393
+        }
+      }
+    }
+  ]
+}

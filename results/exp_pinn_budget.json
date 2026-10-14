@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "timestamp": "2026-09-19 12:57:30",
+    "device": "cuda",
+    "gpu": "NVIDIA GeForce RTX 4090 Laptop GPU",
+    "ladder": [
+      [
+        6000,
+        2048
+      ],
+      [
+        20000,
+        2048
+      ],
+      [
+        6000,
+        8192
+      ]
+    ],
+    "note": "Tests whether the PINN's accuracy loss with dimension is a budget artefact. Architecture (4 x 64 tanh) and learning rate are held fixed across the ladder, matching exp_dimension.py."
+  },
+  "runs": [
+    {
+      "p": 3,
+      "epochs": 6000,
+      "n_collocation": 2048,
+      "seed": 0,
+      "budget_steps": 12288000,
+      "solve_time_s": 169.2680930000497,
+      "value_r2": 0.9990993599868677,
+      "value_mse": 3.299999907921372e-07,
+      "control_r2": 0.9981966808732472,
+      "control_sign_agreement": 0.9829629629629629,
+      "residual_scale": 0.8770032525062561
+    },
+    {
+      "p": 3,
+      "epochs": 6000,
+      "n_collocation": 2048,
+      "seed": 1,
+      "budget_steps": 12288000,
+      "solve_time_s": 173.71129639993887,
+      "value_r2": 0.9970179037379852,
+      "value_mse": 1.0926582481980034e-06,
+      "control_r2": 0.9954220108878324,
+      "control_sign_agreement": 0.9912962962962963,
+      "residual_scale": 0.8637953996658325
+    },
+    {
+      "p": 3,
+      "epochs": 20000,
+      "n_collocation": 2048,
+      "seed": 0,
+      "budget_steps": 40960000,
+      "solve_time_s": 541.3575990999816,
+      "value_r2": 0.9996630035502975,
+      "value_mse": 1.234775533812462e-07,
+      "control_r2": 0.9996756639716674,
+      "control_sign_agreement": 0.9937962962962963,
+      "residual_scale": 0.8770032525062561
+    },
+    {
+      "p": 3,
+      "epochs": 6000,
+      "n_collocation": 8192,
+      "seed": 0,
+      "budget_steps": 49152000,
+      "solve_time_s": 154.50703670002986,
+      "value_r2": 0.9992106758576225,
+      "value_mse": 2.8921317720571573e-07,
+      "control_r2": 0.9982171266903802,
+      "control_sign_agreement": 0.9882407407407408,
+      "residual_scale": 0.8770032525062561
+    },
+    {
+      "p": 3,
+      "epochs": 6000,
+      "n_collocation": 8192,
+      "seed": 1,
+      "budget_steps": 49152000,
+      "solve_time_s": 149.37833069998305,
+      "value_r2": 0.9727330457266994,
+      "value_mse": 9.990778255370477e-06,
+      "control_r2": 0.9920257500094449,
+      "control_sign_agreement": 0.9840740740740741,
+      "residual_scale": 0.8637953996658325
+    },
+    {
+      "p": 4,
+      "epochs": 6000,
+      "n_collocation": 2048,
+      "seed": 0,
+      "budget_steps": 12288000,
+      "solve_time_s": 177.73743710003328,
+      "value_r2": -3.2774571156021457,
+      "value_mse": 0.0024703187139765905,
+      "control_r2": 0.7315451000475084,
+      "control_sign_agreement": 0.995,
+      "residual_scale": 1.1569769382476807
+    },
+    {
+      "p": 4,
+      "epochs": 6000,
+      "n_collocation": 2048,
+      "seed": 1,
+      "budget_steps": 12288000,
+      "solve_time_s": 176.03410620009527,
+      "value_r2": -85.69367139013998,
+      "value_mse": 0.05006736316238951,
+      "control_r2": -0.6411842825769423,
+      "control_sign_agreement": 0.99625,
+      "residual_scale": 1.1134251356124878
+    },
+    {
+      "p": 4,
+      "epochs": 20000,
+      "n_collocation": 2048,
+      "seed": 0,
+      "budget_steps": 40960000,
+      "solve_time_s": 629.995305199991,
+      "value_r2": 0.9971901194268094,
+      "value_mse": 1.622763332605595e-06,
+      "control_r2": 0.9976274852456299,
+      "control_sign_agreement": 0.9770138888888888,
+      "residual_scale": 1.1569769382476807
+    },
+    {
+      "p": 4,
+      "epochs": 6000,
+      "n_collocation": 8192,
+      "seed": 0,
+      "budget_steps": 49152000,
+      "solve_time_s": 186.7836272000568,
+      "value_r2": -38.53746195130181,
+      "value_mse": 0.02283369056002542,
+      "control_r2": -0.06550099939995557,
+      "control_sign_agreement": 0.9979861111111111,
+      "residual_scale": 1.1569769382476807
+    },
+    {
+      "p": 4,
+      "epochs": 6000,
+      "n_collocation": 8192,
+      "seed": 1,
+      "budget_steps": 49152000,
+      "solve_time_s": 181.6196934999898,
+      "value_r2": -580.8684458433967,
+      "value_mse": 0.33604089345430443,
+      "control_r2": -1.6490505228959669,
+      "control_sign_agreement": 1.0,
+      "residual_scale": 1.1134251356124878
+    }
+  ]
+}

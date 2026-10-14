@@ -1,0 +1,187 @@
+{
+  "rows": [
+    {
+      "n_steps": 400,
+      "tag": "convergence",
+      "validated": true,
+      "epochs": 12000,
+      "dt": 0.025,
+      "exact_floor_abs": 6.233e-06,
+      "terminal_rmse_final": 9.883e-06,
+      "ratio_final": 1.59,
+      "value_rel_err_final": 0.1965,
+      "grad_rel_err_final": 0.4089,
+      "terminal_rmse_hi": 9.9392e-06,
+      "ratio_hi": 1.59,
+      "value_rel_err_hi": 0.1965,
+      "grad_rel_err_hi": 0.4089,
+      "hi_paths": 65536,
+      "epochs_completed": 12000,
+      "complete": true,
+      "recovered_from_log": true,
+      "trace": [
+        {
+          "epoch": 100,
+          "terminal_rmse": 0.010776,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 1728.94,
+          "value_rel_err": 0.6892,
+          "grad_rel_err": 5.308,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 175,
+          "terminal_rmse": 0.0070289,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 1127.73,
+          "value_rel_err": 0.6718,
+          "grad_rel_err": 0.3592,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 250,
+          "terminal_rmse": 0.0060869,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 976.59,
+          "value_rel_err": 0.6554,
+          "grad_rel_err": 0.4658,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 500,
+          "terminal_rmse": 0.0052852,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 847.96,
+          "value_rel_err": 0.5912,
+          "grad_rel_err": 0.4538,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 700,
+          "terminal_rmse": 0.0048536,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 778.72,
+          "value_rel_err": 0.5284,
+          "grad_rel_err": 0.4477,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 1000,
+          "terminal_rmse": 0.0041289,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 662.44,
+          "value_rel_err": 0.4218,
+          "grad_rel_err": 0.4379,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 1400,
+          "terminal_rmse": 0.0031109,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 499.12,
+          "value_rel_err": 0.2713,
+          "grad_rel_err": 0.4232,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 2000,
+          "terminal_rmse": 0.0017266,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 277.02,
+          "value_rel_err": 0.06547,
+          "grad_rel_err": 0.4055,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 2800,
+          "terminal_rmse": 0.0005322,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 85.39,
+          "value_rel_err": 0.1132,
+          "grad_rel_err": 0.3902,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 4000,
+          "terminal_rmse": 2.7772e-05,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 4.46,
+          "value_rel_err": 0.1894,
+          "grad_rel_err": 0.3827,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 5600,
+          "terminal_rmse": 1.1047e-05,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 1.77,
+          "value_rel_err": 0.1933,
+          "grad_rel_err": 0.3658,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 7000,
+          "terminal_rmse": 1.0947e-05,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 1.76,
+          "value_rel_err": 0.1933,
+          "grad_rel_err": 0.3189,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 8000,
+          "terminal_rmse": 1.0778e-05,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 1.73,
+          "value_rel_err": 0.1934,
+          "grad_rel_err": 0.2351,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 10000,
+          "terminal_rmse": 1.0269e-05,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 1.65,
+          "value_rel_err": 0.1943,
+          "grad_rel_err": 0.07346,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 12000,
+          "terminal_rmse": 9.883e-06,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 1.59,
+          "value_rel_err": 0.1965,
+          "grad_rel_err": 0.4089,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 12000,
+          "terminal_rmse": 9.883e-06,
+          "exact_floor": 6.233e-06,
+          "ratio_to_exact_floor": 1.59,
+          "value_rel_err": 0.1965,
+          "grad_rel_err": 0.4089,
+          "seconds": null,
+          "recovered_from_log": true
+        }
+      ]
+    }
+  ],
+  "recovered_from_log": true
+}

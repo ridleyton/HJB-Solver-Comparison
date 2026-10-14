@@ -1,0 +1,73 @@
+% Flowchart for the Methodology section.
+%
+% Drawn with TikZ so no binary asset is needed and the fonts match the paper. A two-column IEEE
+% layout gives about 3.4in (~86mm) of column width, so node text is set at \scriptsize and every
+% node is kept well inside that: an earlier version used 63mm text widths plus side-positioned
+% labels and overflowed the column by 17pt.
+%
+% Self-contained: this file carries its own figure environment, caption and label, so main.tex
+% needs only a single \input.
+\begin{figure}[t]
+\centering
+\definecolor{flowA}{RGB}{235,242,250}
+\definecolor{flowB}{RGB}{244,238,228}
+\definecolor{flowEdge}{RGB}{90,100,115}
+
+\begin{tikzpicture}[
+  font=\scriptsize,
+  >={Stealth[length=1.5mm]},
+  node distance=2.4mm,
+  box/.style={draw=flowEdge, rounded corners=1pt, align=center, inner sep=2.2pt,
+              minimum height=5mm},
+  prob/.style={box, fill=flowA, text width=52mm},
+  meth/.style={box, fill=flowB, text width=17mm},
+  wide/.style={box, fill=flowB, text width=58mm},
+  ar/.style={->, draw=flowEdge, line width=0.4pt},
+]
+
+% 1. the problem, with its closed-form answer key
+\node[prob] (prob) {\textbf{Linear--quadratic HJB}, $p$ assets:\\
+                    value function known in \textbf{closed form}};
+
+% 2. four solver families, side by side
+\node[meth, below=4mm of prob, xshift=-28.5mm] (a) {finite\\differ-\\ences};
+\node[meth, right=1.6mm of a]                   (b) {Howard\\policy\\iteration};
+\node[meth, right=1.6mm of b]                   (c) {direct\\PINN\\~};
+\node[meth, right=1.6mm of c]                   (d) {policy-\\iteration\\PINN};
+
+% 3. the two ways of obtaining a control
+\node[wide, below=6mm of b, xshift=-9mm] (grid)
+  {\textbf{grid:} $V$ at $N^p$ nodes $\rightarrow$ \textbf{reconstruct} $\hat V$
+   $\rightarrow$ differentiate};
+\node[wide, below=2.2mm of grid] (net)
+  {\textbf{network:} $V$ is continuous $\rightarrow$ \textbf{autograd}
+   differentiates it exactly};
+
+\draw[ar] (prob.south) -- ++(0,-1.6mm) -| (a.north);
+\draw[ar] (a.south) |- ([yshift=1.2mm]grid.north west);
+\draw[ar] (b.south) |- ([yshift=1.2mm]grid.north);
+\draw[ar] (c.south) |- ([yshift=1.2mm]net.north);
+\draw[ar] (d.south) |- ([yshift=1.2mm]net.north east);
+
+% 4. the protocol, applied to every method
+\node[wide, below=6mm of net] (proto)
+  {\textbf{score \emph{value} and \emph{control}} against the closed form,\\
+   on identical states, at matched accuracy};
+\draw[ar] (grid.south) -- ++(0,-1.6mm) -| ([xshift=-2mm]proto.north);
+\draw[ar] (net.south)  -- ++(0,-1.6mm) -| ([xshift=2mm]proto.north);
+
+% 5. what the protocol reveals
+\node[wide, below=4mm of proto] (find)
+  {value accuracy does not bound control accuracy; the control error is
+   governed by the \textbf{reconstruction order}};
+\draw[ar] (proto.south) -- (find.north);
+
+\end{tikzpicture}
+\caption{The benchmark design. A problem whose answer is known in closed form is solved by four
+methods that differ in \emph{how they obtain a control}: the two grid methods must reconstruct a
+continuous function from nodal values and then differentiate it, while the two network methods are
+continuous functions by construction and are differentiated exactly. Every solver is scored on both
+the value function and the control, against the analytic solution and never against another
+solver.}
+\label{fig:method}
+\end{figure}

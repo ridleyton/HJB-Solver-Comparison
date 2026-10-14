@@ -1,0 +1,37 @@
+# Line endings, pinned so that a clone is byte-identical to what was committed.
+#
+# WHY THIS FILE EXISTS. `git init` on this machine set core.autocrlf=true, which rewrites every text
+# file to CRLF on checkout. That produced a CRLF warning for well over a hundred files at the first
+# `git add`, and left alone it would mean (a) every collaborator's checkout differs from the commit,
+# and (b) the first edit by anyone on Unix shows the whole file as changed. Pinning the endings in
+# the repository rather than in one machine's config is the fix: the setting travels with the code.
+#
+# The paper is the reason this matters more than usual here. `paper/main.tex`, the generated tables
+# and the CSVs are all inputs to a build whose numbers are checked mechanically, and silent
+# whitespace rewriting is exactly the kind of change that is invisible in a diff and visible in a
+# checksum.
+* text=auto eol=lf
+
+# Explicit, so the intent survives a change to the line above.
+*.py    text eol=lf
+*.md    text eol=lf
+*.tex   text eol=lf
+*.bib   text eol=lf
+*.json  text eol=lf
+*.csv   text eol=lf
+*.txt   text eol=lf
+.gitignore      text eol=lf
+.gitattributes  text eol=lf
+
+# Binary. Declared so that Git never attempts an ending conversion or a text diff on them; the
+# figures and the compiled manuscript are deliverables, not sources, but they are committed so a
+# reader can see the artifact the numbers produce without installing a TeX toolchain.
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.zip   binary
+
+# Generated LaTeX from matplotlib (fig_method.tex) is a source input to the build, so it is text.
+*.eps   binary

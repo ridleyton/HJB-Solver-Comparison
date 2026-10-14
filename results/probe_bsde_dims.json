@@ -1,0 +1,44 @@
+{
+  "rows": [
+    {
+      "d": 1,
+      "n_assets": 1,
+      "state_dim": 1,
+      "V_true": -0.00624645801430112,
+      "driver_finite": true,
+      "driver_floor": 5.029204185120762e-05,
+      "loss_at_100": 0.2741594910621643,
+      "loss_at_end": 0.24885627627372742,
+      "finite": true,
+      "sec_per_epoch": 0.07937785416531067
+    },
+    {
+      "d": 4,
+      "n_assets": 4,
+      "state_dim": 4,
+      "V_true": -0.02498583205801711,
+      "driver_finite": true,
+      "driver_floor": 0.0002011735923588276,
+      "loss_at_100": 2627.011962890625,
+      "loss_at_end": 2141.54296875,
+      "finite": true,
+      "sec_per_epoch": 0.09494206833381516
+    },
+    {
+      "d": 8,
+      "n_assets": 8,
+      "state_dim": 8,
+      "V_true": -0.04997166411790142,
+      "driver_finite": true,
+      "driver_floor": 0.0004023176617920399,
+      "loss_at_100": 1726.2347412109375,
+      "loss_at_end": 1482.889892578125,
+      "finite": true,
+      "sec_per_epoch": 0.09474781416744614
+    }
+  ],
+  "epochs": 120,
+  "n_steps": 50,
+  "n_paths": 1024,
+  "device": "cuda"
+}

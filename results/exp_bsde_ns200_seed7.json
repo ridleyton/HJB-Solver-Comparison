@@ -1,0 +1,197 @@
+{
+  "rows": [
+    {
+      "n_steps": 200,
+      "tag": "convergence-seed7",
+      "validated": true,
+      "epochs": 16000,
+      "dt": 0.05,
+      "exact_floor_abs": 1.248e-05,
+      "terminal_rmse_final": 7.5073e-05,
+      "ratio_final": 6.01,
+      "value_rel_err_final": 0.4383,
+      "grad_rel_err_final": 0.8464,
+      "terminal_rmse_hi": 7.4337e-05,
+      "ratio_hi": 5.96,
+      "value_rel_err_hi": 0.4383,
+      "grad_rel_err_hi": 0.8464,
+      "hi_paths": 65536,
+      "epochs_completed": 16000,
+      "complete": true,
+      "recovered_from_log": true,
+      "trace": [
+        {
+          "epoch": 100,
+          "terminal_rmse": 0.044177,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 3539.29,
+          "value_rel_err": 0.6785,
+          "grad_rel_err": 7.518,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 175,
+          "terminal_rmse": 0.035451,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 2840.15,
+          "value_rel_err": 0.6544,
+          "grad_rel_err": 0.3599,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 250,
+          "terminal_rmse": 0.030132,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 2414.07,
+          "value_rel_err": 0.629,
+          "grad_rel_err": 0.2053,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 500,
+          "terminal_rmse": 0.018577,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 1488.28,
+          "value_rel_err": 0.5457,
+          "grad_rel_err": 0.2412,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 700,
+          "terminal_rmse": 0.013685,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 1096.35,
+          "value_rel_err": 0.4848,
+          "grad_rel_err": 0.2532,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 1000,
+          "terminal_rmse": 0.0095772,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 767.28,
+          "value_rel_err": 0.4017,
+          "grad_rel_err": 0.2611,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 1400,
+          "terminal_rmse": 0.0067073,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 537.36,
+          "value_rel_err": 0.2999,
+          "grad_rel_err": 0.267,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 2000,
+          "terminal_rmse": 0.0044669,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 357.87,
+          "value_rel_err": 0.1554,
+          "grad_rel_err": 0.268,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 2800,
+          "terminal_rmse": 0.0027437,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 219.81,
+          "value_rel_err": 0.03096,
+          "grad_rel_err": 0.2658,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 4000,
+          "terminal_rmse": 0.0010543,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 84.47,
+          "value_rel_err": 0.2716,
+          "grad_rel_err": 0.2644,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 5600,
+          "terminal_rmse": 0.00011758,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 9.42,
+          "value_rel_err": 0.4197,
+          "grad_rel_err": 0.2753,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 7000,
+          "terminal_rmse": 7.7802e-05,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 6.23,
+          "value_rel_err": 0.4334,
+          "grad_rel_err": 0.3169,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 8000,
+          "terminal_rmse": 7.7688e-05,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 6.22,
+          "value_rel_err": 0.4336,
+          "grad_rel_err": 0.3941,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 10000,
+          "terminal_rmse": 7.7435e-05,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 6.2,
+          "value_rel_err": 0.4346,
+          "grad_rel_err": 0.6347,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 12000,
+          "terminal_rmse": 7.7233e-05,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 6.19,
+          "value_rel_err": 0.4359,
+          "grad_rel_err": 0.8116,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 16000,
+          "terminal_rmse": 7.5073e-05,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 6.01,
+          "value_rel_err": 0.4383,
+          "grad_rel_err": 0.8464,
+          "seconds": null,
+          "recovered_from_log": true
+        },
+        {
+          "epoch": 16000,
+          "terminal_rmse": 7.5073e-05,
+          "exact_floor": 1.248e-05,
+          "ratio_to_exact_floor": 6.01,
+          "value_rel_err": 0.4383,
+          "grad_rel_err": 0.8464,
+          "seconds": null,
+          "recovered_from_log": true
+        }
+      ]
+    }
+  ],
+  "recovered_from_log": true
+}

@@ -1,0 +1,61 @@
+{
+  "epochs": 6000,
+  "batch": 2048,
+  "rows": [
+    {
+      "method": "grid",
+      "p": 2,
+      "device": "CPU",
+      "N": 21,
+      "n_steps": 420,
+      "flops": 7779240.0,
+      "seconds": 0.05980360019020736,
+      "gflops_per_s": 0.13007979411369658
+    },
+    {
+      "method": "grid",
+      "p": 2,
+      "device": "CPU",
+      "N": 31,
+      "n_steps": 631,
+      "flops": 25468422.0,
+      "seconds": 0.11790410010144114,
+      "gflops_per_s": 0.216009638155821
+    },
+    {
+      "method": "grid",
+      "p": 2,
+      "device": "CPU",
+      "N": 41,
+      "n_steps": 840,
+      "flops": 59305680.0,
+      "seconds": 0.21999559993855655,
+      "gflops_per_s": 0.2695766643358491
+    },
+    {
+      "method": "PINN",
+      "p": 1,
+      "device": "cuda",
+      "N": null,
+      "n_steps": 6000,
+      "flops": 1252098048000.0,
+      "seconds": 42.1508745001629,
+      "gflops_per_s": 29.705149960652918,
+      "params": 12737
+    },
+    {
+      "method": "PINN",
+      "p": 2,
+      "device": "cuda",
+      "N": null,
+      "n_steps": 6000,
+      "flops": 1572986880000.0,
+      "seconds": 60.164111900143325,
+      "gflops_per_s": 26.144936413434415,
+      "params": 12801
+    }
+  ],
+  "mean_gflops_grid": 0.2695766643358491,
+  "mean_gflops_pinn": 27.925043187043666,
+  "rate_ratio": 103.58850331441731
+}

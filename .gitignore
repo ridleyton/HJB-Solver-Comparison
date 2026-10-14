@@ -1,0 +1,43 @@
+# Build and run artefacts.
+#
+# Nothing listed here is needed to reproduce a result. `results/*.json` and `figures/` ARE needed --
+# every number in the manuscript traces to one of them -- so they are deliberately NOT ignored.
+
+# LaTeX staging directories. build_paper.py writes these; the count reached 48 during development
+# because each --build-dir attempt leaves one behind (Windows keeps main.pdf locked if a viewer has
+# it open, which is why the override exists at all).
+paper_build/
+
+# Compiled output of the staging build. The manuscript PDF that ships lives at paper/main.pdf.
+paper_build*/*.pdf
+
+# Page-by-page renders and extracted text used to inspect layout while iterating.
+.pagedump/
+paper_preview/
+
+# Per-run logs: the console transcripts that produced results/*.json. Kept out of the RELEASE
+# (.gitignore) but NOT deleted, because they are the only record of stdout for runs whose JSON has
+# been superseded -- and the trace-recovery step in this project read them back once already when a
+# parse bug corrupted the per-run files. Deleting evidence that has already been needed once is a
+# bad trade for 50 kB. src/check_release.py will keep reporting them under "intermediates"; that
+# count is expected to be non-zero and is not a blocker.
+logs/
+results/*.log
+
+# Python caches.
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.pytest_cache/
+
+# matplotlib font cache, created when MPLCONFIGDIR points inside the tree.
+.mplconfig/
+
+# Scratch space from repairing the workspace ACL.
+.acl-repair/
+
+# Local editor and OS noise.
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

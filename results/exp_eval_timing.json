@@ -1,0 +1,245 @@
+{
+  "meta": {
+    "timestamp": "2026-09-19 18:14:43",
+    "torch": "2.7.1+cu126",
+    "gpu": "NVIDIA GeForce RTX 4090 Laptop GPU",
+    "repeat": 200,
+    "batch_one_day": 390,
+    "note": "Amortised latency of evaluating the optimal control after the solution exists. Weights are randomly initialised: the operation count, and therefore the timing, does not depend on the trained values."
+  },
+  "runs": [
+    {
+      "method": "PINN",
+      "p": 1,
+      "batch": 1,
+      "device": "cuda",
+      "seconds_per_call": 0.0011733114999969985,
+      "us_per_state": 1173.3114999969985
+    },
+    {
+      "method": "PINN",
+      "p": 1,
+      "batch": 1,
+      "device": "cpu",
+      "seconds_per_call": 0.00038255250000474917,
+      "us_per_state": 382.55250000474916
+    },
+    {
+      "method": "PINN",
+      "p": 1,
+      "batch": 390,
+      "device": "cuda",
+      "seconds_per_call": 0.0011602765000043292,
+      "us_per_state": 2.9750679487290492
+    },
+    {
+      "method": "PINN",
+      "p": 1,
+      "batch": 390,
+      "device": "cpu",
+      "seconds_per_call": 0.0014588839999942137,
+      "us_per_state": 3.740728205113369
+    },
+    {
+      "method": "PINN",
+      "p": 3,
+      "batch": 1,
+      "device": "cuda",
+      "seconds_per_call": 0.0013149075000001176,
+      "us_per_state": 1314.9075000001176
+    },
+    {
+      "method": "PINN",
+      "p": 3,
+      "batch": 1,
+      "device": "cpu",
+      "seconds_per_call": 0.0004662430000007589,
+      "us_per_state": 466.2430000007589
+    },
+    {
+      "method": "PINN",
+      "p": 3,
+      "batch": 390,
+      "device": "cuda",
+      "seconds_per_call": 0.0014042359999984911,
+      "us_per_state": 3.600605128201259
+    },
+    {
+      "method": "PINN",
+      "p": 3,
+      "batch": 390,
+      "device": "cpu",
+      "seconds_per_call": 0.002453210499998022,
+      "us_per_state": 6.2902833333282615
+    },
+    {
+      "method": "PINN",
+      "p": 5,
+      "batch": 1,
+      "device": "cuda",
+      "seconds_per_call": 0.0021168390000002547,
+      "us_per_state": 2116.8390000002546
+    },
+    {
+      "method": "PINN",
+      "p": 5,
+      "batch": 1,
+      "device": "cpu",
+      "seconds_per_call": 0.0006571330000042508,
+      "us_per_state": 657.1330000042508
+    },
+    {
+      "method": "PINN",
+      "p": 5,
+      "batch": 390,
+      "device": "cuda",
+      "seconds_per_call": 0.0018962335000014719,
+      "us_per_state": 4.862137179490953
+    },
+    {
+      "method": "PINN",
+      "p": 5,
+      "batch": 390,
+      "device": "cpu",
+      "seconds_per_call": 0.0025521574999947914,
+      "us_per_state": 6.543993589730235
+    },
+    {
+      "method": "Finite Difference (interpolation)",
+      "p": 1,
+      "batch": 1,
+      "device": "cpu",
+      "n_grid": 21,
+      "seconds_per_call_control": 0.0003501560000040627,
+      "us_per_state_control": 350.15600000406266,
+      "seconds_per_call_value": 9.877849999611498e-05,
+      "us_per_state_value": 98.77849999611499
+    },
+    {
+      "method": "Finite Difference (interpolation)",
+      "p": 1,
+      "batch": 390,
+      "device": "cpu",
+      "n_grid": 21,
+      "seconds_per_call_control": 0.000256858499997179,
+      "us_per_state_control": 0.6586115384543052,
+      "seconds_per_call_value": 0.0001160989999971207,
+      "us_per_state_value": 0.2976897435823608
+    },
+    {
+      "method": "Finite Difference (interpolation)",
+      "p": 2,
+      "batch": 1,
+      "device": "cpu",
+      "n_grid": 21,
+      "seconds_per_call_control": 0.00043729399999392626,
+      "us_per_state_control": 437.29399999392626,
+      "seconds_per_call_value": 0.00010798450000038429,
+      "us_per_state_value": 107.98450000038429
+    },
+    {
+      "method": "Finite Difference (interpolation)",
+      "p": 2,
+      "batch": 390,
+      "device": "cpu",
+      "n_grid": 21,
+      "seconds_per_call_control": 0.0005887425000037183,
+      "us_per_state_control": 1.509596153855688,
+      "seconds_per_call_value": 0.0001692765000007057,
+      "us_per_state_value": 0.4340423076941172
+    },
+    {
+      "method": "Finite Difference (interpolation)",
+      "p": 3,
+      "batch": 1,
+      "device": "cpu",
+      "n_grid": 21,
+      "seconds_per_call_control": 0.001437737999995079,
+      "us_per_state_control": 1437.737999995079,
+      "seconds_per_call_value": 0.000192760999998427,
+      "us_per_state_value": 192.760999998427
+    },
+    {
+      "method": "Finite Difference (interpolation)",
+      "p": 3,
+      "batch": 390,
+      "device": "cpu",
+      "n_grid": 21,
+      "seconds_per_call_control": 0.0019782180000038354,
+      "us_per_state_control": 5.07235384616368,
+      "seconds_per_call_value": 0.00028440799999771113,
+      "us_per_state_value": 0.7292512820454132
+    },
+    {
+      "method": "Finite Difference (interpolation)",
+      "p": 4,
+      "batch": 1,
+      "device": "cpu",
+      "n_grid": 21,
+      "seconds_per_call_control": 0.0027202089999991586,
+      "us_per_state_control": 2720.2089999991586,
+      "seconds_per_call_value": 0.00028055849999873315,
+      "us_per_state_value": 280.55849999873317
+    },
+    {
+      "method": "Finite Difference (interpolation)",
+      "p": 4,
+      "batch": 390,
+      "device": "cpu",
+      "n_grid": 21,
+      "seconds_per_call_control": 0.005036749499995494,
+      "us_per_state_control": 12.914742307680754,
+      "seconds_per_call_value": 0.0007122419999996054,
+      "us_per_state_value": 1.8262615384605267
+    },
+    {
+      "method": "Finite Difference (interpolation)",
+      "p": 5,
+      "batch": 1,
+      "device": "cpu",
+      "n_grid": 21,
+      "seconds_per_call_control": 0.005808976499993151,
+      "us_per_state_control": 5808.97649999315,
+      "seconds_per_call_value": 0.0004809434999970108,
+      "us_per_state_value": 480.9434999970108
+    },
+    {
+      "method": "Finite Difference (interpolation)",
+      "p": 5,
+      "batch": 390,
+      "device": "cpu",
+      "n_grid": 21,
+      "seconds_per_call_control": 0.013364998500001092,
+      "us_per_state_control": 34.26922692307973,
+      "seconds_per_call_value": 0.001140297500005545,
+      "us_per_state_value": 2.923839743603961
+    }
+  ],
+  "breakeven": [
+    {
+      "p": 1,
+      "grid_solve_s": 0.023,
+      "pinn_train_s": 95.1,
+      "grid_us_per_state": 0.6586115384543052,
+      "pinn_us_per_state": 2.9750679487290492,
+      "n_star_evaluations": null,
+      "n_star_days": null,
+      "note": "PINN 6000 epochs, R2 0.9997"
+    },
+    {
+      "p": 3,
+      "grid_solve_s": 0.53,
+      "pinn_train_s": 156.6,
+      "grid_us_per_state": 5.07235384616368,
+      "pinn_us_per_state": 3.600605128201259,
+      "n_star_evaluations": 106043917.75253107,
+      "n_star_days": 271907.48141674633,
+      "note": "PINN 6000 epochs, R2 0.9918"
+    }
+  ],
+  "summary": {
+    "p1_pinn_over_grid": 3.3508250607825802,
+    "p3_pinn_over_grid": 0.9145668404150257,
+    "p5_pinn_over_grid": 0.3644082567734179
+  }
+}

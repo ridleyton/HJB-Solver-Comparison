@@ -1,0 +1,318 @@
+{
+  "meta": {
+    "timestamp": "2026-09-19 12:28:41 + 2026-09-19 12:30:13",
+    "solver": "Finite Difference (explicit, tensor-product grid)",
+    "reference": "closed-form matrix Riccati solution",
+    "target_r2": 0.9999,
+    "note": "p=1,2,3 and p=4,5 generated separately and merged; see the two source runs."
+  },
+  "runs": [
+    {
+      "p": 1,
+      "N": 11,
+      "n_grid_points": 11,
+      "n_time_steps": 210,
+      "solve_time_s": 0.009922500001266599,
+      "value_r2": 0.9991601461350349,
+      "value_mse": 6.8197748049899e-08,
+      "control_r2": 0.9834631132207509
+    },
+    {
+      "p": 1,
+      "N": 21,
+      "n_grid_points": 21,
+      "n_time_steps": 420,
+      "solve_time_s": 0.022780700004659593,
+      "value_r2": 0.9999479776701089,
+      "value_mse": 4.224313175045186e-09,
+      "control_r2": 0.9957877299296387
+    },
+    {
+      "p": 1,
+      "N": 31,
+      "n_grid_points": 31,
+      "n_time_steps": 631,
+      "solve_time_s": 0.03841959999408573,
+      "value_r2": 0.9999870877457481,
+      "value_mse": 1.0484998628528304e-09,
+      "control_r2": 0.998197756772525
+    },
+    {
+      "p": 1,
+      "N": 41,
+      "n_grid_points": 41,
+      "n_time_steps": 840,
+      "solve_time_s": 0.05945850000716746,
+      "value_r2": 0.9999956665688354,
+      "value_mse": 3.518829395000931e-10,
+      "control_r2": 0.9989820073075181
+    },
+    {
+      "p": 1,
+      "N": 51,
+      "n_grid_points": 51,
+      "n_time_steps": 1050,
+      "solve_time_s": 0.08033729996532202,
+      "value_r2": 0.9999969596687872,
+      "value_mse": 2.468807380522062e-10,
+      "control_r2": 0.9993753449623142
+    },
+    {
+      "p": 1,
+      "N": 61,
+      "n_grid_points": 61,
+      "n_time_steps": 1260,
+      "solve_time_s": 0.10419649991672486,
+      "value_r2": 0.9999986950180187,
+      "value_mse": 1.0596704507698627e-10,
+      "control_r2": 0.9995786162138445
+    },
+    {
+      "p": 1,
+      "N": 81,
+      "n_grid_points": 81,
+      "n_time_steps": 1680,
+      "solve_time_s": 0.1622202000580728,
+      "value_r2": 0.9999993935067969,
+      "value_mse": 4.924841377930109e-11,
+      "control_r2": 0.9997642359266526
+    },
+    {
+      "p": 2,
+      "N": 11,
+      "n_grid_points": 121,
+      "n_time_steps": 210,
+      "solve_time_s": 0.022966900025494397,
+      "value_r2": 0.9987847176114789,
+      "value_mse": 2.5572369884566063e-07,
+      "control_r2": 0.9838523238584066
+    },
+    {
+      "p": 2,
+      "N": 21,
+      "n_grid_points": 441,
+      "n_time_steps": 420,
+      "solve_time_s": 0.05623470002319664,
+      "value_r2": 0.9999295035471116,
+      "value_mse": 1.4834094411618752e-08,
+      "control_r2": 0.9956544469268627
+    },
+    {
+      "p": 2,
+      "N": 31,
+      "n_grid_points": 961,
+      "n_time_steps": 631,
+      "solve_time_s": 0.1152870999649167,
+      "value_r2": 0.9999836645444744,
+      "value_mse": 3.4373600315342973e-09,
+      "control_r2": 0.9981439651236603
+    },
+    {
+      "p": 2,
+      "N": 41,
+      "n_grid_points": 1681,
+      "n_time_steps": 840,
+      "solve_time_s": 0.2059157999465242,
+      "value_r2": 0.9999944866744693,
+      "value_mse": 1.1601320079580073e-09,
+      "control_r2": 0.9989745752693899
+    },
+    {
+      "p": 2,
+      "N": 51,
+      "n_grid_points": 2601,
+      "n_time_steps": 1050,
+      "solve_time_s": 0.3289656999986619,
+      "value_r2": 0.9999964228924453,
+      "value_mse": 7.527066825793649e-10,
+      "control_r2": 0.9993683595665399
+    },
+    {
+      "p": 2,
+      "N": 61,
+      "n_grid_points": 3721,
+      "n_time_steps": 1260,
+      "solve_time_s": 0.49146210006438196,
+      "value_r2": 0.999998489700658,
+      "value_mse": 3.1780213204357613e-10,
+      "control_r2": 0.9995547422456404
+    },
+    {
+      "p": 3,
+      "N": 11,
+      "n_grid_points": 1331,
+      "n_time_steps": 210,
+      "solve_time_s": 0.06636970001272857,
+      "value_r2": 0.9987167465036448,
+      "value_mse": 5.518038388869246e-07,
+      "control_r2": 0.9843153434714382
+    },
+    {
+      "p": 3,
+      "N": 21,
+      "n_grid_points": 9261,
+      "n_time_steps": 420,
+      "solve_time_s": 0.5299266000511125,
+      "value_r2": 0.9999262387695286,
+      "value_mse": 3.171760704392899e-08,
+      "control_r2": 0.9958121145240125
+    },
+    {
+      "p": 3,
+      "N": 31,
+      "n_grid_points": 29791,
+      "n_time_steps": 631,
+      "solve_time_s": 7.034895200049505,
+      "value_r2": 0.9999831505252247,
+      "value_mse": 7.245337644236909e-09,
+      "control_r2": 0.9981790008340016
+    },
+    {
+      "p": 3,
+      "N": 41,
+      "n_grid_points": 68921,
+      "n_time_steps": 840,
+      "solve_time_s": 17.758094599936157,
+      "value_r2": 0.9999942661358977,
+      "value_mse": 2.4655831698917303e-09,
+      "control_r2": 0.9990070618013621
+    },
+    {
+      "p": 3,
+      "N": 51,
+      "n_grid_points": 132651,
+      "n_time_steps": 1050,
+      "solve_time_s": 44.6204731001053,
+      "value_r2": 0.9999962644349285,
+      "value_mse": 1.6063070568265771e-09,
+      "control_r2": 0.9993881895626073
+    },
+    {
+      "p": 4,
+      "N": 9,
+      "n_grid_points": 6561,
+      "n_time_steps": 168,
+      "solve_time_s": 0.27243160002399236,
+      "value_r2": 0.9967793884626333,
+      "value_mse": 2.2374999937550566e-06,
+      "control_r2": 0.9738995139331572
+    },
+    {
+      "p": 4,
+      "N": 13,
+      "n_grid_points": 28561,
+      "n_time_steps": 253,
+      "solve_time_s": 1.3279602000257,
+      "value_r2": 0.9993359508305857,
+      "value_mse": 4.6134406313167047e-07,
+      "control_r2": 0.9892524960156908
+    },
+    {
+      "p": 4,
+      "N": 17,
+      "n_grid_points": 83521,
+      "n_time_steps": 336,
+      "solve_time_s": 10.591439399984665,
+      "value_r2": 0.9997944007809274,
+      "value_mse": 1.4283878886153047e-07,
+      "control_r2": 0.9937953193399379
+    },
+    {
+      "p": 4,
+      "N": 21,
+      "n_grid_points": 194481,
+      "n_time_steps": 420,
+      "solve_time_s": 31.71021519997157,
+      "value_r2": 0.999919444448247,
+      "value_mse": 5.596547253619496e-08,
+      "control_r2": 0.995850947464713
+    },
+    {
+      "p": 5,
+      "N": 9,
+      "n_grid_points": 59049,
+      "n_time_steps": 168,
+      "solve_time_s": 5.493692600051872,
+      "value_r2": 0.9965921766359455,
+      "value_mse": 3.4580376347276412e-06,
+      "control_r2": 0.9737358834992577
+    },
+    {
+      "p": 5,
+      "N": 11,
+      "n_grid_points": 161051,
+      "n_time_steps": 210,
+      "solve_time_s": 16.500554799917154,
+      "value_r2": 0.9985403375646987,
+      "value_mse": 1.481170558460134e-06,
+      "control_r2": 0.9841214572759882
+    },
+    {
+      "p": 5,
+      "N": 13,
+      "n_grid_points": 371293,
+      "n_time_steps": 253,
+      "solve_time_s": 44.009626999963075,
+      "value_r2": 0.999296052952319,
+      "value_mse": 7.14319706065936e-07,
+      "control_r2": 0.9892001619845132
+    },
+    {
+      "p": 5,
+      "N": 17,
+      "n_grid_points": 1419857,
+      "n_time_steps": 336,
+      "solve_time_s": 224.16882489994168,
+      "value_r2": 0.9997831540015443,
+      "value_mse": 2.2004122382322025e-07,
+      "control_r2": 0.9937270095264817
+    },
+    {
+      "p": 5,
+      "N": 21,
+      "n_grid_points": 4084101,
+      "n_time_steps": 420,
+      "solve_time_s": 864.8725118000293,
+      "value_r2": 0.9999135921252221,
+      "value_mse": 8.768109464549343e-08,
+      "control_r2": 0.9959008504287432
+    }
+  ],
+  "summary": {
+    "1": {
+      "N_star": 21,
+      "n_grid_points": 21,
+      "time_s": 0.022780700004659593,
+      "value_r2": 0.9999479776701089,
+      "feasible_at_target": true
+    },
+    "2": {
+      "N_star": 21,
+      "n_grid_points": 441,
+      "time_s": 0.05623470002319664,
+      "value_r2": 0.9999295035471116,
+      "feasible_at_target": true
+    },
+    "3": {
+      "N_star": 21,
+      "n_grid_points": 9261,
+      "time_s": 0.5299266000511125,
+      "value_r2": 0.9999262387695286,
+      "feasible_at_target": true
+    },
+    "4": {
+      "N_star": 21,
+      "n_grid_points": 194481,
+      "time_s": 31.71021519997157,
+      "value_r2": 0.999919444448247,
+      "feasible_at_target": true
+    },
+    "5": {
+      "N_star": 21,
+      "n_grid_points": 4084101,
+      "time_s": 864.8725118000293,
+      "value_r2": 0.9999135921252221,
+      "feasible_at_target": true
+    }
+  }
+}

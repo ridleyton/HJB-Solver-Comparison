@@ -1,0 +1,51 @@
+{
+  "rows": [
+    {
+      "d": 1,
+      "exact_floor": 5.029204185120762e-05,
+      "initial_residual": 0.09273920208215714,
+      "init_over_floor": 1844.0134595555355,
+      "known_optimum_residual": 0.002497,
+      "known_optimum_V_err": 0.0382,
+      "optimum_fraction_of_initial": 0.026924967478024253
+    },
+    {
+      "d": 2,
+      "exact_floor": 0.00010057825129479171,
+      "initial_residual": 376.8441162109375,
+      "init_over_floor": 3746775.3849330624,
+      "known_optimum_residual": null,
+      "known_optimum_V_err": null,
+      "optimum_fraction_of_initial": null
+    },
+    {
+      "d": 4,
+      "exact_floor": 0.0002011735923588276,
+      "initial_residual": 463.86712646484375,
+      "init_over_floor": 2305805.255182088,
+      "known_optimum_residual": 5.212,
+      "known_optimum_V_err": 0.0327,
+      "optimum_fraction_of_initial": 0.011235976215260029
+    },
+    {
+      "d": 8,
+      "exact_floor": 0.0004023176617920399,
+      "initial_residual": 159.40603637695312,
+      "init_over_floor": 396219.3349079239,
+      "known_optimum_residual": null,
+      "known_optimum_V_err": null,
+      "optimum_fraction_of_initial": null
+    },
+    {
+      "d": 16,
+      "exact_floor": 0.0008045768365263939,
+      "initial_residual": 12.346985816955566,
+      "init_over_floor": 15345.937462307898,
+      "known_optimum_residual": null,
+      "known_optimum_V_err": null,
+      "optimum_fraction_of_initial": null
+    }
+  ],
+  "warmup": 25,
+  "n_steps": 50
+}

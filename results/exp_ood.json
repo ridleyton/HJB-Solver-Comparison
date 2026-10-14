@@ -1,0 +1,698 @@
+{
+  "meta": {
+    "timestamp": "2026-09-19 13:09:51",
+    "train_domain_price": [
+      20.0,
+      30.0
+    ],
+    "train_domain_vol": [
+      0.01,
+      0.05
+    ],
+    "train_domain_spread": [
+      0.001,
+      0.01
+    ],
+    "target_price": 25.0,
+    "kappa": 0.0005,
+    "gamma": 0.0001,
+    "epochs": 6000,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "eval_assets": [
+      "OXY",
+      "NVDA",
+      "GOOGL",
+      "AMZN",
+      "AAPL",
+      "TSLA",
+      "MSFT",
+      "QQQ",
+      "SPY"
+    ],
+    "note": "Conditions: (1) unscaled evaluation on raw prices (reproduces the original defect); (2) evaluation with price affine-mapped into the training domain (the fix)."
+  },
+  "conditions": {
+    "unscaled_raw_price": [
+      {
+        "per_asset": [
+          {
+            "asset": "OXY",
+            "mean_price": 41.66177075,
+            "V_min": -47.694881439208984,
+            "V_max": -6.80930757522583,
+            "V_range": 40.88557434082031,
+            "grad_abs_mean": 2.8416268825531006,
+            "grad_abs_median": 3.13316011428833,
+            "control_abs_mean": 70.56280418230571,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "NVDA",
+            "mean_price": 104.73603175,
+            "V_min": -112.99095153808594,
+            "V_max": 5.426003456115723,
+            "V_range": 118.41695404052734,
+            "grad_abs_mean": 0.12199055403470993,
+            "grad_abs_median": 0.1275896430015564,
+            "control_abs_mean": 1.1620906265613002,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "GOOGL",
+            "mean_price": 154.284874,
+            "V_min": -108.43162536621094,
+            "V_max": -73.10301971435547,
+            "V_range": 35.32860565185547,
+            "grad_abs_mean": 0.20297016203403473,
+            "grad_abs_median": 0.21111196279525757,
+            "control_abs_mean": 1.3153810742132743,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "AMZN",
+            "mean_price": 182.00443075000004,
+            "V_min": -98.40901184082031,
+            "V_max": -77.80845642089844,
+            "V_range": 20.600555419921875,
+            "grad_abs_mean": 0.17580431699752808,
+            "grad_abs_median": 0.1799985021352768,
+            "control_abs_mean": 0.9690221581023926,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "AAPL",
+            "mean_price": 202.3777215,
+            "V_min": -105.37645721435547,
+            "V_max": -80.96194458007812,
+            "V_range": 24.414512634277344,
+            "grad_abs_mean": 0.15373319387435913,
+            "grad_abs_median": 0.15752187371253967,
+            "control_abs_mean": 0.7625624937840496,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "TSLA",
+            "mean_price": 252.1454955,
+            "V_min": -105.0172119140625,
+            "V_max": -88.70462799072266,
+            "V_range": 16.312583923339844,
+            "grad_abs_mean": 0.1009412407875061,
+            "grad_abs_median": 0.1015598475933075,
+            "control_abs_mean": 0.40362703485882806,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "MSFT",
+            "mean_price": 376.4774862500001,
+            "V_min": -105.84996032714844,
+            "V_max": -100.2630844116211,
+            "V_range": 5.586875915527344,
+            "grad_abs_mean": 0.05586285516619682,
+            "grad_abs_median": 0.055420368909835815,
+            "control_abs_mean": 0.14850468376389483,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "QQQ",
+            "mean_price": 452.096614,
+            "V_min": -111.81904602050781,
+            "V_max": -89.69356536865234,
+            "V_range": 22.12548065185547,
+            "grad_abs_mean": 0.042254459112882614,
+            "grad_abs_median": 0.04196488857269287,
+            "control_abs_mean": 0.0935728431920571,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "SPY",
+            "mean_price": 535.6008325,
+            "V_min": -111.46685791015625,
+            "V_max": -104.22698211669922,
+            "V_range": 7.239875793457031,
+            "grad_abs_mean": 0.03420649468898773,
+            "grad_abs_median": 0.03400268405675888,
+            "control_abs_mean": 0.06388514283430846,
+            "no_trade_frac": 0.0
+          }
+        ],
+        "seed": 0,
+        "train_time_s": 87.74864580004942,
+        "spearman_price_vs_abs_grad": -0.9,
+        "spearman_price_vs_V_range": -0.8166666666666667,
+        "spearman_price_vs_no_trade": 1.0,
+        "grad_abs_mean": 0.414376684361034
+      },
+      {
+        "per_asset": [
+          {
+            "asset": "OXY",
+            "mean_price": 41.50791875,
+            "V_min": -66.22083282470703,
+            "V_max": -2.2372000217437744,
+            "V_range": 63.9836311340332,
+            "grad_abs_mean": 4.101593494415283,
+            "grad_abs_median": 4.119091987609863,
+            "control_abs_mean": 99.78590154013453,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "NVDA",
+            "mean_price": 104.9737065,
+            "V_min": -215.49888610839844,
+            "V_max": -81.05424499511719,
+            "V_range": 134.44464111328125,
+            "grad_abs_mean": 0.9565122127532959,
+            "grad_abs_median": 0.9435688257217407,
+            "control_abs_mean": 9.200802757549678,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "GOOGL",
+            "mean_price": 154.16910425,
+            "V_min": -223.19549560546875,
+            "V_max": -208.63079833984375,
+            "V_range": 14.564697265625,
+            "grad_abs_mean": 0.3612453043460846,
+            "grad_abs_median": 0.3628707528114319,
+            "control_abs_mean": 2.350147591969843,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "AMZN",
+            "mean_price": 182.14909049999997,
+            "V_min": -228.83282470703125,
+            "V_max": -216.35398864746094,
+            "V_range": 12.478836059570312,
+            "grad_abs_mean": 0.21081885695457458,
+            "grad_abs_median": 0.2119802087545395,
+            "control_abs_mean": 1.1675654867910377,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "AAPL",
+            "mean_price": 202.33531974999997,
+            "V_min": -228.50486755371094,
+            "V_max": -219.2364959716797,
+            "V_range": 9.26837158203125,
+            "grad_abs_mean": 0.1426907479763031,
+            "grad_abs_median": 0.14285513758659363,
+            "control_abs_mean": 0.7170496336528859,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "TSLA",
+            "mean_price": 252.58400675000001,
+            "V_min": -230.57814025878906,
+            "V_max": -226.35586547851562,
+            "V_range": 4.2222747802734375,
+            "grad_abs_mean": 0.03272165358066559,
+            "grad_abs_median": 0.0312570221722126,
+            "control_abs_mean": 0.13375908009730048,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "MSFT",
+            "mean_price": 376.043042,
+            "V_min": -230.1956787109375,
+            "V_max": -226.9210662841797,
+            "V_range": 3.2746124267578125,
+            "grad_abs_mean": 0.020351700484752655,
+            "grad_abs_median": 0.020158801227808,
+            "control_abs_mean": 0.0539926972506702,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "QQQ",
+            "mean_price": 453.2197382500001,
+            "V_min": -228.7865447998047,
+            "V_max": -223.66319274902344,
+            "V_range": 5.12335205078125,
+            "grad_abs_mean": 0.02134755067527294,
+            "grad_abs_median": 0.021134251728653908,
+            "control_abs_mean": 0.047092365344616575,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "SPY",
+            "mean_price": 535.751771,
+            "V_min": -227.22854614257812,
+            "V_max": -216.9641876220703,
+            "V_range": 10.264358520507812,
+            "grad_abs_mean": 0.017516009509563446,
+            "grad_abs_median": 0.017315082252025604,
+            "control_abs_mean": 0.03267235502803916,
+            "no_trade_frac": 0.0
+          }
+        ],
+        "seed": 1,
+        "train_time_s": 87.48792999994475,
+        "spearman_price_vs_abs_grad": -0.9833333333333333,
+        "spearman_price_vs_V_range": -0.7666666666666667,
+        "spearman_price_vs_no_trade": 1.0,
+        "grad_abs_mean": 0.6516441700773107
+      },
+      {
+        "per_asset": [
+          {
+            "asset": "OXY",
+            "mean_price": 41.633306499999996,
+            "V_min": -58.042110443115234,
+            "V_max": -11.010022163391113,
+            "V_range": 47.03208923339844,
+            "grad_abs_mean": 3.1357147693634033,
+            "grad_abs_median": 3.350342273712158,
+            "control_abs_mean": 77.0849641418225,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "NVDA",
+            "mean_price": 105.208966,
+            "V_min": -69.2325210571289,
+            "V_max": -18.038043975830078,
+            "V_range": 51.19447708129883,
+            "grad_abs_mean": 1.4236749410629272,
+            "grad_abs_median": 1.4311962127685547,
+            "control_abs_mean": 13.556795882447767,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "GOOGL",
+            "mean_price": 153.807376,
+            "V_min": 13.689611434936523,
+            "V_max": 39.604957580566406,
+            "V_range": 25.915346145629883,
+            "grad_abs_mean": 1.155806541442871,
+            "grad_abs_median": 1.148912787437439,
+            "control_abs_mean": 7.532876458609155,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "AMZN",
+            "mean_price": 182.28787625,
+            "V_min": 36.704715728759766,
+            "V_max": 75.31473541259766,
+            "V_range": 38.61001968383789,
+            "grad_abs_mean": 0.920350968837738,
+            "grad_abs_median": 0.922559916973114,
+            "control_abs_mean": 5.076162712051193,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "AAPL",
+            "mean_price": 202.54533774999996,
+            "V_min": 46.901432037353516,
+            "V_max": 89.111083984375,
+            "V_range": 42.209651947021484,
+            "grad_abs_mean": 0.7806574106216431,
+            "grad_abs_median": 0.774347186088562,
+            "control_abs_mean": 3.9013728818645372,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "TSLA",
+            "mean_price": 252.95227975,
+            "V_min": 8.671859741210938,
+            "V_max": 124.73078155517578,
+            "V_range": 116.05892181396484,
+            "grad_abs_mean": 0.511333167552948,
+            "grad_abs_median": 0.5083987712860107,
+            "control_abs_mean": 2.0467192919102235,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "MSFT",
+            "mean_price": 376.27858224999994,
+            "V_min": 140.4151611328125,
+            "V_max": 151.19549560546875,
+            "V_range": 10.78033447265625,
+            "grad_abs_mean": 0.23760654032230377,
+            "grad_abs_median": 0.23629890382289886,
+            "control_abs_mean": 0.6325308004312625,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "QQQ",
+            "mean_price": 453.3587465,
+            "V_min": 155.28550720214844,
+            "V_max": 167.0699920654297,
+            "V_range": 11.78448486328125,
+            "grad_abs_mean": 0.1737351268529892,
+            "grad_abs_median": 0.17290115356445312,
+            "control_abs_mean": 0.3843116073881494,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "SPY",
+            "mean_price": 535.829408,
+            "V_min": 151.92642211914062,
+            "V_max": 178.90585327148438,
+            "V_range": 26.97943115234375,
+            "grad_abs_mean": 0.1345282793045044,
+            "grad_abs_median": 0.13466861844062805,
+            "control_abs_mean": 0.25164155960579154,
+            "no_trade_frac": 0.0
+          }
+        ],
+        "seed": 2,
+        "train_time_s": 87.23731459991541,
+        "spearman_price_vs_abs_grad": -1.0,
+        "spearman_price_vs_V_range": -0.5,
+        "spearman_price_vs_no_trade": 1.0,
+        "grad_abs_mean": 0.941489749484592
+      }
+    ],
+    "price_rescaled_to_train_domain": [
+      {
+        "per_asset": [
+          {
+            "asset": "OXY",
+            "mean_price": 41.66177075,
+            "V_min": 4.776809215545654,
+            "V_max": 14.931328773498535,
+            "V_range": 10.154520034790039,
+            "grad_abs_mean": 0.038643769919872284,
+            "grad_abs_median": 0.03899538516998291,
+            "control_abs_mean": 0.9410777653128539,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "NVDA",
+            "mean_price": 104.73603175,
+            "V_min": -39.737281799316406,
+            "V_max": 16.400466918945312,
+            "V_range": 56.13774871826172,
+            "grad_abs_mean": 0.027906417846679688,
+            "grad_abs_median": 0.028000306338071823,
+            "control_abs_mean": 0.2672520170397524,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "GOOGL",
+            "mean_price": 154.284874,
+            "V_min": -20.714473724365234,
+            "V_max": 17.84154510498047,
+            "V_range": 38.5560188293457,
+            "grad_abs_mean": 0.018897265195846558,
+            "grad_abs_median": 0.018882552161812782,
+            "control_abs_mean": 0.12261806254942648,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "AMZN",
+            "mean_price": 182.00443075000004,
+            "V_min": 9.063076972961426,
+            "V_max": 18.434303283691406,
+            "V_range": 9.37122631072998,
+            "grad_abs_mean": 0.013767094351351261,
+            "grad_abs_median": 0.013952720910310745,
+            "control_abs_mean": 0.07604911294155137,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "AAPL",
+            "mean_price": 202.3777215,
+            "V_min": 7.21962833404541,
+            "V_max": 18.516786575317383,
+            "V_range": 11.297158241271973,
+            "grad_abs_mean": 0.009757335297763348,
+            "grad_abs_median": 0.009625955484807491,
+            "control_abs_mean": 0.04901931848370667,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "TSLA",
+            "mean_price": 252.1454955,
+            "V_min": -5.663515090942383,
+            "V_max": 18.509723663330078,
+            "V_range": 24.17323875427246,
+            "grad_abs_mean": 0.0025097159668803215,
+            "grad_abs_median": 0.002241365611553192,
+            "control_abs_mean": 0.009689754843927539,
+            "no_trade_frac": 0.02
+          },
+          {
+            "asset": "MSFT",
+            "mean_price": 376.4774862500001,
+            "V_min": 5.102983474731445,
+            "V_max": 17.588802337646484,
+            "V_range": 12.485818862915039,
+            "grad_abs_mean": 0.02267061546444893,
+            "grad_abs_median": 0.022898197174072266,
+            "control_abs_mean": 0.059994327260946376,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "QQQ",
+            "mean_price": 452.096614,
+            "V_min": -26.49570083618164,
+            "V_max": 15.76195240020752,
+            "V_range": 42.257652282714844,
+            "grad_abs_mean": 0.034641873091459274,
+            "grad_abs_median": 0.03518112748861313,
+            "control_abs_mean": 0.07636043438961942,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "SPY",
+            "mean_price": 535.6008325,
+            "V_min": -1.098753809928894,
+            "V_max": 12.971789360046387,
+            "V_range": 14.07054328918457,
+            "grad_abs_mean": 0.04561514034867287,
+            "grad_abs_median": 0.04605197533965111,
+            "control_abs_mean": 0.08499102808260758,
+            "no_trade_frac": 0.0
+          }
+        ],
+        "seed": 0,
+        "train_time_s": 85.0605782000348,
+        "spearman_price_vs_abs_grad": 0.11666666666666667,
+        "spearman_price_vs_V_range": 0.13333333333333333,
+        "spearman_price_vs_no_trade": 0.9,
+        "grad_abs_mean": 0.023823247498108283
+      },
+      {
+        "per_asset": [
+          {
+            "asset": "OXY",
+            "mean_price": 41.50791875,
+            "V_min": 9.549585342407227,
+            "V_max": 14.043977737426758,
+            "V_range": 4.494392395019531,
+            "grad_abs_mean": 0.03207109123468399,
+            "grad_abs_median": 0.03189484402537346,
+            "control_abs_mean": 0.7832406800980274,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "NVDA",
+            "mean_price": 104.9737065,
+            "V_min": -108.18083953857422,
+            "V_max": 15.59450626373291,
+            "V_range": 123.77534484863281,
+            "grad_abs_mean": 0.02714860439300537,
+            "grad_abs_median": 0.027132544666528702,
+            "control_abs_mean": 0.2593123168553375,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "GOOGL",
+            "mean_price": 154.16910425,
+            "V_min": 9.906898498535156,
+            "V_max": 16.910417556762695,
+            "V_range": 7.003519058227539,
+            "grad_abs_mean": 0.02200901322066784,
+            "grad_abs_median": 0.021969566121697426,
+            "control_abs_mean": 0.142845381739206,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "AMZN",
+            "mean_price": 182.14909049999997,
+            "V_min": 2.960719585418701,
+            "V_max": 17.704971313476562,
+            "V_range": 14.744251251220703,
+            "grad_abs_mean": 0.01865256018936634,
+            "grad_abs_median": 0.01876472681760788,
+            "control_abs_mean": 0.10270661831365474,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "AAPL",
+            "mean_price": 202.33531974999997,
+            "V_min": -11.231257438659668,
+            "V_max": 18.032407760620117,
+            "V_range": 29.26366424560547,
+            "grad_abs_mean": 0.01613396592438221,
+            "grad_abs_median": 0.016177553683519363,
+            "control_abs_mean": 0.08036878747985414,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "TSLA",
+            "mean_price": 252.58400675000001,
+            "V_min": -2.8625307083129883,
+            "V_max": 18.059402465820312,
+            "V_range": 20.921932220458984,
+            "grad_abs_mean": 0.008206280879676342,
+            "grad_abs_median": 0.008574140258133411,
+            "control_abs_mean": 0.03284823350522004,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "MSFT",
+            "mean_price": 376.043042,
+            "V_min": 11.648439407348633,
+            "V_max": 18.67066192626953,
+            "V_range": 7.022222518920898,
+            "grad_abs_mean": 0.008960300125181675,
+            "grad_abs_median": 0.008834969252347946,
+            "control_abs_mean": 0.023616800219434263,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "QQQ",
+            "mean_price": 453.2197382500001,
+            "V_min": 8.78219985961914,
+            "V_max": 17.9604434967041,
+            "V_range": 9.178243637084961,
+            "grad_abs_mean": 0.021181071177124977,
+            "grad_abs_median": 0.021355319768190384,
+            "control_abs_mean": 0.04650002691917022,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "SPY",
+            "mean_price": 535.751771,
+            "V_min": -2.9109222888946533,
+            "V_max": 16.258756637573242,
+            "V_range": 19.169679641723633,
+            "grad_abs_mean": 0.033501915633678436,
+            "grad_abs_median": 0.033521637320518494,
+            "control_abs_mean": 0.0623235363147117,
+            "no_trade_frac": 0.0
+          }
+        ],
+        "seed": 1,
+        "train_time_s": 83.71710110001732,
+        "spearman_price_vs_abs_grad": -0.21666666666666667,
+        "spearman_price_vs_V_range": 0.15,
+        "spearman_price_vs_no_trade": 1.0,
+        "grad_abs_mean": 0.020873866975307465
+      },
+      {
+        "per_asset": [
+          {
+            "asset": "OXY",
+            "mean_price": 41.633306499999996,
+            "V_min": 0.8587197065353394,
+            "V_max": 5.228014945983887,
+            "V_range": 4.369295120239258,
+            "grad_abs_mean": 0.02534893900156021,
+            "grad_abs_median": 0.02536684088408947,
+            "control_abs_mean": 0.6166869140768678,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "NVDA",
+            "mean_price": 105.208966,
+            "V_min": -82.823486328125,
+            "V_max": 6.570951461791992,
+            "V_range": 89.39443969726562,
+            "grad_abs_mean": 0.020358100533485413,
+            "grad_abs_median": 0.019996419548988342,
+            "control_abs_mean": 0.19413436154434213,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "GOOGL",
+            "mean_price": 153.807376,
+            "V_min": 2.212043285369873,
+            "V_max": 7.510725975036621,
+            "V_range": 5.298682689666748,
+            "grad_abs_mean": 0.01509870309382677,
+            "grad_abs_median": 0.015111196786165237,
+            "control_abs_mean": 0.09821777160710546,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "AMZN",
+            "mean_price": 182.28787625,
+            "V_min": 0.8182770609855652,
+            "V_max": 7.981309413909912,
+            "V_range": 7.163032531738281,
+            "grad_abs_mean": 0.011772564612329006,
+            "grad_abs_median": 0.011754246428608894,
+            "control_abs_mean": 0.0647886213470733,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "AAPL",
+            "mean_price": 202.54533774999996,
+            "V_min": -3.591973304748535,
+            "V_max": 8.210803031921387,
+            "V_range": 11.802776336669922,
+            "grad_abs_mean": 0.009301308542490005,
+            "grad_abs_median": 0.009236352518200874,
+            "control_abs_mean": 0.04653950531786775,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "TSLA",
+            "mean_price": 252.95227975,
+            "V_min": -72.8721694946289,
+            "V_max": 8.164852142333984,
+            "V_range": 81.03701782226562,
+            "grad_abs_mean": 0.0034491270780563354,
+            "grad_abs_median": 0.002554737962782383,
+            "control_abs_mean": 0.01378430263502997,
+            "no_trade_frac": 0.025
+          },
+          {
+            "asset": "MSFT",
+            "mean_price": 376.27858224999994,
+            "V_min": 5.597675323486328,
+            "V_max": 7.811983108520508,
+            "V_range": 2.2143077850341797,
+            "grad_abs_mean": 0.015409309417009354,
+            "grad_abs_median": 0.0156104676425457,
+            "control_abs_mean": 0.04073210313484186,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "QQQ",
+            "mean_price": 453.3587465,
+            "V_min": 2.99715256690979,
+            "V_max": 6.53437614440918,
+            "V_range": 3.5372235774993896,
+            "grad_abs_mean": 0.02657700516283512,
+            "grad_abs_median": 0.026928899809718132,
+            "control_abs_mean": 0.05834334466572875,
+            "no_trade_frac": 0.0
+          },
+          {
+            "asset": "SPY",
+            "mean_price": 535.829408,
+            "V_min": -28.14105987548828,
+            "V_max": 4.24724817276001,
+            "V_range": 32.388309478759766,
+            "grad_abs_mean": 0.03731464222073555,
+            "grad_abs_median": 0.03822275623679161,
+            "control_abs_mean": 0.06935373891975968,
+            "no_trade_frac": 0.0025
+          }
+        ],
+        "seed": 2,
+        "train_time_s": 83.19986639998388,
+        "spearman_price_vs_abs_grad": 0.23333333333333334,
+        "spearman_price_vs_V_range": -0.13333333333333333,
+        "spearman_price_vs_no_trade": 0.9,
+        "grad_abs_mean": 0.018292188851369753
+      }
+    ]
+  }
+}

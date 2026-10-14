@@ -1,0 +1,25 @@
+# Exact versions the published results were produced with.
+#
+# Platform: Windows x64, Python 3.11.5 (Anaconda distribution).
+# Install with:  python -m pip install -r requirements.txt
+#
+# The pins are deliberately exact rather than ranges. Two of them are load-bearing for
+# reproducibility, not just convenience:
+#   * numpy is pinned below 2.0. The code uses np.trapz, which numpy 2.0 removed.
+#   * matplotlib's font cache location matters on Windows, where the default is not always
+#     writable -- see the MPLCONFIGDIR note in README.md.
+#
+# torch: the pin below is the CUDA 12.6 build used here. On a machine without a suitable GPU,
+# install the CPU build from https://pytorch.org/get-started/locally/ instead -- the pins for the
+# other packages still apply. Only the neural experiments (src/pinn.py, src/pinn_pi.py,
+# src/deep_bsde.py, src/exp_dimension.py, src/exp_highdim.py, src/exp_alpha.py --neural) need
+# torch at all; the verification suite and every grid experiment run without it.
+torch==2.7.1
+numpy==1.24.3
+scipy==1.11.1
+pandas==2.0.3
+matplotlib==3.7.2
+
+# Optional. src/verify_all.py checks for tqdm and reports it as an optional dependency rather
+# than failing if it is absent.
+tqdm

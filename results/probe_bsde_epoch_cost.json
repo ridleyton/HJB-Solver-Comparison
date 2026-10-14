@@ -1,0 +1,51 @@
+{
+  "rows": [
+    {
+      "p": 1,
+      "sec_per_epoch": 0.15429407500778325,
+      "ratio_to_p1": 1.0,
+      "n_params": 12737,
+      "flops_per_epoch_est": 3912806400,
+      "n_steps": 50,
+      "n_paths": 1024
+    },
+    {
+      "p": 2,
+      "sec_per_epoch": 0.11588763748295605,
+      "ratio_to_p1": 0.7510828751986114,
+      "n_params": 12866,
+      "flops_per_epoch_est": 3952435200,
+      "n_steps": 50,
+      "n_paths": 1024
+    },
+    {
+      "p": 4,
+      "sec_per_epoch": 0.11167163751088083,
+      "ratio_to_p1": 0.7237584301616743,
+      "n_params": 13124,
+      "flops_per_epoch_est": 4031692800,
+      "n_steps": 50,
+      "n_paths": 1024
+    },
+    {
+      "p": 8,
+      "sec_per_epoch": 0.11298613747931086,
+      "ratio_to_p1": 0.7322778756968559,
+      "n_params": 13640,
+      "flops_per_epoch_est": 4190208000,
+      "n_steps": 50,
+      "n_paths": 1024
+    },
+    {
+      "p": 16,
+      "sec_per_epoch": 0.1256641249929089,
+      "ratio_to_p1": 0.8144455643327191,
+      "n_params": 14672,
+      "flops_per_epoch_est": 4507238400,
+      "n_steps": 50,
+      "n_paths": 1024
+    }
+  ],
+  "epochs_timed": 8,
+  "device": "cuda"
+}

@@ -1,0 +1,18 @@
+{
+  "credentials": [],
+  "absolute_paths": [],
+  "intermediates": [
+    "results/exp_arch_ablation.log (4,380 B)",
+    "results/exp_bsde_dims.log (6,396 B)",
+    "results/exp_bsde_dims_d8.log (4,032 B)",
+    "results/exp_bsde_ns200_conv.log (7,464 B)",
+    "results/exp_bsde_ns200_seed7.log (7,478 B)",
+    "results/exp_bsde_ns50_conv.log (5,826 B)",
+    "results/exp_bsde_steps.log (16,862 B)"
+  ],
+  "notes": [
+    "scanned 183 text files, 38.1 MB total",
+    "largest files: data_causal/SPY_causal.csv (2.5 MB), data_causal/TSLA_causal.csv (2.4 MB), data_causal/QQQ_causal.csv (2.4 MB), data_causal/MSFT_causal.csv (2.4 MB), data_causal/AMZN_causal.csv (2.4 MB)",
+    "NOT checked: whether the repo is public, whether the licence is right, and whether a credential was EVER exposed. A checker cannot un-publish a secret; if one was committed at any point it must be rotated, not deleted."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "n_steps": 50,
+  "epochs": 1000,
+  "n_paths": 1024,
+  "rows": [
+    {
+      "seed": 999999,
+      "width": 1024,
+      "rollout": 0.005581710021942854,
+      "terminal_batch": 0.005581710021942854,
+      "ratio": 1.0
+    },
+    {
+      "seed": 424242,
+      "width": 1024,
+      "rollout": 0.005581126548349857,
+      "terminal_batch": 0.005581126548349857,
+      "ratio": 1.0
+    },
+    {
+      "seed": 7,
+      "width": 1024,
+      "rollout": 0.005583096761256456,
+      "terminal_batch": 0.005583096761256456,
+      "ratio": 1.0
+    },
+    {
+      "seed": 12345,
+      "width": 1024,
+      "rollout": 0.005578267853707075,
+      "terminal_batch": 0.005578267853707075,
+      "ratio": 1.0
+    }
+  ],
+  "agree": true
+}

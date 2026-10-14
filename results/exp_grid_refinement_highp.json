@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "timestamp": "2026-09-19 12:30:13",
+    "solver": "Finite Difference (explicit, tensor-product grid)",
+    "reference": "closed-form matrix Riccati solution",
+    "target_r2": 0.9999,
+    "note": "Cost model: time step is CFL-limited by the mesh spacing, so at fixed domain the work scales as N^(p+1)."
+  },
+  "runs": [
+    {
+      "p": 4,
+      "N": 9,
+      "n_grid_points": 6561,
+      "n_time_steps": 168,
+      "solve_time_s": 0.27243160002399236,
+      "value_r2": 0.9967793884626333,
+      "value_mse": 2.2374999937550566e-06,
+      "control_r2": 0.9738995139331572
+    },
+    {
+      "p": 4,
+      "N": 13,
+      "n_grid_points": 28561,
+      "n_time_steps": 253,
+      "solve_time_s": 1.3279602000257,
+      "value_r2": 0.9993359508305857,
+      "value_mse": 4.6134406313167047e-07,
+      "control_r2": 0.9892524960156908
+    },
+    {
+      "p": 4,
+      "N": 17,
+      "n_grid_points": 83521,
+      "n_time_steps": 336,
+      "solve_time_s": 10.591439399984665,
+      "value_r2": 0.9997944007809274,
+      "value_mse": 1.4283878886153047e-07,
+      "control_r2": 0.9937953193399379
+    },
+    {
+      "p": 4,
+      "N": 21,
+      "n_grid_points": 194481,
+      "n_time_steps": 420,
+      "solve_time_s": 31.71021519997157,
+      "value_r2": 0.999919444448247,
+      "value_mse": 5.596547253619496e-08,
+      "control_r2": 0.995850947464713
+    },
+    {
+      "p": 5,
+      "N": 9,
+      "n_grid_points": 59049,
+      "n_time_steps": 168,
+      "solve_time_s": 5.493692600051872,
+      "value_r2": 0.9965921766359455,
+      "value_mse": 3.4580376347276412e-06,
+      "control_r2": 0.9737358834992577
+    },
+    {
+      "p": 5,
+      "N": 11,
+      "n_grid_points": 161051,
+      "n_time_steps": 210,
+      "solve_time_s": 16.500554799917154,
+      "value_r2": 0.9985403375646987,
+      "value_mse": 1.481170558460134e-06,
+      "control_r2": 0.9841214572759882
+    },
+    {
+      "p": 5,
+      "N": 13,
+      "n_grid_points": 371293,
+      "n_time_steps": 253,
+      "solve_time_s": 44.009626999963075,
+      "value_r2": 0.999296052952319,
+      "value_mse": 7.14319706065936e-07,
+      "control_r2": 0.9892001619845132
+    },
+    {
+      "p": 5,
+      "N": 17,
+      "n_grid_points": 1419857,
+      "n_time_steps": 336,
+      "solve_time_s": 224.16882489994168,
+      "value_r2": 0.9997831540015443,
+      "value_mse": 2.2004122382322025e-07,
+      "control_r2": 0.9937270095264817
+    },
+    {
+      "p": 5,
+      "N": 21,
+      "n_grid_points": 4084101,
+      "n_time_steps": 420,
+      "solve_time_s": 864.8725118000293,
+      "value_r2": 0.9999135921252221,
+      "value_mse": 8.768109464549343e-08,
+      "control_r2": 0.9959008504287432
+    }
+  ],
+  "summary": {
+    "4": {
+      "N_star": 21,
+      "n_grid_points": 194481,
+      "time_s": 31.71021519997157,
+      "value_r2": 0.999919444448247,
+      "feasible_at_target": true
+    },
+    "5": {
+      "N_star": 21,
+      "n_grid_points": 4084101,
+      "time_s": 864.8725118000293,
+      "value_r2": 0.9999135921252221,
+      "feasible_at_target": true
+    }
+  }
+}
