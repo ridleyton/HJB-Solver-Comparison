@@ -1,0 +1,89 @@
+{
+  "repo": "ridleyton/HJB-Solver-Comparison",
+  "visibility": "public",
+  "files_in_tree": 105,
+  "scanned": 57,
+  "hits": [],
+  "largest": [
+    [
+      289377,
+      "paper/main.pdf"
+    ],
+    [
+      281957,
+      "paper/IEEEtran.cls"
+    ],
+    [
+      126932,
+      "figures/fig1_accuracy_and_cost.png"
+    ],
+    [
+      124274,
+      "results/exp_ablation.json"
+    ],
+    [
+      121643,
+      "figures/fig3_ood_no_trade.png"
+    ],
+    [
+      79622,
+      "figures/fig4_defect_ablation.png"
+    ],
+    [
+      41289,
+      "paper/main.tex"
+    ],
+    [
+      39070,
+      "src/make_tables.py"
+    ],
+    [
+      38721,
+      "results/exp_control_order.json"
+    ],
+    [
+      29733,
+      "src/solvers.py"
+    ],
+    [
+      29227,
+      "results/exp_control_floor.json"
+    ],
+    [
+      24585,
+      "results/exp_ood.json"
+    ],
+    [
+      24154,
+      "figures/fig1_accuracy_and_cost.pdf"
+    ],
+    [
+      23634,
+      "src/ac_problem.py"
+    ],
+    [
+      20587,
+      "figures/fig3_ood_no_trade.pdf"
+    ],
+    [
+      20254,
+      "STATUS.md"
+    ],
+    [
+      20205,
+      "src/pinn_pi.py"
+    ],
+    [
+      19894,
+      "figures/fig4_defect_ablation.pdf"
+    ],
+    [
+      18395,
+      "src/exp_ood.py"
+    ],
+    [
+      18196,
+      "results/exp_dimension.json"
+    ]
+  ]
+}
