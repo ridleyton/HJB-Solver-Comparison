@@ -31,8 +31,8 @@
     "results/exp_nonpolynomial.log (7,314 B)"
   ],
   "notes": [
-    "scanned 242 text files, 39.2 MB total",
-    "largest files: data_causal/SPY_causal.csv (2.5 MB), data_causal/TSLA_causal.csv (2.4 MB), data_causal/QQQ_causal.csv (2.4 MB), data_causal/MSFT_causal.csv (2.4 MB), data_causal/AMZN_causal.csv (2.4 MB)",
+    "scanned 224 text files, 4.8 MB total",
+    "largest files: paper/main.pdf (0.5 MB), paper/IEEEtran.cls (0.3 MB), figures/fig_j2_bsde_stopping.png (0.2 MB), figures/fig_j1_control_order.png (0.2 MB), results/exp_ablation.json (0.1 MB)",
     "NOT checked: whether the repo is public, whether the licence is right, and whether a credential was EVER exposed. A checker cannot un-publish a secret; if one was committed at any point it must be rotated, not deleted."
   ]
 }

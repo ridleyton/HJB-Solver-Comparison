@@ -43,7 +43,7 @@
       "path": "paper\\main.pdf",
       "present": true,
       "required_at_submission": true,
-      "size": 499445
+      "size": 499434
     },
     {
       "item": "Highlights",
@@ -57,7 +57,7 @@
       "path": "paper\\journal\\cover_letter.pdf",
       "present": true,
       "required_at_submission": true,
-      "size": 84537
+      "size": 84524
     },
     {
       "item": "Cover letter (source)",
@@ -71,7 +71,7 @@
       "path": "paper\\journal\\declarations.pdf",
       "present": true,
       "required_at_submission": true,
-      "size": 79423
+      "size": 79411
     },
     {
       "item": "Declarations (source)",
@@ -92,14 +92,14 @@
       "path": "paper\\journal\\README.md",
       "present": true,
       "required_at_submission": true,
-      "size": 6162
+      "size": 6372
     },
     {
       "item": "Conversion recipe",
       "path": "paper\\journal\\README.md",
       "present": true,
       "required_at_submission": false,
-      "size": 6162
+      "size": 6372
     }
   ],
   "missing_required": []

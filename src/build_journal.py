@@ -66,14 +66,24 @@ def find_pdflatex(explicit: str | None) -> str | None:
 
 
 def compile_tex(tex: pathlib.Path, engine: str) -> dict:
-    """Two passes, so cross-references settle; reports only what matters."""
+    """Two passes, so cross-references settle; reports only what matters.
+
+    The dates are pinned for the same reason build_paper.py pins them, and the reason is measured:
+    without it, two consecutive builds of the same source differ in the embedded creation/modification
+    strings, so every rebuild of the submission package produced three "modified" PDFs of identical
+    size and the repository churned. `pdflatex` honours SOURCE_DATE_EPOCH only when
+    FORCE_SOURCE_DATE is also set.
+    """
     work = tex.parent
     log = work / (tex.stem + ".log")
+    env = dict(os.environ)
+    env["SOURCE_DATE_EPOCH"] = "1767225600"          # 2026-01-01T00:00:00Z, as in build_paper.py
+    env["FORCE_SOURCE_DATE"] = "1"
     ok = True
     detail = ""
     for _ in range(2):
         proc = subprocess.run([engine, "-interaction=nonstopmode", "-halt-on-error", tex.name],
-                              cwd=str(work), capture_output=True, text=True)
+                              cwd=str(work), capture_output=True, text=True, env=env)
         if proc.returncode != 0:
             ok = False
             tail = (proc.stdout or "").strip().splitlines()[-12:]
