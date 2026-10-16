@@ -167,6 +167,11 @@ and its reduced budget wherever that comparison is reported.
 
 ---
 
+## Verification
+
+What is checked, by what, and what is NOT covered: see `VERIFICATION.md`. The short
+version is `python src/verify_all.py` (23 checks, no GPU, no market data).
+
 ## Running
 
 Environment: Python 3.11.5 with the exact pins in `requirements.txt` (torch 2.7.1+cu126,

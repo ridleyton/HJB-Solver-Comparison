@@ -51,14 +51,15 @@ def record(name: str, status: str, detail: str = "") -> None:
 
 
 def run_script(name: str, path: Path, timeout: int = 900,
-               pass_marker: str | None = None) -> bool:
+               pass_marker: str | None = None,
+               extra_args: list[str] | None = None) -> bool:
     """Run a module as a subprocess and decide pass/fail from its exit code."""
     if not path.exists():
         record(name, SKIP, f"{path.name} not found")
         return False
     t0 = time.perf_counter()
     try:
-        proc = subprocess.run([sys.executable, str(path)], cwd=str(ROOT),
+        proc = subprocess.run([sys.executable, str(path)] + list(extra_args or []), cwd=str(ROOT),
                               capture_output=True, text=True, timeout=timeout,
                               env=os.environ.copy())
     except subprocess.TimeoutExpired:
@@ -284,6 +285,14 @@ def main() -> int:
         # it, one cross-reference style, no sentence over 80 words.
         run_script("prose consistency (floats, terminology, sentence length)",
                    SRC / "check_prose_consistency.py", pass_marker="Nothing flagged")
+        # Every method, on one small instance, against the claim the paper makes about it -- including
+        # the two negative results, which are asserted AS reported so a future change that alters them
+        # is flagged rather than silently accepted. --full adds the PINN at a budget where the paper's
+        # accuracy claim applies (about 150s on CPU).
+        run_script("method claims matrix (every solver)",
+                   SRC / "check_methods_smoke.py",
+                   pass_marker="METHOD CLAIMS MATRIX COMPLETE", timeout=1200,
+                   extra_args=["--thorough"] if args.full else None)
         # NOTE: exp_lsmc_basis.py is deliberately NOT in this harness. It is a 6-minute experiment
         # whose largest-amplitude case sits in a failing regime where the value moves by up to 0.07
         # across process runs, so re-running it here would make the harness flaky and would overwrite
