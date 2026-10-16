@@ -1,7 +1,7 @@
-# Value Accuracy Is Not Control Accuracy 鈥?rework
+# Value Accuracy Is Not Control Accuracy — rework
 
 Reproducible code for the CISP-BMEI 2026 submission *"Value Accuracy Is Not Control Accuracy:
-Reconstruction Order Governs Control Accuracy in Hamilton鈥揓acobi鈥揃ellman Solvers."*
+Reconstruction Order Governs Control Accuracy in Hamilton–Jacobi–Bellman Solvers."*
 
 A from-scratch rework of an audited undergraduate thesis on SHoP-style HJB solvers for
 high-frequency trading. **No file in the original thesis package is modified by anything here.**
@@ -26,18 +26,18 @@ summarised in the paper's Section IV. In brief:
 
 | Defect | Where | Effect |
 |---|---|---|
-| D1 ordering | minute CSVs are newest-first and were never sorted | `price[i-1]` is the *next* minute; summed price return is +0.037950 in file order vs 鈭?.021709 chronologically 鈥?the P&L sign is inverted |
+| D1 ordering | minute CSVs are newest-first and were never sorted | `price[i-1]` is the *next* minute; summed price return is +0.037950 in file order vs −0.021709 chronologically — the P&L sign is inverted |
 | D2 same-bar leak | position from bar *i* multiplied by bar *i*'s return | the strategy sees the move it trades |
 | D3 control sign | `-grad V / (2 kappa)` in three places | every "buy" signal (19.1% of minutes on SPY) has a negative rate: a strict pointwise inversion |
 | D4 dollar scaling | the `1/(2 kappa S)` factor omits `S` | wrong control magnitude |
 | D5 position vs rate | `position = clip(rate, -1, 1)` | position is not the integral of the rate, contrary to the model's own `dq = v dt` (the original's notation; the paper writes this `dx = u dt`) |
 | D6 cost units | currency costs subtracted from a return series | costs swamp gross P&L by orders of magnitude |
 | D7 annualisation | minute returns scaled by `sqrt(252)` | every volatility and Sharpe ratio is uninterpretable |
-| D8 input scaling | trained on price 鈭?[20, 30], evaluated at 40鈥?50 | all cross-sectional conclusions are extrapolation artefacts |
+| D8 input scaling | trained on price ∈ [20, 30], evaluated at 40–50 | all cross-sectional conclusions are extrapolation artefacts |
 
 Two further pipeline defects are also corrected: features were computed non-causally
 (`shift(1)` on a newest-first file; VWAP as a global cumulative sum), and the "spread" input was
-the high鈥搇ow range, which is not a bid鈥揳sk spread.
+the high–low range, which is not a bid–ask spread.
 
 Additionally, the original validated solver accuracy against Policy Iteration itself, making
 that method zero-error by construction, and its implemented model had no inventory state.
@@ -46,30 +46,30 @@ that method zero-error by construction, and its implemented model had no invento
 
 ## Design of the corrected benchmark
 
-**Problem.** Multi-asset Almgren鈥揅hriss optimal execution in linear鈥搎uadratic form:
+**Problem.** Multi-asset Almgren–Chriss optimal execution in linear–quadratic form:
 
 ```
-state   x 鈭?R^p   (inventory)
-control u 鈭?R^p   (trading rate)
-dx = (A x + B u) dt + 危 dW
+state   x ∈ R^p   (inventory)
+control u ∈ R^p   (trading rate)
+dx = (A x + B u) dt + Σ dW
 
-max_u  E[ -陆 鈭?(x'Qx + u'Ru) dt  -  陆 x_T' Q_T x_T ]
-   R = 畏 I    temporary market impact
-   Q = 位蟽虏 I  inventory risk penalty
+max_u  E[ -½ ∫(x'Qx + u'Ru) dt  -  ½ x_T' Q_T x_T ]
+   R = η I    temporary market impact
+   Q = λσ² I  inventory risk penalty
 ```
 
-**Analytic reference.** With the quadratic ansatz `V = -陆 x'P(t)x + c(t)`:
+**Analytic reference.** With the quadratic ansatz `V = -½ x'P(t)x + c(t)`:
 
 ```
--峁?= Q + P A + A'P - P B R鈦宦?B' P ,   P(T) = Q_T
- 膵 = 陆 tr(危危' P)                     ,   c(T) = 0
-u*(x,t) = -R鈦宦?B' P(t) x
+-Ṗ = Q + P A + A'P - P B R⁻¹B' P ,   P(T) = Q_T
+ ċ = ½ tr(ΣΣ' P)                     ,   c(T) = 0
+u*(x,t) = -R⁻¹B' P(t) x
 ```
 
 Having `u*` in closed form is what makes the control **sign** falsifiable rather than assumed.
 
 **Default parameters** (well scaled so the explicit time step is CFL-limited realistically):
-`畏 = 0.01`, `位蟽虏 = 0.01`, `Q_T = 0.1`, `蟽 = 0.01`, `T = 1` 鈬?`k = 1`.
+`η = 0.01`, `λσ² = 0.01`, `Q_T = 0.1`, `σ = 0.01`, `T = 1` ⇒ `k = 1`.
 
 ---
 
@@ -220,7 +220,7 @@ python src\make_figures.py
 python src\build_paper.py --build-dir paper_build
 ```
 
-`--pi-max-p` caps Howard policy iteration because it costs ~13鈥?5 grid sweeps per solve; the
+`--pi-max-p` caps Howard policy iteration because it costs ~13–15 grid sweeps per solve; the
 grid-cost scaling beyond that dimension is reported as an extrapolation.
 
 ---
@@ -233,35 +233,35 @@ grid-cost scaling beyond that dimension is reported as an extrapolation.
 |---|---|
 | Riccati `P(t)` vs finite-`Q_T` closed form | max err 9.8e-12 |
 | `P(T) = Q_T` | exact |
-| control law vs `-P(t)q/畏` | max err 8.9e-16 |
+| control law vs `-P(t)q/η` | max err 8.9e-16 |
 | control negative for positive inventory | all sampled states |
-| `Q_T鈫掆垶` limit recovers `畏k路coth(k(T-t))` | rel err 1.0e-9 |
-| same limit recovers `q鈧€ sinh(k(T-t))/sinh(kT)` | max err 4.3e-9 |
+| `Q_T→∞` limit recovers `ηk·coth(k(T-t))` | rel err 1.0e-9 |
+| same limit recovers `q₀ sinh(k(T-t))/sinh(kT)` | max err 4.3e-9 |
 | `p = 1,2,3,5,8`: `P` symmetric PSD | pass |
 
 `test_backtest.py` checks the accounting against hand-computed values (17 checks), including
 that the corrected annualisation matches a manual daily aggregation to 1e-12, and that the
-control sign convention is right (positive gradient 鈬?positive rate under the HJB, negative
+control sign convention is right (positive gradient ⇒ positive rate under the HJB, negative
 under the original defect).
 
 `test_experiment_paths.py` checks the GPU experiments' plumbing on CPU, including the
-rescaling chain rule and a sanity check that an unscaled gradient would fail the test by ~50脳
+rescaling chain rule and a sanity check that an unscaled gradient would fail the test by ~50×
 (so the test has power).
 
 ### Bugs found and fixed *by* verification
 
-These were all silent 鈥?none would have raised an exception:
+These were all silent — none would have raised an exception:
 
 1. **Grid solvers returned the `t=0` slice for every `t`** (no snapshot storage). A first
    accuracy measurement reported a spurious MSE of 3e-13 purely because the randomly drawn
    evaluation time happened to land near 0.
 2. **Policy iteration collapsed the policy to a time-independent array.** The optimal policy
-   here is `u*(x,t) = -R鈦宦笲'P(t)x` with strongly time-dependent `P(t)`; the frozen-policy
+   here is `u*(x,t) = -R⁻¹B'P(t)x` with strongly time-dependent `P(t)`; the frozen-policy
    evaluation PDE was inconsistent near `t=T` and diverged.
 3. **Upwind direction inverted.** Central differencing of a frozen advection term is
    unconditionally unstable; a von Neumann analysis showed `u > 0` needs the *forward* stencil.
-4. **Corwin鈥揝chultz used the average of the two daily squared ranges instead of the sum**,
-   which makes `伪` identically zero 鈥?the estimator returned 0 for every asset.
+4. **Corwin–Schultz used the average of the two daily squared ranges instead of the sum**,
+   which makes `α` identically zero — the estimator returned 0 for every asset.
 5. **`_forward` in the OOD experiment built 1-D tensors** that `_enc` concatenated on `dim=1`.
 
 ---
@@ -270,8 +270,8 @@ These were all silent 鈥?none would have raised an exception:
 
 The paper deliberately excludes six numerical claims from the original thesis that could not
 be traced to any code path: the 1-D harmonic-oscillator and 2-D biharmonic accuracy tables
-(including an `R虏` metric that no function in the package computes), the terminal
-boundary-condition table, the trading-behaviour table, the "Spearman 蟻 = 1.0" claim, and the
+(including an `R²` metric that no function in the package computes), the terminal
+boundary-condition table, the trading-behaviour table, the "Spearman ρ = 1.0" claim, and the
 memory figures. None of them appears in the manuscript, and no value from them is cited.
 
 ## Building the manuscript

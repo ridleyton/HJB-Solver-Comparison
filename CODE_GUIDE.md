@@ -10,25 +10,28 @@ this file explains the *code*.
 
 ```powershell
 cd <path-to-this-repository>
-python src\verify_all.py            # ~5 seconds, CPU only
+python src\verify_all.py            # 23 checks, about 5 minutes, CPU only, no GPU, no market data
 ```
 
-It sets the two environment variables that this machine needs (see 搂5), checks what is installed,
-runs the three unit-test modules, then re-derives the paper's main numbers from scratch and prints
-them:
+It sets the two environment variables that this machine needs (see §5), checks what is installed,
+runs the unit-test modules, re-derives the paper's main numbers from scratch, then checks every
+method against the claim the paper makes about it, the 95 prose assertions, the orphan-result audit
+and the proofread pass. The headline part looks like this:
 
 ```
   closed form: |P(T) - Q_T| = 0.0e+00  (must be 0)
-  FDM  p=2 N=21: 0.178s  value R2=+0.999929  control R2=+0.99601
-  PI   p=2 N=15: 0.800s  value R2=+0.975005
-  extraction on a quartic: multilinear 1.11e-03   cubic 1.41e-07   (7926x better)
-  15 passed, 0 failed, 1 skipped
+  FDM  p=2 N=21: 0.074s  value R2=+0.999929  control R2=+0.99601
+  PI   p=2 N=15: 0.364s  value R2=+0.975005
+  extraction on a quartic: multilinear 3.34e-02   cubic 3.75e-04   (relative L2; 89x better)
+  [PASS] method claims matrix (every solver)   33.9s
+  23 passed, 0 failed, 1 skipped
 ```
 
-Add `--full` to include a short PINN training run (needs the GPU, ~10 s).
+Add `--full` for the PINN at a budget where the paper's accuracy claim applies (6000 epochs, about
+3 minutes on CPU). What each check covers, and what none of them covers, is in `VERIFICATION.md`.
 
 If that prints `Everything verified`, the checkout is reproducible and you can trust what follows.
-If it fails, fix that first 鈥?nothing else will be meaningful.
+If it fails, fix that first — nothing else will be meaningful.
 
 ---
 
@@ -40,11 +43,15 @@ be scored against truth rather than against another solver.**
 ```
    ac_problem.py        the problem, AND its exact solution (a Riccati ODE)
         |
-        +--> solvers.py       three classical solvers, all scored by accuracy_metrics()
+        +--> solvers.py       the grid and probabilistic solvers, all scored the same way
         |      FiniteDifferenceSolver     explicit time stepping on a tensor grid
         |      PolicyIterationSolver      Howard's algorithm on the same grid
+        |      DeepBSDESolver             point-valued: trains V(x0) and Z along paths
         |
-        +--> pinn.py          one neural solver, same scoring
+        +--> pinn.py          the direct neural solver
+        +--> deep_splitting.py     one small network per time step (the modern BSDE variant)
+        +--> multilevel_picard.py  the Picard iteration as a multilevel Monte Carlo scheme
+        +--> exp_lsmc.py           regression Monte Carlo, the classical mesh-free baseline
         |
         +--> exp_*.py         drivers: sweep a parameter, call the solvers, write results/*.json
                  |
@@ -53,16 +60,18 @@ be scored against truth rather than against another solver.**
                           +--> build_paper.py               compile the manuscript
 ```
 
-`accuracy_metrics()` is the hinge. Every solver implements the same three-method interface 鈥?`solve()`, `value(X, t)`, `control(X, t)` 鈥?so the scoring code never knows which method it is
+`accuracy_metrics()` is the hinge. Every solver implements the same three-method interface — `solve()`, `value(X, t)`, `control(X, t)` — so the scoring code never knows which method it is
 testing. If you understand that interface you understand the whole architecture.
 
 ---
 
 ## 2. Reading order
 
-Read these five, in this order. Each one is self-contained and they build on each other.
+Read these seven, in this order. Each one is self-contained and they build on each other. The two
+added most recently (⑤ and ⑥) are worth reading even if you skip the methods: both check themselves
+against an analytic quantity before they are compared with anything.
 
-### 鈶?`src/ac_problem.py` (403 lines) 鈥?start here
+### ①`src/ac_problem.py` (487 lines) — start here
 
 The problem *and* the answer key. Read in this order:
 
@@ -70,59 +79,76 @@ The problem *and* the answer key. Read in this order:
 |---|---|
 | `ACProblem.__post_init__` | builds `Q`, `R`, `Q_T`, `A`, `B`. Note `hetero=True`: per-asset random coefficients, which is what makes the problem *non-separable* |
 | `domain()` | the state box, `[-1,1]^p` |
-| `hamiltonian_max()` | the sup over the control, done analytically: `u* = R鈦宦笲'鈭嘨`. **This is the only place the control is defined.** |
-| `reference()` 鈫?`_RiccatiReference` | integrates `-峁?= Q + PA + A'P - PBR鈦宦笲'P` backwards from `P(T)=Q_T` |
+| `hamiltonian_max()` | the sup over the control, done analytically: `u* = R⁻¹B'∇V`. **This is the only place the control is defined.** |
+| `reference()` → `_RiccatiReference` | integrates `-Ṗ = Q + PA + A'P - PBR⁻¹B'P` backwards from `P(T)=Q_T` |
 | `_RiccatiReference.P()` | the exact `P(t)`, interpolated from the integration |
-| `_RiccatiReference.control()` | `u* = -R鈦宦笲'P(t)x` 鈥?**the ground truth every solver is scored against** |
+| `_RiccatiReference.control()` | `u* = -R⁻¹B'P(t)x` — **the ground truth every solver is scored against** |
 | the `__main__` block | four self-checks against three independent closed forms. Run it: `python src/ac_problem.py` |
 
-**Key insight to take away:** the value function is quadratic, `V = -陆x'P(t)x + c(t)`. That is why
-the "is the value function a polynomial?" question matters for the paper 鈥?a cubic reconstruction
+**Key insight to take away:** the value function is quadratic, `V = -½x'P(t)x + c(t)`. That is why
+the "is the value function a polynomial?" question matters for the paper — a cubic reconstruction
 reproduces quadratics *exactly*, which is why the Merton experiment exists.
 
-### 鈶?`src/solvers.py` (445 lines) 鈥?the classical methods
+### ②`src/solvers.py` (779 lines) — the grid and probabilistic methods
 
 | What | Why it matters |
 |---|---|
-| `_GridSolver._build_grid` | the tensor grid. `self.N = n_grid**p` 鈥?this is the curse of dimensionality, in one line |
+| `_GridSolver._build_grid` | the tensor grid. `self.N = n_grid**p` — this is the curse of dimensionality, in one line |
 | `_GridSolver._stable_dt` | the CFL bound. Note it has *both* a diffusion and an advection limit; the advection one usually binds here |
-| `_GridSolver._sweep` | the backward time loop. `V = V + dt*(H + 陆蟽虏螖V)` 鈥?the "solve long" part |
+| `_GridSolver._sweep` | the backward time loop. `V = V + dt*(H + ½σ²ΔV)` — the "solve long" part |
 | `_GridSolver._spatial_interp` | **multilinear** interpolation. The paper's central argument is that this, not the grid, limits control accuracy |
 | `_GridSolver.control` | a central difference of that interpolant, with a fixed probe step. **This is the code the paper criticises** |
 | `FiniteDifferenceSolver.solve` | a probe pass to estimate `|u|`, then the real pass |
-| `PolicyIterationSolver` | Howard's algorithm: freeze the policy, solve the resulting *linear* PDE, improve. Read the docstring on `_sweep`'s `policy_snap` argument 鈥?the policy must be a function of `(x,t)`, and getting that wrong is a bug that was actually made here |
+| `PolicyIterationSolver` | Howard's algorithm: freeze the policy, solve the resulting *linear* PDE, improve. Read the docstring on `_sweep`'s `policy_snap` argument — the policy must be a function of `(x,t)`, and getting that wrong is a bug that was actually made here |
 | `accuracy_metrics` | **the hinge.** Computes `value_r2`, `control_r2`, `control_sign_agreement`, `value_err`, `control_err` |
 
-### 鈶?`src/exp_control_extraction.py` (356 lines) 鈥?the paper's central experiment
+### ③`src/exp_control_extraction.py` (356 lines) — the paper's central experiment
 
 Small file, big idea. Read the three extractors and compare them:
 
-- `extract_fd` 鈥?central difference on a **multilinear** interpolant (what `solvers.py` does)
-- `extract_cell` 鈥?the **exact** gradient of that same interpolant. Still second order. This is the
+- `extract_fd` — central difference on a **multilinear** interpolant (what `solvers.py` does)
+- `extract_cell` — the **exact** gradient of that same interpolant. Still second order. This is the
   proof that "being consistent with your interpolant" is not enough
-- `extract_spline` 鈥?central difference on a **cubic** interpolant. Fourth order
+- `extract_spline` — central difference on a **cubic** interpolant. Fourth order
 
 Then read `to_exact_nodes`, which is the trick that makes the experiment decisive: it puts the
 *analytic* value function on the grid, so the grid solution has zero error and everything that
 remains belongs to the extraction step.
 
-The `SYNTHETIC` dict at the bottom is why the result generalises 鈥?those test functions have known
+The `SYNTHETIC` dict at the bottom is why the result generalises — those test functions have known
 gradients, so the measured orders are properties of the *reconstruction*, not of this benchmark.
 
-### 鈶?`src/pinn.py` (351 lines) 鈥?the neural method
+### ④`src/pinn.py` (368 lines) — the neural method
 
 | What | Why it matters |
 |---|---|
 | the ansatz | `V = V_T(x) + (T-t)N(x,t)`, which imposes the terminal condition *exactly* rather than as a penalty |
 | the residual | the HJB residual, normalised by its value at initialisation so the loss is `O(1)` |
-| collocation sampling | biased towards `t=T` with `(1-u)^time_bias`, where `|鈭嘨|` is largest |
+| collocation sampling | biased towards `t=T` with `(1-u)^time_bias`, where `|∇V|` is largest |
 | `solve()` | **times the epoch loop.** This is why the paper's PINN numbers are *training* times, not inference |
 
-### 鈶?`src/backtest.py` + `src/preprocess_causal.py` 鈥?the real-data half
+### ⑤`src/deep_splitting.py` (473 lines) — one network per time step
+
+The modern member of the deep-BSDE family, and the one place in this repository where a scheme is
+validated against an **analytic conditional expectation** rather than against its own previous
+iterate: `validate_on_exact()` runs the recursion with the exact solution and reports the deviation,
+which is the check that caught two convention errors in the diagnostic that measured it. The same
+recursion with an exact quadratic regression is the control arm that shows the limitation is the
+learner rather than the scheme.
+
+### ⑥`src/multilevel_picard.py` (351 lines) — the classical high-dimensional method
+
+Equation (5) of Hutzenthaler–Jentzen–Kruse–Nguyen, with the gradient by central differences. Read
+`implementation_check()` first: it runs at a weak nonlinearity, where the Picard map is a contraction
+and the method's hypothesis holds, and refuses to report anything if it does not converge. The
+contraction sweep next to it is what locates the boundary between where the method works and where it
+diverges.
+
+### ⑦`src/backtest.py` + `src/preprocess_causal.py` — the real-data half
 
 Only needed if you care about the out-of-domain and defect-ablation results. `BacktestConfig` has
 one flag per historical defect; `ablation_configs()` builds the ablation table. `preprocess_causal`
-fixes the non-causal preprocessing (sorting, forward-looking VWAP, Corwin鈥揝chultz).
+fixes the non-causal preprocessing (sorting, forward-looking VWAP, Corwin–Schultz).
 
 ---
 
@@ -132,8 +158,8 @@ fixes the non-causal preprocessing (sorting, forward-looking VWAP, Corwin鈥揝c
 |---|---|
 | the math of the problem | `ac_problem.py`, docstring + `__main__` |
 | how a grid solver works | `solvers.py`: `_sweep`, `_stable_dt` |
-| **why control accuracy 鈮?value accuracy** | `exp_control_extraction.py` (whole file) |
-| how the experiments are structured | any `exp_*.py` 鈥?they all follow the same shape |
+| **why control accuracy ≠ value accuracy** | `exp_control_extraction.py` (whole file) |
+| how the experiments are structured | any `exp_*.py` — they all follow the same shape |
 | how a result becomes a table | `make_tables.py`, one `tab_*` function |
 | how the paper is compiled | `build_paper.py` |
 | the literature tooling | `extract_lit.py`, `scan_lit_*.py` (independent of the science) |
@@ -148,14 +174,14 @@ one-off tasks and are not part of the scientific pipeline.
 
 Each `exp_*.py` is standalone and writes `results/<name>.json`. They are all slow; start with the
 cheap ones. `KMP_DUPLICATE_LIB_OK` and `MPLCONFIGDIR` are handled by `verify_all.py` but you must
-set them yourself for a direct run (搂5).
+set them yourself for a direct run (§5).
 
 | Command | Time | What it produces |
 |---|---|---|
 | `python src/exp_grid_refinement.py` | ~2 min | the accuracy-matched grid resolution per dimension |
-| `python src/exp_control_extraction.py --p 2 --grids 11,15,21,27,35,45,61 --also-pde --synthetic` | ~1 min | **Table II** 鈥?the paper's central evidence |
+| `python src/exp_control_extraction.py --p 2 --grids 11,15,21,27,35,45,61 --also-pde --synthetic` | ~1 min | **Table II** — the paper's central evidence |
 | `python src/exp_control_order.py --dims 1,2,3` | ~5 min | control vs value convergence orders |
-| `python src/exp_dimension.py --dims 1,2,3,4,5 --epochs 6000 --seeds 0,1,2` | ~1 h | **Table I** 鈥?accuracy and cost vs dimension |
+| `python src/exp_dimension.py --dims 1,2,3,4,5 --epochs 6000 --seeds 0,1,2` | ~1 h | **Table I** — accuracy and cost vs dimension |
 | `python src/exp_highdim.py --dims 1,2,3,5,8,12,20 --epochs 8000` | ~30 min | the p=20 sweep |
 | `python src/exp_merton_extraction.py` | ~1 min | the non-polynomial confirmation |
 | `python src/exp_control_floor.py` | ~20 min | time vs space refinement |
@@ -182,48 +208,66 @@ $env:MPLCONFIGDIR="$PWD\.mplconfig"
 $env:PYTHONPATH="$PWD\src"
 ```
 
-- **`KMP_DUPLICATE_LIB_OK`** 鈥?Anaconda's MKL and PyTorch each ship an OpenMP runtime. Without this
+- **`KMP_DUPLICATE_LIB_OK`** — Anaconda's MKL and PyTorch each ship an OpenMP runtime. Without this
   the process dies with `OMP: Error #15` the moment both are loaded. It is a workaround, not a fix.
-- **`MPLCONFIGDIR`** 鈥?matplotlib writes a font cache to `~/.matplotlib`, which is not writable
+- **`MPLCONFIGDIR`** — matplotlib writes a font cache to `~/.matplotlib`, which is not writable
   here, so the first plot raises `PermissionError`.
-- **`PYTHONPATH`** 鈥?lets the modules import each other by bare name (`from ac_problem import ...`).
+- **`PYTHONPATH`** — lets the modules import each other by bare name (`from ac_problem import ...`).
 
 `verify_all.py` sets all three itself, which is the main reason to run it first.
 
 ---
 
-## 6. Reading it in VS Code
+## 6. Reading it in VS Code, and running it from there
 
-Open the **`rework` folder** (`File 鈫?Open Folder`), not the whole thesis directory 鈥?otherwise the
+Open the **`rework` folder** (`File → Open Folder`), not the whole thesis directory — otherwise the
 file tree is dominated by data and PDFs.
 
-**Extensions worth installing:** Python (Microsoft), Pylance, and *Better Comments* (colour-codes
-`# NOTE:` / `# BUG:` / `# TODO:` markers, which this code uses).
+**Already configured.** A local `.vscode/` folder (gitignored, because it carries this machine's paths
+— see `.gitignore`) selects the interpreter, sets `TEXLIVE_BIN`/`PYTHONIOENCODING`/`MPLCONFIGDIR` for
+every integrated terminal, hides build artefacts, and defines the tasks below. Recreate it on another
+machine by pointing `python.defaultInterpreterPath` at that machine's interpreter; nothing else in the
+repository depends on it.
 
-**The three features that will help most:**
+**Run anything with `Ctrl+Shift+B`** (`Terminal → Run Task`), which lists:
 
-1. **Outline view** (`Ctrl+Shift+O`, or the Outline panel in the Explorer sidebar). Every file here
-   has a module docstring and one class per concept, so the outline is a usable table of contents.
-   `Ctrl+Shift+O` then typing `control` jumps straight to a method.
+| Task | What it does |
+|---|---|
+| `verify: all checks` | `verify_all.py`, the 23-check harness (default task) |
+| `verify: method claims matrix` | every solver against the claim the paper makes about it, ~34s |
+| `verify: paper numbers` | the 95 prose assertions |
+| `build: tables` / `figures` / `manuscript PDF` / `submission package` | regenerate artefacts |
 
-2. **`F12` (Go to Definition) on `accuracy_metrics`, `reference()`, or `_sweep`.** This is the
-   fastest way to follow the architecture: start in an `exp_*.py`, jump into the solver, jump into
-   the problem.
+**Debug with `F5`** ("Debug the open script"): open any `exp_*.py`, set a breakpoint on a line, press
+`F5`. The configuration passes the same environment variables, keeps `justMyCode` off so you can step
+into the solvers, and runs in the integrated terminal so `print` output appears as it is produced.
+Every script is `argparse`-driven, so `--help` in the terminal lists its knobs.
 
-3. **Run Cell / the integrated terminal.** Select a block and `Shift+Enter` in a `.py` file runs it
-   in the interactive window 鈥?useful for poking at `ACProblem` without writing a script:
-   ```python
-   import sys; sys.path.insert(0, "src")
-   from ac_problem import ACProblem
-   prob = ACProblem(p=2, hetero=True, het_seed=1)
-   prob.Q, prob.domain()          # inspect the matrices
-   ```
+**Extensions.** Python, Pylance and debugpy are what make the above work and are the only ones this
+repository assumes. Two optional additions:
 
-**Watch out for:** the files use `# ----` section banners, so folding (`Ctrl+K Ctrl+0` to collapse
-all) gives you a clean skeleton of each file.
+* **Jupyter** (`ms-toolsai.jupyter`) — *not installed by default*, and without it the `# %%` / Run Cell
+  workflow below does not work. With it, you can select a block in any `.py` file (or add an explicit
+  `# %%` marker) and press `Shift+Enter` to run it against the live interpreter, which is the least
+  intrusive way to poke at the code: no new files, nothing diverges from what is committed.
+* **LaTeX Workshop** — navigation and preview for `paper/main.tex`. Note that the repository's own
+  `build_paper.py` does more than a default recipe: it stages the build, checks the page count, the
+  overfull boxes and the undefined references, and reports them. Prefer the task.
 
-**Not needed:** a debugger, though it works. The code is deterministic and vectorised; printing
-shapes is usually faster than stepping.
+**Three features that will help most when reading:**
+
+1. **Outline view** (`Ctrl+Shift+O`). Every file has a module docstring and one class per concept, so
+   the outline is a usable table of contents. Typing `control` after `Ctrl+Shift+O` jumps to a method.
+
+2. **`F12` (Go to Definition) on `accuracy_metrics`, `reference()` or `_sweep`.** The fastest way to
+   follow the architecture: start in an `exp_*.py`, jump into the solver, jump into the problem.
+
+3. **`Ctrl+Shift+F` (search in files) for a number.** Every value in the manuscript traces to a
+   result file and every result file to a script, so searching for a figure like `0.9987` lands on the
+   experiment that produced it. That is the intended way to audit a claim.
+
+**Watch out for:** the files use `# ----` section banners, so folding (`Ctrl+K Ctrl+0`) gives a clean
+skeleton of each file.
 
 ---
 
@@ -235,11 +279,11 @@ explaining it, and most are bugs that were actually made and caught.
 | Location | The subtlety |
 |---|---|
 | `solvers.py::_sweep` | the frozen policy must be a function of `(x,t)`, interpolated in time. A single time-independent array makes the policy-evaluation PDE inconsistent near `t=T` and it diverges |
-| `solvers.py::_sweep` | upwinding direction. Central differencing of a frozen advection term is unconditionally unstable; von Neumann analysis gives `u>0` 鈬?**forward** stencil |
+| `solvers.py::_sweep` | upwinding direction. Central differencing of a frozen advection term is unconditionally unstable; von Neumann analysis gives `u>0` ⇒ **forward** stencil |
 | `solvers.py::solve` | the snapshot memory cap. It silently halves `n_snap` as `N^p` grows, which coarsens *time* resolution and looks like a spatial error. `snap_cap` is a constructor argument for this reason |
-| `solvers.py::control` | the probe step `eps`. It must scale with `dx`; a fixed step costs a factor of 40鈥?4 in control accuracy |
-| `ac_problem.py` | `hetero=True` destroys separability. With uniform coefficients `V = 危岬(x岬?` and a network barely has to learn anything |
-| `preprocess_causal.py::corwin_schultz_rolling` | the two daily squared ranges must be **summed**, not averaged. Averaging makes `伪 鈮?0` and the estimator returns 0 for every asset |
+| `solvers.py::control` | the probe step `eps`. It must scale with `dx`; a fixed step costs a factor of 40— 4 in control accuracy |
+| `ac_problem.py` | `hetero=True` destroys separability. With uniform coefficients `V = Σᵢ v(xᵢ)` and a network barely has to learn anything |
+| `preprocess_causal.py::corwin_schultz_rolling` | the two daily squared ranges must be **summed**, not averaged. Averaging makes `α ≠ 0` and the estimator returns 0 for every asset |
 | `exp_ood.py` | the rescue path: rescaling the input, then converting the gradient back to price units by the chain rule. Drop the chain-rule factor and you get a plausible but wrong answer |
 | `backtest.py` | the Jacobian `a` is computed in closed form. `np.gradient` divides by zero on repeated minute prices |
 
@@ -262,6 +306,6 @@ explaining it, and most are bugs that were actually made and caught.
 
 Every claim in the manuscript traces to a `results/*.json` file, and each artifact in `artifacts/`
 records the command, inputs and hashes that produced it. If you want to know where a number came
-from, search the paper for it and then grep `results/` 鈥?or read `STATUS.md`, which is the running
+from, search the paper for it and then grep `results/` — or read `STATUS.md`, which is the running
 log of what was measured, what was corrected, and which of the author's own bugs were found by
 verification.
