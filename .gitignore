@@ -50,3 +50,11 @@ paper/journal/*.out
 
 # Local scratch: a copy of a chat answer, not part of the work. It contains this machine's paths.
 readme.txt
+
+# Vendor market data. NOT distributed: Alpha Vantage minute bars for nine instruments, and the
+# causal preprocessing derived from them. Redistribution is not permitted, so these paths are
+# ignored in addition to being absent -- a local copy must not be committable by accident.
+# data_manifest/ is deliberately NOT listed: it is metadata (row counts, dates, spread summaries),
+# contains no prices, and is shipped.
+data/
+data_causal/

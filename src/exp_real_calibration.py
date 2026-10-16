@@ -71,7 +71,13 @@ def accuracy_metrics_at(solver, problem: ACProblem, n_times: int, seed: int = 1)
 
 ROOT = SRC.parent
 CAUSAL = ROOT / "data_causal"
-MANIFEST = CAUSAL / "preprocess_manifest.json"
+# The manifest is METADATA (row counts, date ranges, estimator names, per-asset spread
+# summaries) and is shipped with the repository; the bars it was computed from are not, because
+# they are vendor data. It therefore lives outside data_causal/, which .gitignore excludes, and
+# the search order below keeps working for an author who still has the bars locally.
+MANIFEST_CANDIDATES = [ROOT / "data_manifest" / "preprocess_manifest.json",
+                       CAUSAL / "preprocess_manifest.json"]
+MANIFEST = next((p for p in MANIFEST_CANDIDATES if p.exists()), MANIFEST_CANDIDATES[0])
 OUT = ROOT / "results"
 
 # Minutes in a US equity session, for converting a per-minute volatility to a per-day one.
@@ -100,6 +106,7 @@ def calibrated_assets(names: list[str]) -> dict[str, dict]:
         raise SystemExit(f"manifest not found: {MANIFEST}")
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     out: dict[str, dict] = {}
+    missing_bars: list[str] = []
     for name in names:
         entry = (manifest.get("assets") or {}).get(name)
         if not entry:
@@ -111,6 +118,7 @@ def calibrated_assets(names: list[str]) -> dict[str, dict]:
         csv_path = CAUSAL / f"{name}_causal.csv"
         if not csv_path.exists() or roll is None:
             print(f"  skip {name}: missing csv or spread estimate")
+            missing_bars.append(name)
             continue
         vols = []
         with csv_path.open(newline="", encoding="utf-8") as fh:
@@ -127,6 +135,21 @@ def calibrated_assets(names: list[str]) -> dict[str, dict]:
         out[name] = {"sigma": sigma, "sigma_minute": sigma_min,
                      "roll_spread": roll, "cs_spread": cs,
                      "eta": roll / 2.0, "n_minutes": len(vols)}
+    if missing_bars:
+        # REFUSE TO REPORT A WEAKER RESULT AS IF IT WERE THE SAME ONE. The manifest is shipped; the
+        # bars are not. Running this script on a clean checkout therefore finds the manifest, finds no
+        # per-asset CSV, and -- before this guard existed -- silently produced a synthetic-only result
+        # file, overwriting the shipped one that the manuscript's calibration table is generated from.
+        # Measured: that is exactly what happened the first time this was run after the bars were
+        # removed from the repository.
+        raise SystemExit(
+            f"\n  {len(missing_bars)} asset(s) have no causal CSV: {', '.join(missing_bars)}\n"
+            f"  Those files are NOT distributed: they are vendor data (see README, 'Market data are\n"
+            f"  not distributed with this repository'). The manifest at {MANIFEST.relative_to(ROOT)}\n"
+            f"  is shipped, and results/exp_real_calibration.json holds the calibration this script\n"
+            f"  produced when the bars were present, so the calibration tables remain checkable.\n"
+            f"  To re-run it, restore the bars to {CAUSAL.relative_to(ROOT)} and try again.\n"
+            f"  Refusing to write a partial result over the shipped one.")
     return out
 
 

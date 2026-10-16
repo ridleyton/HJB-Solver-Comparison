@@ -1,0 +1,743 @@
+{
+  "timestamp": "2026-09-19 12:12:15",
+  "assets": {
+    "AAPL": {
+      "per_source": {
+        "A": {
+          "source": "AAPL_intraday_data.csv",
+          "n_rows_raw": 20994,
+          "n_rows_session": 8602,
+          "n_rows_final": 8597,
+          "date_min": "2025-03-06 04:00:00",
+          "date_max": "2025-04-04 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0,
+          "roll_spread_mean": 0.00027812667144193803,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "A"
+        },
+        "B": {
+          "source": "AAPL_intraday_data.csv",
+          "n_rows_raw": 20106,
+          "n_rows_session": 8211,
+          "n_rows_final": 8206,
+          "date_min": "2025-03-27 04:00:00",
+          "date_max": "2025-04-25 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0019407825482297015,
+          "roll_spread_mean": 0.0005453262742584136,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "B"
+        }
+      },
+      "split": {
+        "train": [
+          "2025-03-06",
+          "2025-03-26"
+        ],
+        "validation": [
+          "2025-03-27",
+          "2025-04-04"
+        ],
+        "test": [
+          "2025-04-07",
+          "2025-04-25"
+        ],
+        "rationale": "Strictly temporal; train and test share no dates, so the test window is genuinely out of sample. The two shipped data windows overlap only on 2025-03-27..2025-04-04, which is used as validation."
+      },
+      "n_rows_total": 14071,
+      "split_counts": {
+        "train": 5860,
+        "test": 5474,
+        "validation": 2737
+      },
+      "date_min": "2025-03-06 09:35:00",
+      "date_max": "2025-04-25 16:00:00",
+      "close_min": 169.2408,
+      "close_max": 241.33,
+      "spread_mean": 0.00037946648065426597,
+      "normalized_spread_mean": 1.869461398417976e-06,
+      "ewma_vol_mean": 0.0010971607225089483
+    },
+    "AMZN": {
+      "per_source": {
+        "A": {
+          "source": "AMZN_intraday_data.csv",
+          "n_rows_raw": 21038,
+          "n_rows_session": 8602,
+          "n_rows_final": 8597,
+          "date_min": "2025-03-06 04:00:00",
+          "date_max": "2025-04-04 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 1.6100413900812504e-05,
+          "roll_spread_mean": 0.0002949196471500221,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "A"
+        },
+        "B": {
+          "source": "AMZN_intraday_data.csv",
+          "n_rows_raw": 20124,
+          "n_rows_session": 8211,
+          "n_rows_final": 8206,
+          "date_min": "2025-03-27 04:00:00",
+          "date_max": "2025-04-25 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0025883609056628837,
+          "roll_spread_mean": 0.00029150515935722057,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "B"
+        }
+      },
+      "split": {
+        "train": [
+          "2025-03-06",
+          "2025-03-26"
+        ],
+        "validation": [
+          "2025-03-27",
+          "2025-04-04"
+        ],
+        "test": [
+          "2025-04-07",
+          "2025-04-25"
+        ],
+        "rationale": "Strictly temporal; train and test share no dates, so the test window is genuinely out of sample. The two shipped data windows overlap only on 2025-03-27..2025-04-04, which is used as validation."
+      },
+      "n_rows_total": 14071,
+      "split_counts": {
+        "train": 5860,
+        "test": 5474,
+        "validation": 2737
+      },
+      "date_min": "2025-03-06 09:35:00",
+      "date_max": "2025-04-25 16:00:00",
+      "close_min": 163.39,
+      "close_max": 206.05,
+      "spread_mean": 0.0002794484338117174,
+      "normalized_spread_mean": 1.4831485673991039e-06,
+      "ewma_vol_mean": 0.0011372019282302327
+    },
+    "GOOGL": {
+      "per_source": {
+        "A": {
+          "source": "GOOGL_intraday_data.csv",
+          "n_rows_raw": 20990,
+          "n_rows_session": 8602,
+          "n_rows_final": 8597,
+          "date_min": "2025-03-06 04:00:00",
+          "date_max": "2025-04-04 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0010657001161574588,
+          "roll_spread_mean": 0.0002110246903577625,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "A"
+        },
+        "B": {
+          "source": "GOOGL_intraday_data.csv",
+          "n_rows_raw": 20085,
+          "n_rows_session": 8211,
+          "n_rows_final": 8206,
+          "date_min": "2025-03-27 04:00:00",
+          "date_max": "2025-04-25 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0017054850812989815,
+          "roll_spread_mean": 0.0003945715639212561,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "B"
+        }
+      },
+      "split": {
+        "train": [
+          "2025-03-06",
+          "2025-03-26"
+        ],
+        "validation": [
+          "2025-03-27",
+          "2025-04-04"
+        ],
+        "test": [
+          "2025-04-07",
+          "2025-04-25"
+        ],
+        "rationale": "Strictly temporal; train and test share no dates, so the test window is genuinely out of sample. The two shipped data windows overlap only on 2025-03-27..2025-04-04, which is used as validation."
+      },
+      "n_rows_total": 14071,
+      "split_counts": {
+        "train": 5860,
+        "test": 5474,
+        "validation": 2737
+      },
+      "date_min": "2025-03-06 09:35:00",
+      "date_max": "2025-04-25 16:00:00",
+      "close_min": 140.9,
+      "close_max": 174.7293,
+      "spread_mean": 0.00030053385494927177,
+      "normalized_spread_mean": 1.9132404910891576e-06,
+      "ewma_vol_mean": 0.0009643058896220576
+    },
+    "MSFT": {
+      "per_source": {
+        "A": {
+          "source": "MSFT_intraday_data.csv",
+          "n_rows_raw": 20785,
+          "n_rows_session": 8602,
+          "n_rows_final": 8597,
+          "date_min": "2025-03-06 04:00:00",
+          "date_max": "2025-04-04 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0,
+          "roll_spread_mean": 0.00019968731009302107,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "A"
+        },
+        "B": {
+          "source": "MSFT_intraday_data.csv",
+          "n_rows_raw": 19954,
+          "n_rows_session": 8211,
+          "n_rows_final": 8206,
+          "date_min": "2025-03-27 04:00:00",
+          "date_max": "2025-04-25 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0014984918483523669,
+          "roll_spread_mean": 0.00031553234256459907,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "B"
+        }
+      },
+      "split": {
+        "train": [
+          "2025-03-06",
+          "2025-03-26"
+        ],
+        "validation": [
+          "2025-03-27",
+          "2025-04-04"
+        ],
+        "test": [
+          "2025-04-07",
+          "2025-04-25"
+        ],
+        "rationale": "Strictly temporal; train and test share no dates, so the test window is genuinely out of sample. The two shipped data windows overlap only on 2025-03-27..2025-04-04, which is used as validation."
+      },
+      "n_rows_total": 14071,
+      "split_counts": {
+        "train": 5860,
+        "test": 5474,
+        "validation": 2737
+      },
+      "date_min": "2025-03-06 09:35:00",
+      "date_max": "2025-04-25 16:00:00",
+      "close_min": 345.1145,
+      "close_max": 401.86,
+      "spread_mean": 0.0002694785384833922,
+      "normalized_spread_mean": 7.10360926551721e-07,
+      "ewma_vol_mean": 0.0008025886117940538
+    },
+    "NVDA": {
+      "per_source": {
+        "A": {
+          "source": "NVDA_intraday_data.csv",
+          "n_rows_raw": 21120,
+          "n_rows_session": 8602,
+          "n_rows_final": 8597,
+          "date_min": "2025-03-06 04:00:00",
+          "date_max": "2025-04-04 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.001498730874101399,
+          "roll_spread_mean": 0.00029806844092416965,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "A"
+        },
+        "B": {
+          "source": "NVDA_intraday_data.csv",
+          "n_rows_raw": 20160,
+          "n_rows_session": 8211,
+          "n_rows_final": 8206,
+          "date_min": "2025-03-27 04:00:00",
+          "date_max": "2025-04-25 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0007796184604868506,
+          "roll_spread_mean": 0.0005369697297427265,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "B"
+        }
+      },
+      "split": {
+        "train": [
+          "2025-03-06",
+          "2025-03-26"
+        ],
+        "validation": [
+          "2025-03-27",
+          "2025-04-04"
+        ],
+        "test": [
+          "2025-04-07",
+          "2025-04-25"
+        ],
+        "rationale": "Strictly temporal; train and test share no dates, so the test window is genuinely out of sample. The two shipped data windows overlap only on 2025-03-27..2025-04-04, which is used as validation."
+      },
+      "n_rows_total": 14071,
+      "split_counts": {
+        "train": 5860,
+        "test": 5474,
+        "validation": 2737
+      },
+      "date_min": "2025-03-06 09:35:00",
+      "date_max": "2025-04-25 16:00:00",
+      "close_min": 86.92,
+      "close_max": 122.58,
+      "spread_mean": 0.00039781290942898193,
+      "normalized_spread_mean": 3.71637589521776e-06,
+      "ewma_vol_mean": 0.0015897540490907845
+    },
+    "OXY": {
+      "per_source": {
+        "A": {
+          "source": "OXY_intraday_data.csv",
+          "n_rows_raw": 16971,
+          "n_rows_session": 8602,
+          "n_rows_final": 8597,
+          "date_min": "2025-03-06 04:00:00",
+          "date_max": "2025-04-04 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0,
+          "roll_spread_mean": 0.00019294657481609448,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "A"
+        },
+        "B": {
+          "source": "OXY_intraday_data.csv",
+          "n_rows_raw": 17436,
+          "n_rows_session": 8211,
+          "n_rows_final": 8206,
+          "date_min": "2025-03-27 04:00:00",
+          "date_max": "2025-04-25 19:56:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0005077591514949021,
+          "roll_spread_mean": 0.00044856826893381596,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "B"
+        }
+      },
+      "split": {
+        "train": [
+          "2025-03-06",
+          "2025-03-26"
+        ],
+        "validation": [
+          "2025-03-27",
+          "2025-04-04"
+        ],
+        "test": [
+          "2025-04-07",
+          "2025-04-25"
+        ],
+        "rationale": "Strictly temporal; train and test share no dates, so the test window is genuinely out of sample. The two shipped data windows overlap only on 2025-03-27..2025-04-04, which is used as validation."
+      },
+      "n_rows_total": 14071,
+      "split_counts": {
+        "train": 5860,
+        "test": 5474,
+        "validation": 2737
+      },
+      "date_min": "2025-03-06 09:35:00",
+      "date_max": "2025-04-25 16:00:00",
+      "close_min": 34.82,
+      "close_max": 50.425,
+      "spread_mean": 0.00033956882500372153,
+      "normalized_spread_mean": 8.2721970966301e-06,
+      "ewma_vol_mean": 0.001040285031037347
+    },
+    "QQQ": {
+      "per_source": {
+        "A": {
+          "source": "QQQ_intraday_data.csv",
+          "n_rows_raw": 21115,
+          "n_rows_session": 8602,
+          "n_rows_final": 8597,
+          "date_min": "2025-03-06 04:00:00",
+          "date_max": "2025-04-04 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0,
+          "roll_spread_mean": 0.00013487793665608894,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "A"
+        },
+        "B": {
+          "source": "QQQ_intraday_data.csv",
+          "n_rows_raw": 20159,
+          "n_rows_session": 8211,
+          "n_rows_final": 8206,
+          "date_min": "2025-03-27 04:00:00",
+          "date_max": "2025-04-25 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0021653950404181507,
+          "roll_spread_mean": 0.0003198917664427218,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "B"
+        }
+      },
+      "split": {
+        "train": [
+          "2025-03-06",
+          "2025-03-26"
+        ],
+        "validation": [
+          "2025-03-27",
+          "2025-04-04"
+        ],
+        "test": [
+          "2025-04-07",
+          "2025-04-25"
+        ],
+        "rationale": "Strictly temporal; train and test share no dates, so the test window is genuinely out of sample. The two shipped data windows overlap only on 2025-03-27..2025-04-04, which is used as validation."
+      },
+      "n_rows_total": 14071,
+      "split_counts": {
+        "train": 5860,
+        "test": 5474,
+        "validation": 2737
+      },
+      "date_min": "2025-03-06 09:35:00",
+      "date_max": "2025-04-25 16:00:00",
+      "close_min": 403.19,
+      "close_max": 497.6641,
+      "spread_mean": 0.00022589077571755513,
+      "normalized_spread_mean": 4.932582763579673e-07,
+      "ewma_vol_mean": 0.0008589084036457656
+    },
+    "SPY": {
+      "per_source": {
+        "A": {
+          "source": "SPY_intraday_data.csv",
+          "n_rows_raw": 21126,
+          "n_rows_session": 8602,
+          "n_rows_final": 8597,
+          "date_min": "2025-03-06 04:00:00",
+          "date_max": "2025-04-04 20:00:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0011611748226834963,
+          "roll_spread_mean": 0.00011729000849140907,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "A"
+        },
+        "B": {
+          "source": "SPY_intraday_data.csv",
+          "n_rows_raw": 20174,
+          "n_rows_session": 8211,
+          "n_rows_final": 8206,
+          "date_min": "2025-03-27 04:00:00",
+          "date_max": "2025-04-25 20:00:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.002091266238600127,
+          "roll_spread_mean": 0.00025625973176442943,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "B"
+        }
+      },
+      "split": {
+        "train": [
+          "2025-03-06",
+          "2025-03-26"
+        ],
+        "validation": [
+          "2025-03-27",
+          "2025-04-04"
+        ],
+        "test": [
+          "2025-04-07",
+          "2025-04-25"
+        ],
+        "rationale": "Strictly temporal; train and test share no dates, so the test window is genuinely out of sample. The two shipped data windows overlap only on 2025-03-27..2025-04-04, which is used as validation."
+      },
+      "n_rows_total": 14071,
+      "split_counts": {
+        "train": 5860,
+        "test": 5474,
+        "validation": 2737
+      },
+      "date_min": "2025-03-06 09:35:00",
+      "date_max": "2025-04-25 16:00:00",
+      "close_min": 482.64,
+      "close_max": 578.2914,
+      "spread_mean": 0.00018390067575918358,
+      "normalized_spread_mean": 3.38889963114588e-07,
+      "ewma_vol_mean": 0.0007191791081304871
+    },
+    "TSLA": {
+      "per_source": {
+        "A": {
+          "source": "TSLA_intraday_data.csv",
+          "n_rows_raw": 21120,
+          "n_rows_session": 8602,
+          "n_rows_final": 8597,
+          "date_min": "2025-03-06 04:00:00",
+          "date_max": "2025-04-04 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0,
+          "roll_spread_mean": 0.0006847207974555727,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "A"
+        },
+        "B": {
+          "source": "TSLA_intraday_data.csv",
+          "n_rows_raw": 20160,
+          "n_rows_session": 8211,
+          "n_rows_final": 8206,
+          "date_min": "2025-03-27 04:00:00",
+          "date_max": "2025-04-25 19:59:00",
+          "sorted_ascending": true,
+          "session_filter": "09:30-16:00",
+          "ewma_span": 5,
+          "spread_estimator": "Roll (1984), daily, assigned per minute",
+          "spread_cross_check": "Corwin-Schultz (2012), daily",
+          "cs_spread_mean": 0.0028310895744025604,
+          "roll_spread_mean": 0.0008828335894916261,
+          "features": [
+            "log_return",
+            "ewma_volatility",
+            "spread",
+            "cs_spread",
+            "normalized_spread",
+            "vwap"
+          ],
+          "notes": "Causal: data sorted ascending before lagged feature computation; VWAP accumulated forward from sample start; spread is a published estimator, not the high-low range. Roll is primary because its magnitudes match known effective spreads for these names.",
+          "window": "B"
+        }
+      },
+      "split": {
+        "train": [
+          "2025-03-06",
+          "2025-03-26"
+        ],
+        "validation": [
+          "2025-03-27",
+          "2025-04-04"
+        ],
+        "test": [
+          "2025-04-07",
+          "2025-04-25"
+        ],
+        "rationale": "Strictly temporal; train and test share no dates, so the test window is genuinely out of sample. The two shipped data windows overlap only on 2025-03-27..2025-04-04, which is used as validation."
+      },
+      "n_rows_total": 14071,
+      "split_counts": {
+        "train": 5860,
+        "test": 5474,
+        "validation": 2737
+      },
+      "date_min": "2025-03-06 09:35:00",
+      "date_max": "2025-04-25 16:00:00",
+      "close_min": 215.6068,
+      "close_max": 291.55,
+      "spread_mean": 0.0007026093854539427,
+      "normalized_spread_mean": 2.8071171207614268e-06,
+      "ewma_vol_mean": 0.0020872501543851944
+    }
+  }
+}
