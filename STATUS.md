@@ -4,8 +4,45 @@
 rank 3/60), JIF 3.9. The conference submission is cancelled; the manuscript goes straight to a
 journal. Selection evidence, the gap list and the roadmap are in `JOURNAL_Q1_TARGET_AND_GAPS.md`.
 
-**Current stage: round 13 — the pre-submission read-through is done, and it found real defects rather
-than only style. Remaining: author-only items.**
+**Current stage: round 14 — the session's work is committed (`2a84b66`, 79 files). One blocking issue
+found during the pre-commit release scan and NOT mine to decide: see "Market data are in the public
+repository" below.**
+
+---
+
+## Round 14 — commit, and a contradiction found while staging (2026-10-14)
+
+Committed as `2a84b66`: 79 files, 14,709 insertions, 0 remaining modifications. Running the
+pre-commit release scan (`src/check_release.py`) first was worth it, because it caught a rule I had
+broken: `build_journal.py` named two absolute TeX directories as a fallback, which `build_paper.py`'s
+own comment forbids in as many words ("the literals are REMOVED rather than demoted to a fallback: a
+fallback that still names someone else's directory solves nothing for a reviewer and still publishes
+the path"). Fixed: `TEXLIVE_BIN`, then PATH, then nothing. Results no longer record a machine-specific
+engine path either, and `.gitignore` now covers the submission package's LaTeX intermediates.
+
+**A contradiction that needs the authors' decision, not mine.** `rework/README.md` states:
+
+> "Market data are not distributed with this repository ... **Neither directory is included here**,
+> because redistributing vendor market data is generally not permitted."
+
+and the manuscript's data-availability statement says the same. But `data/` and `data_causal/` **are
+tracked in git** --- 19 files, 32.8 MB, Alpha Vantage 1-minute OHLCV for nine instruments, added in
+commit `e360f4e`. The repository is public (`ridleyton/HJB-Solver-Comparison`). So the repository
+publishes exactly what two documents say it does not, and Alpha Vantage's standard terms restrict
+redistribution.
+
+This is not something to fix silently, because the two resolutions are opposite and only the authors
+can choose:
+
+1. **If redistribution is not permitted** (the stated position): remove the files from the working tree
+   and from history (`git rm -r --cached data data_causal`, then a history rewrite with
+   `git filter-repo` and a force-push, plus a request to GitHub to purge cached views --- a checker
+   cannot un-publish), and take the Zenodo snapshot from a commit that does not contain them.
+2. **If it is permitted**, or if those series are not actually vendor data: keep them and correct the
+   README and the manuscript's data statement, which currently misdescribe the repository.
+
+Either way it must be settled before the Zenodo release, because a release archives one commit and the
+statement has to match it. Recorded here rather than acted on.
 
 ---
 
