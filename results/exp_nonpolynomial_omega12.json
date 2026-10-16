@@ -1,0 +1,116 @@
+{
+  "A0": 0.00125,
+  "omega": 12.0,
+  "tol": 0.001,
+  "dims": {
+    "1": {
+      "rows": [
+        {
+          "value_rel_l2": 1.4950980895780415,
+          "control_rel_l2": 3.41426151056206,
+          "control_rel_l2_multilinear": 3.4157954394914127,
+          "control_rel_l2_cubic": 3.845491228279542,
+          "N": 11,
+          "n_steps": 210,
+          "seconds": 0.027328800002578646
+        },
+        {
+          "value_rel_l2": 0.1729560941832365,
+          "control_rel_l2": 0.680638708235338,
+          "control_rel_l2_multilinear": 0.6813336890604546,
+          "control_rel_l2_cubic": 0.6410946908992512,
+          "N": 21,
+          "n_steps": 420,
+          "seconds": 0.05514779999793973
+        },
+        {
+          "value_rel_l2": 0.06137182290811617,
+          "control_rel_l2": 0.39017942294464836,
+          "control_rel_l2_multilinear": 0.3911788688537631,
+          "control_rel_l2_cubic": 0.31214585052030486,
+          "N": 31,
+          "n_steps": 631,
+          "seconds": 0.08731170000100974
+        },
+        {
+          "value_rel_l2": 0.024086870228575287,
+          "control_rel_l2": 0.21678942230776937,
+          "control_rel_l2_multilinear": 0.21733621628997746,
+          "control_rel_l2_cubic": 0.1575247192322332,
+          "N": 45,
+          "n_steps": 924,
+          "seconds": 0.13062089999584714
+        },
+        {
+          "value_rel_l2": 0.011787997091032315,
+          "control_rel_l2": 0.1425661188211709,
+          "control_rel_l2_multilinear": 0.1432130596387347,
+          "control_rel_l2_cubic": 0.08369482269504966,
+          "N": 61,
+          "n_steps": 1260,
+          "seconds": 0.1913468999991892
+        }
+      ],
+      "N_star": null,
+      "target_reached": false,
+      "order_value_vs_N": 2.81693813136285,
+      "order_control_vs_N": 1.8258971736122729,
+      "order_fit_r2": 0.9937367889940505
+    },
+    "2": {
+      "rows": [
+        {
+          "value_rel_l2": 1.2224120649607406,
+          "control_rel_l2": 2.652490309527445,
+          "control_rel_l2_multilinear": 3.5199306944759337,
+          "control_rel_l2_cubic": 3.3928271469840254,
+          "N": 11,
+          "n_steps": 210,
+          "seconds": 0.42387369999778457
+        },
+        {
+          "value_rel_l2": 0.19848578237930176,
+          "control_rel_l2": 0.9418679343053745,
+          "control_rel_l2_multilinear": 1.6088793809493487,
+          "control_rel_l2_cubic": 1.274355505126363,
+          "N": 21,
+          "n_steps": 420,
+          "seconds": 0.5226133999967715
+        },
+        {
+          "value_rel_l2": 0.09938889545691831,
+          "control_rel_l2": 0.5468201068494217,
+          "control_rel_l2_multilinear": 0.9157548073568942,
+          "control_rel_l2_cubic": 0.6714033583360799,
+          "N": 31,
+          "n_steps": 631,
+          "seconds": 0.691166600001452
+        },
+        {
+          "value_rel_l2": 0.022587052425504024,
+          "control_rel_l2": 0.20551754065315325,
+          "control_rel_l2_multilinear": 0.4100757975394695,
+          "control_rel_l2_cubic": 0.19156472156957394,
+          "N": 45,
+          "n_steps": 924,
+          "seconds": 1.087054600000556
+        },
+        {
+          "value_rel_l2": 0.005086047712348487,
+          "control_rel_l2": 0.14143385317319862,
+          "control_rel_l2_multilinear": 0.29635764998688874,
+          "control_rel_l2_cubic": 0.11037554720474844,
+          "N": 61,
+          "n_steps": 1260,
+          "seconds": 1.7512339999957476
+        }
+      ],
+      "N_star": null,
+      "target_reached": false,
+      "order_value_vs_N": 3.081441059930644,
+      "order_control_vs_N": 1.4934633382219809,
+      "order_fit_r2": 0.9737382778916277
+    }
+  },
+  "contrast": "N* is dimension-free for the quadratic solution and grows with the dimension once the solution is not a polynomial"
+}

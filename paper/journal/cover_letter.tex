@@ -1,0 +1,74 @@
+%=====================================================================
+% Cover letter. Compile with: python src/build_journal.py
+%=====================================================================
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{flushright}
+Jingwen Zhang, Fei Ma\\
+School of Mathematics and Physics\\
+Xi'an Jiaotong-Liverpool University\\
+Suzhou, China
+\end{flushright}
+
+\vspace{1em}
+\noindent Dear Editors of the \emph{Journal of Computational Physics},
+
+\vspace{0.6em}
+\noindent We submit for your consideration the manuscript \emph{``Reconstruction Order, Not Solver
+Family, Governs Control Accuracy: A Comparison of Neural and Classical HJB Solvers Against an Exact
+Reference''}.
+
+\noindent The paper measures something that is usually asserted. Neural solvers for
+Hamilton--Jacobi--Bellman equations are proposed on the strength of the curse of dimensionality, and
+the comparison literature scores them against other solvers --- which makes the reference exact by
+construction and its reported error zero. We score four families against a closed-form Riccati
+reference on a multi-asset optimal-execution HJB, and we report the \emph{control} as well as the
+value. Three results follow, and each is stated as a rate rather than an observation:
+
+\begin{itemize}
+\item \textbf{Two propositions.} A degree-$k$ reconstruction delivers gradient order $k$, but a
+symmetric-difference probe at step $\varepsilon$ adds an independent $O(\varepsilon^2)$, so a probe
+that shrinks only like $h$ caps a cubic reconstruction at order two. And for this problem the
+objective lost is \emph{exactly} the $R$-weighted squared control deviation accumulated along the path
+taken --- an identity, not the bound the envelope theorem would give. Together they explain why the
+control error is 3.2 to 26 times the value error, and they reduce to a prescription: raise the
+reconstruction order, and scale the probe with it.
+\item \textbf{A boundary, measured rather than assumed.} Where a grid scheme runs it is faster and
+more accurate; we also run a compiled kernel of the same scheme, which changes the comparison at the
+top dimension, and we run the classical mesh-free family the earlier version of this work had only
+cited --- where it turns out to be \emph{more} accurate than the neural solver at every dimension
+tested. A conclusion changed as a result, and the paper says so.
+\item \textbf{What it is worth.} On the paper's own real-market calibration, raising the
+reconstruction from multilinear to cubic is worth 2.7 to 8.4 basis points of notional across nine
+instruments, with the largest effect on the most liquid one.
+\end{itemize}
+
+\noindent The paper is a comparison and a measurement, and we have tried to make it useful in the way
+your readership would want: every table is generated from committed result files, the verification
+suite runs on a clean checkout, the scheme's own solver is the one used for the compiled timing so
+that implementation and algorithm are separated, and the limitations are stated where they bind
+rather than collected in a closing paragraph. Three of them are worth naming here. The grid sweep
+stops at $p=5$; the neural results use one architecture family at stated budgets; and the
+non-polynomial benchmark we construct to answer the ``your solution is quadratic'' objection uses a
+manufactured source, which produces an exact solution but artificial economics.
+
+\noindent We confirm that this manuscript is original, is not under consideration elsewhere, and that
+all authors have approved the submission. Declarations of competing interest, the CRediT statement
+and the data availability statement accompany the submission. Reproducibility is the point of the
+paper, so we have made every number traceable to a released file, and the repository is archived.
+
+\vspace{1em}
+\noindent We would be glad to suggest referees if that is helpful, and we thank you for considering
+the work.
+
+\vspace{1.4em}
+\noindent Sincerely,\\
+Jingwen Zhang and Fei Ma
+
+\end{document}

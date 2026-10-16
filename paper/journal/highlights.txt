@@ -1,0 +1,10 @@
+Highlights for "Reconstruction Order, Not Solver Family, Governs Control Accuracy"
+
+Elsevier requires 3-5 bullets, each at most 85 characters including spaces. One per line, no bullet
+glyph (the submission system adds it). `src/build_journal.py` checks both constraints.
+
+A degree-k reconstruction gives gradient order k, and a bad probe step caps it.
+Control error is 3.2 to 26 times value error; value accuracy does not bound it.
+Raising the reconstruction from linear to cubic is worth 2.7-8.4 bp of notional.
+A compiled grid kernel is 2.5-12x faster than the NumPy one at identical work.
+Classical regression Monte Carlo beats the neural solver at d = 8, 12 and 20.

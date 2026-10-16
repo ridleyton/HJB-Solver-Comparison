@@ -1,5 +1,6 @@
 {
-  "matched": 7,
+  "matched": 95,
   "unmatched": 0,
-  "skipped": []
+  "skipped": [],
+  "metric": "relative L2; orders fitted to the error, not its square"
 }

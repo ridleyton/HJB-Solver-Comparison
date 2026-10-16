@@ -191,10 +191,14 @@ def check_numerics(quick: bool) -> None:
         snap = 0.25 * np.sum(xn**4, axis=1).reshape(41, 41)     # quartic: not polynomial-exact
         exact = X**3                                            # d/dx of x^4/4 is x^3
         scale = float(np.mean((exact - exact.mean()) ** 2))
-        e_fd = float(np.mean((extract_fd(axes, snap, X, 0.25) - exact) ** 2) / scale)
-        e_sp = float(np.mean((extract_spline(axes, snap, X, 0.25) - exact) ** 2) / scale)
+        # Square roots, because the paper's metric is the relative L2 error and these two numbers
+        # are the check that the reconstruction order works. Reporting the squared error here would
+        # print a factor that is the square of the error ratio -- the exact confusion the metric
+        # work removed from the tables.
+        e_fd = float(np.sqrt(np.mean((extract_fd(axes, snap, X, 0.25) - exact) ** 2) / scale))
+        e_sp = float(np.sqrt(np.mean((extract_spline(axes, snap, X, 0.25) - exact) ** 2) / scale))
         print(f"  extraction on a quartic: multilinear {e_fd:.2e}   cubic {e_sp:.2e}   "
-              f"({e_fd/e_sp:.0f}x better)")
+              f"(relative L2; {e_fd/e_sp:.0f}x better)")
         record("cubic reconstruction beats multilinear", PASS if e_sp < e_fd / 10 else FAIL,
                f"{e_fd/e_sp:.0f}x")
 
@@ -257,6 +261,34 @@ def main() -> int:
         # covers the inventory-only AND signal-augmented benchmarks, and both modules.
         run_script("PINN residuals vanish on the exact solution", SRC / "diag_alpha_pinn.py",
                    pass_marker="ALL RESIDUALS VANISH ON THE EXACT SOLUTION")
+        # The two checks that came out of the journal-conversion audit. Both fail on the state the
+        # repository was in before it: one on a metric convention that mixed squared errors with
+        # error norms, the other on a table row that carried another dimension's run.
+        run_script("metric convention (orders on one scale)", SRC / "check_order_convention.py",
+                   pass_marker="REGRESSION GUARD")
+        run_script("prose numbers vs results/", SRC / "verify_paper_numbers.py",
+                   pass_marker="Every asserted order is fitted to the relative L2 error")
+        # Proposition 2 is a theorem about this v2 benchmark; this runs it against trajectories
+        # integrated under the paper's own reconstructions.
+        run_script("suboptimality identity (Proposition 2)",
+                   SRC / "verify_suboptimality_identity.py", pass_marker="VERDICT: PASS")
+        # The submission package: highlights within the publisher's limits, the declarations and
+        # cover letter compiling, and every required item present.
+        run_script("journal submission package", SRC / "build_journal.py",
+                   pass_marker="All required items present")
+        # The audit that a consistency check cannot do: a result file nothing reads is invisible to
+        # every other check here. Two experiments had been measured and never reported before this.
+        run_script("orphan result audit", SRC / "check_orphan_results.py",
+                   pass_marker="every result file is either reported")
+        # The proofread pass: every float cited at least once and in the subsection that introduces
+        # it, one cross-reference style, no sentence over 80 words.
+        run_script("prose consistency (floats, terminology, sentence length)",
+                   SRC / "check_prose_consistency.py", pass_marker="Nothing flagged")
+        # NOTE: exp_lsmc_basis.py is deliberately NOT in this harness. It is a 6-minute experiment
+        # whose largest-amplitude case sits in a failing regime where the value moves by up to 0.07
+        # across process runs, so re-running it here would make the harness flaky and would overwrite
+        # the result file the prose assertions check against. It is a documented reproduction step:
+        #   python src/exp_lsmc_basis.py --dim 4 --a0 0,1e-4,1e-3,5e-3,2e-2 --repeats 3
 
     check_numerics(quick=not args.full)
 

@@ -1,17 +1,37 @@
 {
-  "credentials": [],
-  "absolute_paths": [],
+  "credentials": [
+    "paper/main.tex:456  key-shaped token (30 chars)",
+    "paper/refs.bib:416  key-shaped token (30 chars)"
+  ],
+  "absolute_paths": [
+    "readme.txt:1  D:\\deepseek workplace\\jingwen zhang\\rework\\",
+    "readme.txt:46  D:\\deepseek workplace\\jingwen zhang\\rework",
+    "readme.txt:47  D:\\texlive\\2026\\bin\\windows"
+  ],
   "intermediates": [
+    "logs/verify_check_orphan_results.log (1,265 B)",
+    "paper/journal/cover_letter.aux (162 B)",
+    "paper/journal/cover_letter.log (13,425 B)",
+    "paper/journal/cover_letter.out (0 B)",
+    "paper/journal/declarations.aux (32 B)",
+    "paper/journal/declarations.log (7,938 B)",
+    "paper/journal/nomenclature.aux (32 B)",
+    "paper/journal/nomenclature.log (8,689 B)",
     "results/exp_arch_ablation.log (4,380 B)",
     "results/exp_bsde_dims.log (6,396 B)",
     "results/exp_bsde_dims_d8.log (4,032 B)",
     "results/exp_bsde_ns200_conv.log (7,464 B)",
     "results/exp_bsde_ns200_seed7.log (7,478 B)",
     "results/exp_bsde_ns50_conv.log (5,826 B)",
-    "results/exp_bsde_steps.log (16,862 B)"
+    "results/exp_bsde_steps.log (16,862 B)",
+    "results/exp_compiled_grid.log (3,384 B)",
+    "results/exp_deep_splitting_budget.log (1,852 B)",
+    "results/exp_lsmc.log (17,500 B)",
+    "results/exp_lsmc_basis.log (5,884 B)",
+    "results/exp_nonpolynomial.log (7,314 B)"
   ],
   "notes": [
-    "scanned 183 text files, 38.1 MB total",
+    "scanned 242 text files, 39.2 MB total",
     "largest files: data_causal/SPY_causal.csv (2.5 MB), data_causal/TSLA_causal.csv (2.4 MB), data_causal/QQQ_causal.csv (2.4 MB), data_causal/MSFT_causal.csv (2.4 MB), data_causal/AMZN_causal.csv (2.4 MB)",
     "NOT checked: whether the repo is public, whether the licence is right, and whether a credential was EVER exposed. A checker cannot un-publish a secret; if one was committed at any point it must be rotated, not deleted."
   ]

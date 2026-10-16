@@ -119,6 +119,12 @@ def load_run(p: int, fname: str, n_steps: int):
     rows = json.loads(path.read_text(encoding="utf-8")).get("rows", [])
     best = None
     for r in rows:
+        # SELECT THE RUN FOR THIS DIMENSION. `exp_bsde_dims.json` holds the d=4 and the d=8 run in
+        # one file, and this loop used to take the smallest error across BOTH -- so the p=4 row of
+        # the table silently carried the d=8 run's accuracy, residual and floor (0.3% instead of
+        # 3.3%), contradicting the text, which was right. Filtering by dimension is the fix.
+        if r.get("d") is not None and int(r["d"]) != int(p):
+            continue
         tr = r.get("trace") or []
         if not tr:
             continue

@@ -8,10 +8,25 @@ by hand, and no figure is carried over from the audited baseline.
 from __future__ import annotations
 
 import json
+import sys
 from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
+
+SRC = Path(__file__).resolve().parent
+sys.path.insert(0, str(SRC))
+# The paper's error metric, defined once. The extraction and control-order experiments store a
+# normalised MEAN SQUARED error and fit orders to it, so their numbers must be converted before
+# they reach a table; mixing the two scales is what made the same control error read as "order
+# 2.00" in one table and "1.03" in another. See src/metrics.py.
+from metrics import (  # noqa: E402
+    fit_order, order_from_mse_order, ratio_from_mse_ratio, rms_from_mse,
+)
+
+# Below this, an error is floating-point residue rather than a measurement, and fitting an order
+# across it reports the rounding, not the method. Same threshold the experiments themselves used.
+FLOOR_FOR_ORDER = 1e-16
 
 RESULTS = Path("results")
 TABDIR = Path("paper/tables")
@@ -478,10 +493,12 @@ def tab_control(order, floor, p5) -> None:
         "\\centering",
         "\\caption{Value accuracy is not control accuracy. The control is the deliverable of an "
         "HJB and is a derivative of the value function, so the two errors need not track each "
-        "other. \\emph{Top}: both errors against the closed-form reference, with the observed "
+        "other. Both errors are relative $L^2$ norms ($\\|a-a^{\\star}\\|_2/\\|a^{\\star}\\|_2$) and "
+        "every order in this table is the least-squares slope of $\\log$(error) against "
+        "$\\log h$. \\emph{Top}: both errors against the closed-form reference, with the observed "
         "order of the control error. \\emph{Middle}: with the mesh fixed and only the number of "
-        "stored snapshots changed, the value error falls by one to four orders of magnitude while "
-        "the control error improves by at most a factor of about $17$ and then plateaus -- the "
+        "stored snapshots changed, the value error falls by up to two orders of magnitude while "
+        "the control error improves by at most a factor of about $23$ and then plateaus -- the "
         "two are limited by different refinements. \\emph{Bottom}: for each sweep, the "
         "least-squares control order with its fit quality, and the control/value error ratio "
         "from its first to its largest value. The order is the robust statement; the ratio is a "
@@ -498,10 +515,13 @@ def tab_control(order, floor, p5) -> None:
         "\\midrule",
     ]
     for r in sorted(rows_a, key=lambda r: (r["p"], r["N"])):
-        oc = r.get("order_control", float("nan"))
+        # Stored as a normalised MSE; the paper's metric is its square root, and the per-step
+        # order stored alongside it was fitted to the square, so it halves.
+        oc = order_from_mse_order(r.get("order_control", float("nan")))
         ocs = f"{oc:.2f}" if oc == oc else "--"
-        lines.append(f"{r['p']} & {r['N']} & {r['value_err']:.2e} & {r['control_err']:.2e} & "
-                     f"{ocs} & {r['ratio']:.1f} \\\\")
+        lines.append(f"{r['p']} & {r['N']} & {rms_from_mse(r['value_err']):.2e} & "
+                     f"{rms_from_mse(r['control_err']):.2e} & "
+                     f"{ocs} & {ratio_from_mse_ratio(r['ratio']):.1f} \\\\")
 
     fl = (floor or {}).get("part_d_snapshot_sweep", [])
     if fl:
@@ -513,10 +533,10 @@ def tab_control(order, floor, p5) -> None:
                             key=lambda r: r["n_snap"])
                 if len(rs) < 2:
                     continue
-                vg = rs[0]["value_err"] / rs[-1]["value_err"]
-                cg = rs[0]["control_err"] / rs[-1]["control_err"]
-                lines.append(f"{p} & {N} & $\\times{vg:.0f}$ & $\\times{cg:.1f}$ & -- & "
-                             f"{rs[-1]['ratio']:.1f} \\\\")
+                vg = ratio_from_mse_ratio(rs[0]["value_err"] / rs[-1]["value_err"])
+                cg = ratio_from_mse_ratio(rs[0]["control_err"] / rs[-1]["control_err"])
+                lines.append(f"{p} & {N} & $\\times{vg:.1f}$ & $\\times{cg:.1f}$ & -- & "
+                             f"{ratio_from_mse_ratio(rs[-1]['ratio']):.1f} \\\\")
 
     lines.append("\\midrule")
     lines.append("\\multicolumn{6}{l}{\\emph{fitted control order and ratio growth}} \\\\")
@@ -539,14 +559,14 @@ def tab_control(order, floor, p5) -> None:
         rs = sorted(rows, key=lambda r: r["N"])
         if len(rs) < 2:
             return
-        ratios = [r["ratio"] for r in rs]
+        ratios = [ratio_from_mse_ratio(r["ratio"]) for r in rs]
         first, peak = ratios[0], max(ratios)
         fit = fits.get(fit_key) if fit_key else None
         bits = [label + ":"]
         if fit:
-            bits.append(f"order ${fit['control_order']:.2f}$ "
+            bits.append(f"order ${order_from_mse_order(fit['control_order']):.2f}$ "
                         f"($R^2={fit['control_fit_r2']:.3f}$),")
-        bits.append(f"ratio ${first:.0f} \\to {peak:.0f}$")
+        bits.append(f"ratio ${first:.1f} \\to {peak:.1f}$")
         lines.append("\\multicolumn{6}{l}{" + " ".join(bits) + "} \\\\")
 
     for p in sorted({r["p"] for r in rows_a}):
@@ -568,7 +588,7 @@ def tab_control(order, floor, p5) -> None:
     print("  wrote paper/tables/tab_control.tex")
 
 
-def tab_extract(ext, extp3, extp5, merton=None) -> None:
+def tab_extract(ext, extp3, extp5, merton=None, intrinsic=None) -> None:
     """Gradient-extraction order for three reconstructions, on functions of known form.
 
     This is the table behind the paper's central claim. The functions are synthetic, so the
@@ -577,6 +597,12 @@ def tab_extract(ext, extp3, extp5, merton=None) -> None:
     quadratics exactly, flattering that method. The non-polynomial rows are the ones to quote, and
     the last column is the Merton value function, which is a power function from a real
     non-linear control problem rather than a synthetic test case.
+
+    ORDERS ARE CONVERGENCE ORDERS, NOT SLOPES OF A SQUARED ERROR. The experiment stores a
+    normalised MSE and fits log(MSE) against log(h), which doubles the slope; `metrics.py` undoes
+    that. The last row is the same measurement with the probe step taken far below the mesh --
+    which is what separates the order of the RECONSTRUCTION from the order actually achieved by a
+    fixed-relative probe, and is why the two order tables in this paper no longer disagree.
     """
     by_fn: dict[str, dict[str, dict]] = {}
     for src in (ext, extp3, extp5):
@@ -586,6 +612,18 @@ def tab_extract(ext, extp3, extp5, merton=None) -> None:
     # The Merton orders live in a different shape: one non-polynomial value function, three
     # extractors, in meta.exact_node_orders.
     m_orders = ((merton or {}).get("meta") or {}).get("exact_node_orders") or {}
+
+    # Same three extractors, same functions, probe step far below the mesh: the reconstruction's
+    # own order, with the probe no longer the limiter.
+    intr: dict[str, dict[str, float]] = {}
+    for r in (intrinsic or {}).get("synthetic", []) or []:
+        for method, track in (r.get("tracks") or {}).items():
+            pts = [(h, e) for h, e in track if e and e > FLOOR_FOR_ORDER]
+            if len(pts) < 3:
+                continue
+            order_rms, _ = fit_order([p[0] for p in pts],
+                                     [rms_from_mse(p[1]) for p in pts])
+            intr.setdefault(r["function"], {})[method] = order_rms
 
     if not by_fn and not m_orders:
         print("  NOTE: no extraction results; skipping tab_extract")
@@ -599,7 +637,8 @@ def tab_extract(ext, extp3, extp5, merton=None) -> None:
         for r in (src or {}).get("synthetic", []):
             for key, v in (r.get("orders") or {}).items():
                 if v and v.get("order") is not None:
-                    pooled.setdefault((key, r["function"]), []).append(v["order"])
+                    pooled.setdefault((key, r["function"]), []).append(
+                        order_from_mse_order(v["order"]))
     n_dims = sum(1 for s in (ext, extp3, extp5) if (s or {}).get("synthetic"))
 
     # Keep a stable, meaningful order: the benchmark's case first, then the general ones, and the
@@ -638,15 +677,24 @@ def tab_extract(ext, extp3, extp5, merton=None) -> None:
         "the \\emph{gradient} --- the control --- measured on functions whose gradients are known "
         "exactly, so the rates are properties of the reconstruction rather than of the benchmark; "
         "the first four columns are this paper's own problem, averaged over "
-        f"$p = 2, 3$ and $5$.{spread_txt}. The last column is the Merton value function, a power "
-        "function from a genuinely non-linear control problem --- non-polynomial, so the cubic "
-        "reconstruction is not exact there. Differentiating the piecewise-linear reconstruction "
-        "exactly is no better than probing it, so consistency with the interpolant buys nothing. "
-        "The quadratic column is this paper's own case and flatters the cubic method, which "
-        "reproduces quadratics exactly; every other column is the one to quote. Errors are "
-        "normalised by the spread of the true gradient.}",
+        f"$p = 2, 3$ and $5$.{spread_txt}. Every order is fitted to the relative $L^2$ error, "
+        "and the probe step is stated because it is not innocent: the first three rows use the "
+        "practical probe $\\varepsilon = h/4$, and the last row repeats the same three "
+        "measurements with $\\varepsilon$ far below the mesh, which recovers the reconstruction's "
+        "own order --- the cubic reaches $\\approx 3.5$ there, so a probe that is not scaled with "
+        "the mesh silently caps the order a high-order reconstruction can deliver. The last "
+        "column is the Merton value function, a power function from a genuinely non-linear "
+        "control problem --- non-polynomial, so the cubic reconstruction is not exact there. "
+        "Differentiating the piecewise-linear reconstruction exactly is no better than probing "
+        "it, so consistency with the interpolant buys nothing. The quadratic column is this "
+        "paper's own case and flatters the cubic method, which reproduces quadratics exactly; "
+        "every other column is the one to quote.}",
         "\\label{tab:extract}",
         "\\small",
+        # Two extra rows went in with the intrinsic-probe measurement, and the row labels are the
+        # widest thing in this table; the inter-column space is tightened rather than the font
+        # shrunk, so the numbers stay the same size as every other table's.
+        "\\setlength{\\tabcolsep}{3.5pt}",
         "\\begin{tabular}{l" + "r" * len(functions) + "}",
         "\\toprule",
         " & \\multicolumn{" + str(len(functions)) + "}{c}{gradient-error convergence rate} \\\\",
@@ -660,7 +708,7 @@ def tab_extract(ext, extp3, extp5, merton=None) -> None:
             if f == "Merton":
                 v = m_orders.get(key) or {}
                 o = v.get("order")
-                cells.append("exact" if o is None else f"{o:.1f}")
+                cells.append("exact" if o is None else f"{order_from_mse_order(o):.1f}")
                 continue
             vals = pooled.get((key, f), [])
             if not vals:
@@ -670,9 +718,581 @@ def tab_extract(ext, extp3, extp5, merton=None) -> None:
             else:
                 cells.append(f"{sum(vals)/len(vals):.1f}")
         lines.append(f"{label} & " + " & ".join(cells) + " \\\\")
+    if intr:
+        def _cell(fname: str, method: str) -> str:
+            v = (intr.get(fname) or {}).get(method)
+            return f"{v:.1f}" if isinstance(v, float) and v == v else "--"
+
+        lines.append("\\midrule")
+        lines.append("multilinear, $\\varepsilon \\ll h$ & "
+                     + " & ".join("--" if f == "Merton" else _cell(f, "fd")
+                                  for f in functions) + " \\\\")
+        lines.append("cubic, $\\varepsilon \\ll h$ & "
+                     + " & ".join("--" if f == "Merton" else _cell(f, "spline")
+                                  for f in functions) + " \\\\")
     lines += ["\\bottomrule", "\\end{tabular}", "\\end{table}", ""]
     (TABDIR / "tab_extract.tex").write_text("\n".join(lines))
     print("  wrote paper/tables/tab_extract.tex")
+
+
+def tab_limit(res) -> None:
+    """Order against monotonicity: what a limited reconstruction costs and what it buys.
+
+    Generated from `exp_limited_reconstruction.py`. The two columns that matter for a control are
+    the wrong-way fraction (the reconstruction pointing OPPOSITE to a significant true gradient --
+    for a derivative that is a trade in the wrong direction) and the overshoot beyond the largest
+    true gradient. The order column is reported only where an order exists: a discontinuous
+    gradient and noisy nodal values have none.
+    """
+    fns = (res or {}).get("functions") or {}
+    if not fns:
+        print("  NOTE: no exp_limited_reconstruction results; skipping tab_limit")
+        return
+    rows = [
+        ("smooth, monotone", "exponential", "order"),
+        ("smooth, interior turning point", "trigonometric", "order"),
+        ("gradient kink", "kink", None),
+        ("2\\% nodal noise (solved grid)", "exponential_noisy", None),
+    ]
+    lines = [
+        "% Auto-generated by src/make_tables.py -- do not edit by hand.",
+        "\\begin{table}[t]",
+        "\\centering",
+        "\\caption{Order against monotonicity, on functions whose gradients are known. "
+        "\\emph{cubic} is the unlimited reconstruction of Proposition~1 with a probe far below the "
+        "mesh; \\emph{limited} is the same gradient passed through a monotonised-central limiter "
+        "built from the nodal one-sided slopes. \\emph{Wrong way} is the fraction of samples where "
+        "the reconstruction has the OPPOSITE sign to a significant true gradient --- for a control, "
+        "which is a derivative, that is a trade in the wrong direction rather than a small error, "
+        "and returning zero at a turning point is the safe answer and is not counted. "
+        "\\emph{Overshoot} is the largest recovered gradient relative to the largest true one. The "
+        "order column is given only where an order exists: a discontinuous gradient and noisy data "
+        "have none. On smooth data the limiter is inert (no wrong-way samples either way) and costs "
+        "nothing except at interior turning points, where clipping drops it from $3.7$ to $1.5$. On "
+        "data that are not smooth it is what stops the control pointing the wrong way.}",
+        "\\label{tab:limit}",
+        "\\scriptsize",
+        "\\setlength{\\tabcolsep}{3pt}",
+        "\\begin{tabular}{lcccc}",
+        "\\toprule",
+        " & \\multicolumn{2}{c}{wrong way (\\%)} & \\multicolumn{2}{c}{overshoot ($\\times$)} \\\\",
+        "\\cmidrule(lr){2-3} \\cmidrule(lr){4-5}",
+        "data condition & cubic & limited & cubic & limited \\\\",
+        "\\midrule",
+    ]
+    for label, key, _ in rows:
+        pm = (fns.get(key) or {}).get("per_method") or {}
+        if not pm:
+            continue
+        c, l = pm.get("cubic") or {}, pm.get("limited") or {}
+        lines.append(
+            f"{label} & {100*c.get('max_wrong_way', float('nan')):.1f} & "
+            f"{100*l.get('max_wrong_way', float('nan')):.1f} & "
+            f"{c.get('max_overshoot', float('nan')):.2f} & "
+            f"{l.get('max_overshoot', float('nan')):.2f} \\\\")
+    lines += [
+        "\\midrule",
+        "\\multicolumn{5}{l}{\\emph{convergence order, where one exists}} \\\\",
+    ]
+    for label, key, _ in rows:
+        pm = (fns.get(key) or {}).get("per_method") or {}
+        c, l = pm.get("cubic") or {}, pm.get("limited") or {}
+        # Noisy nodal values have no convergence order -- the noise floor sets the error -- so the
+        # fitted slope (which comes out negative) is not reported as one.
+        if c.get("order") is None or "noisy" in key:
+            continue
+        lines.append(f"\\multicolumn{{5}}{{l}}{{{label}: cubic ${c['order']:.2f}$, "
+                     f"limited ${l['order']:.2f}$}} \\\\")
+    lines += ["\\bottomrule", "\\end{tabular}", "\\end{table}", ""]
+    (TABDIR / "tab_limit.tex").write_text("\n".join(lines))
+    print("  wrote paper/tables/tab_limit.tex")
+
+
+def tab_nonpoly(res, res12) -> None:
+    """Is N* = 21 at every dimension a property of the solvers, or of the quadratic solution?
+
+    Generated from `exp_nonpolynomial.py` (two runs: a well-resolved non-polynomial term and a
+    spatially under-resolved one). The quadratic row is the benchmark's own result, repeated here so
+    the contrast is in one place rather than in the reader's memory.
+    """
+    dims = (res or {}).get("dims") or {}
+    dims12 = (res12 or {}).get("dims") or {}
+    if not dims:
+        print("  NOTE: no exp_nonpolynomial results; skipping tab_nonpoly")
+        return
+    keys = sorted(dims, key=int)
+    lines = [
+        "% Auto-generated by src/make_tables.py -- do not edit by hand.",
+        "\\begin{table}[t]",
+        "\\centering",
+        "\\caption{The benchmark's dimension-free resolution is a property of its SOLUTION, not of "
+        "the solvers. The quadratic rows are the paper's benchmark, whose value function is a "
+        "quadratic form: a second-order scheme reproduces it almost exactly, and $N^\\star = 21$ "
+        "suffices for the accuracy target at every dimension. The non-polynomial rows replace it "
+        "with a manufactured exact solution, $V = -\\tfrac12 x^\\top P(t)x + 5\\times10^{-3}(T-t)"
+        "\\sin(3\\cdot \\mathbf{1}^\\top x)$, made exact by a source in the running reward, and solved "
+        "by \\emph{the same solver} with the same stencil and CFL bound. The target "
+        "($\\text{relative }L^2$ value error $\\le 10^{-3}$) is then not reached by $N=61$ in any "
+        "dimension. The control-error order and the cubic-vs-multilinear gain are given at the "
+        "finest mesh: the order stays near one, as Proposition~1 predicts for a piecewise-linear "
+        "reconstruction, and the cubic reconstruction keeps a nine- to seventeen-fold advantage on "
+        "the same nodes --- so the paper's headline result does not depend on the solution being a "
+        "polynomial.}",
+        "\\label{tab:nonpoly}",
+        "\\scriptsize",
+        "\\setlength{\\tabcolsep}{4pt}",
+        "\\begin{tabular}{l" + "r" * len(keys) + "}",
+        "\\toprule",
+        " & " + " & ".join(f"$d={k}$" for k in keys) + " \\\\",
+        "\\midrule",
+        "\\multicolumn{" + str(len(keys) + 1) + "}{l}{\\emph{quadratic solution (this paper's "
+        "benchmark)}} \\\\",
+        "\\multicolumn{" + str(len(keys) + 1) + "}{l}{$N^\\star$ for the target: "
+        + ", ".join(["21"] * len(keys)) + "} \\\\",
+        "\\midrule",
+        "\\multicolumn{" + str(len(keys) + 1) + "}{l}{\\emph{non-polynomial solution "
+        "(manufactured, same solvers)}} \\\\",
+    ]
+
+    def row(label, getter, fmt, src=None):
+        # `src` must be passed explicitly: closing over `dims` silently printed the w=3 numbers in
+        # the w=12 rows, which is the kind of duplication that looks like a result.
+        data = dims if src is None else src
+        cells = []
+        for k in keys:
+            v = getter(data.get(k))
+            cells.append("--" if v is None else fmt(v))
+        lines.append(f"{label} & " + " & ".join(cells) + " \\\\")
+
+    row("value rel.\\ $L^2$ at $N=61$", lambda dd: dd["rows"][-1]["value_rel_l2"], lambda v: f"{v:.1e}")
+    row("target $10^{-3}$ reached", lambda dd: dd["target_reached"], lambda v: "yes" if v else "no")
+    row("value order vs $N$", lambda dd: dd["order_value_vs_N"], lambda v: f"{v:.2f}")
+    row("control order vs $N$", lambda dd: dd["order_control_vs_N"], lambda v: f"{v:.2f}")
+    row("cubic gain at $N=61$",
+        lambda dd: dd["rows"][-1]["control_rel_l2_multilinear"]
+        / dd["rows"][-1]["control_rel_l2_cubic"], lambda v: f"{v:.1f}$\\times$")
+    if dims12:
+        lines.append("\\midrule")
+        lines.append("\\multicolumn{" + str(len(keys) + 1) + "}{l}{\\emph{the same, with the "
+                     "non-polynomial term under-resolved ($\\omega=12$)}} \\\\")
+        row("value rel.\\ $L^2$ at $N=61$",
+            lambda dd: dd["rows"][-1]["value_rel_l2"] if dd else None,
+            lambda v: f"{v:.1e}", src=dims12)
+        row("value order vs $N$", lambda dd: dd["order_value_vs_N"] if dd else None,
+            lambda v: f"{v:.2f}", src=dims12)
+        row("cubic gain at $N=61$",
+            lambda dd: (dd["rows"][-1]["control_rel_l2_multilinear"]
+                        / dd["rows"][-1]["control_rel_l2_cubic"]) if dd else None,
+            lambda v: f"{v:.1f}$\\times$", src=dims12)
+    lines += ["\\bottomrule", "\\end{tabular}", "\\end{table}", ""]
+    (TABDIR / "tab_nonpoly.tex").write_text("\n".join(lines))
+    print("  wrote paper/tables/tab_nonpoly.tex")
+
+
+def tab_meshfree(lsmc, high) -> None:
+    """Who can actually run past the grid's limit, and how accurate are they?
+
+    Generated from `exp_lsmc.py` (regression Monte Carlo, the paper's own problem: hetero=True,
+    het_seed=1) and `exp_highdim.json` (the PINN and grid runs on the same problem). The point of the
+    table is that the mesh-free side is not only neural: a classical regression method also runs at
+    every dimension here, so "the neural solver is the only method that runs" needed qualifying.
+    """
+    dims = (lsmc or {}).get("dims") or {}
+    if not dims:
+        print("  NOTE: no exp_lsmc results; skipping tab_meshfree")
+        return
+    runs = [r for r in (high or {}).get("runs", []) if r.get("feasible")]
+
+    def pin(p):
+        rows = [r for r in runs if r.get("method") == "PINN" and r.get("hetero") is True
+                and r.get("p") == p]
+        return (float(np.mean([r["value_r2"] for r in rows])),
+                float(np.mean([r["solve_time_s"] for r in rows]))) if rows else (None, None)
+
+    def grid(p):
+        rows = [r for r in runs if r.get("method") == "Finite Difference" and r.get("p") == p]
+        return float(rows[0]["value_r2"]) if rows else None
+
+    keys = sorted(dims, key=int)
+    lines = [
+        "% Auto-generated by src/make_tables.py -- do not edit by hand.",
+        "\\begin{table}[t]",
+        "\\centering",
+        "\\caption{Beyond the grid's limit, on the non-separable benchmark (per-asset heterogeneous "
+        "risk and impact, random off-diagonal risk). The mesh-free side is not only neural: "
+        "regression Monte Carlo --- a classical method that needs no grid --- runs at every "
+        "dimension here, and it is more accurate than the neural solver at every dimension where "
+        "both were measured, in seconds on a CPU where the neural runs take minutes on a GPU. "
+        "$m$ is the number of quadratic basis functions the regression fits "
+        "at every time slice, $1 + d + d(d+1)/2$: the cost of this family grows in the BASIS, not in "
+        "the state dimension. That basis is also the qualification --- it is the exact structure of "
+        "this benchmark's value function, which the neural solver is not given, so the result is a "
+        "statement about this problem class rather than about high-dimensional HJB equations in "
+        "general. PINN entries are means over its seeds at a fixed 8000-epoch budget; the grid is "
+        "runnable only to $p = 5$.}",
+        "\\label{tab:meshfree}",
+        "\\scriptsize",
+        "\\setlength{\\tabcolsep}{4pt}",
+        "\\begin{tabular}{rrrrrr}",
+        "\\toprule",
+        "$d$ & PINN $R^2$ & RMC $R^2$ & RMC $m$ & RMC (s) & grid $R^2$ \\\\",
+        "\\midrule",
+    ]
+    for k in keys:
+        rows = dims[k]
+        last = rows[-1] if rows else {}
+        p_r2, _ = pin(int(k))
+        g_r2 = grid(int(k))
+        lines.append(
+            f"{k} & " + (f"${p_r2:+.4f}$" if p_r2 is not None else "--") + " & "
+            + (f"${last.get('value_r2', float('nan')):+.4f}$" if last else "--") + " & "
+            + (f"{last.get('basis_functions', 0)}" if last else "--") + " & "
+            + (f"{last.get('seconds', float('nan')):.0f}" if last else "--") + " & "
+            + (f"${g_r2:+.5f}$" if g_r2 is not None else "n/a$^\\dagger$") + " \\\\")
+    lines += [
+        "\\bottomrule",
+        "\\end{tabular}",
+        "\\\\[2pt] {\\footnotesize $^\\dagger$not runnable: $N^p$ grid points at the resolution the "
+        "accuracy target needs.}",
+        "\\end{table}",
+        "",
+    ]
+    (TABDIR / "tab_meshfree.tex").write_text("\n".join(lines))
+    print("  wrote paper/tables/tab_meshfree.tex")
+
+
+def tab_shortfall(res) -> None:
+    """What the reconstruction order is worth, in basis points of notional.
+
+    Generated from `exp_execution_shortfall.py`, which runs the paper's own real-market calibration
+    through the executed closed loop. The quoted number is the PAIRWISE difference between the two
+    reconstructions -- they share the snapshots and the time interpolation, so only the spatial
+    reconstruction differs -- and the third column shows that the cubic arm is at the numerical
+    floor, which is what makes the pairwise difference a statement about the multilinear one.
+    """
+    rows = (res or {}).get("rows") or []
+    if not rows:
+        print("  NOTE: no exp_execution_shortfall results; skipping tab_shortfall")
+        return
+    lines = [
+        "% Auto-generated by src/make_tables.py -- do not edit by hand.",
+        "\\begin{table}[t]",
+        "\\centering",
+        "\\caption{The reconstruction order in the currency it trades in. Each instrument is run "
+        "through the executed closed loop with the paper's real-market calibration "
+        "($\\eta$ = half the Roll effective spread, $\\sigma$ from minute bars), with the exact "
+        "value function placed on the grid so the solve contributes nothing and only the "
+        "reconstruction differs. \\emph{Excess over exact} is the cost of an arm measured against "
+        "the exact control, in basis points of notional; \\emph{multilinear vs cubic} is the "
+        "pairwise difference, which is the well-posed statement because both arms share the "
+        "snapshots and the time interpolation. The cubic arm sits at the numerical floor "
+        "($\\le 0.02$\\,bp), so raising the reconstruction order is worth the difference column --- "
+        "and it is worth most on the MOST liquid instrument, because a tighter spread buys a larger "
+        "optimal control and therefore a larger reconstruction error. Full horizon: truncating the "
+        "integral at $T-\\delta$ removes the terminal penalty that pays for not liquidating, which "
+        "makes the slower policy look cheap (the pairwise figure falls to $-0.21$\\,bp at "
+        "$\\delta = 0.1$ on SPY); the sensitivity is in the reproduction.}",
+        "\\label{tab:shortfall}",
+        "\\scriptsize",
+        "\\setlength{\\tabcolsep}{4pt}",
+        "\\begin{tabular}{lrrr}",
+        "\\toprule",
+        "instrument & $\\eta$ (bp) & excess over exact: ml & ml vs cubic \\\\",
+        "\\midrule",
+    ]
+    for r in rows:
+        lines.append(f"{r['asset']} & {r['eta']*1e4:.2f} & "
+                     f"{r['excess_total_bp_multilinear']:.2f} & {r['pairwise_bp']:.2f} \\\\")
+    s = (res or {}).get("summary") or {}
+    if s:
+        lines.append("\\midrule")
+        # Kept short on purpose: the long form of this line overflowed a single column by 50 pt.
+        lines.append(f"\\multicolumn{{4}}{{l}}{{\\emph{{mean}} {s.get('pairwise_bp_mean', float('nan')):.2f}"
+                     f"\\,bp of notional}} \\\\")
+    lines += ["\\bottomrule", "\\end{tabular}", "\\end{table}", ""]
+    (TABDIR / "tab_shortfall.tex").write_text("\n".join(lines))
+    print("  wrote paper/tables/tab_shortfall.tex")
+
+
+def tab_compiled(res) -> None:
+    """What the grid timings were measuring: the scheme, or NumPy?
+
+    Generated from `exp_compiled_grid.py`, which runs the same scheme as a fused parallel kernel at
+    identical work (same grid, same step count) and checks that the two implementations agree on the
+    solved field.
+    """
+    rows = (res or {}).get("rows") or []
+    if not rows:
+        print("  NOTE: no exp_compiled_grid results; skipping tab_compiled")
+        return
+    rate_bits = ", ".join(f"$p={r['d']}$: ${r['numpy_gflops']:.2f}\\to{r['kernel_gflops']:.2f}$"
+                          for r in rows)
+    lines = [
+        "% Auto-generated by src/make_tables.py -- do not edit by hand.",
+        "\\begin{table}[t]",
+        "\\centering",
+        "\\caption{The grid timings, separated into the scheme and the implementation. The same "
+        "solve --- same grid, same stencil, same step count, checked to agree on the solved field to "
+        "$1.3\\times10^{-4}$ relative (the edge closure; the interior is identical) --- is run by the "
+        "NumPy solver used everywhere else in this paper and by a fused parallel kernel (numba; the "
+        "environment has no JAX). The implementation factor grows with the problem, from $2.5\\times$ "
+        "at $p=1$ to $11.9\\times$ at $p=4$, and the achieved rate rises --- " + rate_bits +
+        " GFLOP/s --- which is what the FLOP model in the text was there to correct for: the NumPy "
+        "figure was measuring per-step array overhead as much as arithmetic. The consequence for the "
+        "comparison is at $p=5$, where the NumPy grid was slower than the neural solver "
+        "($865$\\,s against $226$\\,s) and the compiled one is faster ($59$\\,s). Both columns are "
+        "the time-stepping sweeps only, at the same forced step count.}",
+        "\\label{tab:compiled}",
+        "\\scriptsize",
+        "\\setlength{\\tabcolsep}{4pt}",
+        "\\begin{tabular}{rrrrrr}",
+        "\\toprule",
+        "$p$ & $N$ & steps & NumPy (s) & kernel (s) & factor \\\\",
+        "\\midrule",
+    ]
+    for r in rows:
+        lines.append(f"{r['d']} & {r['n_grid']} & {r['n_steps']} & {r['numpy_seconds']:.2f} & "
+                     f"{r['kernel_seconds']:.3f} & ${r['speedup']:.1f}\\times$ \\\\")
+    lines += [
+        "\\bottomrule",
+        "\\end{tabular}",
+        "\\end{table}",
+        "",
+    ]
+    (TABDIR / "tab_compiled.tex").write_text("\n".join(lines))
+    print("  wrote paper/tables/tab_compiled.tex")
+
+
+def tab_solvers(grid, dim, pipinn, implicit, bsde, lsmc, splitting, mlp) -> None:
+    """Every solver this work measured, with the operating point each was measured at.
+
+    WHY THIS TABLE EXISTS
+    ---------------------
+    The paper's headline table compares two families at matched accuracy, which is what that question
+    needs -- but eight solvers were measured in total, and a reader who sees only Table~\\ref{tab:main}
+    reasonably concludes that two methods were compared. The operating points deliberately differ:
+    matched ACCURACY where a grid can run, matched BUDGET among the neural variants, matched PROBLEM
+    everywhere. Saying so in one place is cheaper than making the reader assemble it from five tables.
+
+    Every cell is pulled from a committed result file, named in the caption. Two rows had been
+    measured early and never reported at all (the implicit scheme, and the PI-PINN sweep).
+
+    Two selection traps this function exists to document: the accuracy-matched finite-difference run
+    is NOT in exp_dimension.json (that file holds the fixed-resolution sweep, whose p=2 row is a
+    finer grid and flatters the scheme by a factor of ten in both accuracy and time); and policy
+    iteration ran at N=41, not at the N=21 the accuracy-matched column uses, so its row says so.
+    """
+    lines_rows: list[tuple[str, str, str, str, str]] = []
+
+    fd = None
+    for r in (grid or {}).get("runs", []):
+        if r.get("p") == 2 and r.get("N") == 21 and "control_r2" in r:
+            fd = r
+            break
+    if fd:
+        lines_rows.append(("explicit finite differences", "grid", "$p=2$, $N^\\star=21$",
+                           f"${fd['value_r2']:.5f}$ / ${fd['control_r2']:.4f}$",
+                           f"{fd['solve_time_s']:.3f}"))
+
+    pi = None
+    for r in (dim or {}).get("runs", []):
+        if r.get("method") == "Policy Iteration" and r.get("p") == 2 and r.get("feasible"):
+            pi = r
+            break
+    if pi:
+        lines_rows.append(("Howard policy iteration", "grid",
+                           f"$p=2$, $N={pi['n_grid']}$", 
+                           f"${pi['value_r2']:.5f}$ / ${pi['control_r2']:.4f}$",
+                           f"{pi['solve_time_s']:.2f}"))
+
+    lod_rows = [r for r in (implicit or {}).get("rows", []) if r.get("scheme") == "lod"
+                and r.get("case", "").startswith("signal")]
+    expl_rows = [r for r in (implicit or {}).get("rows", []) if r.get("scheme") == "explicit"
+                 and r.get("case", "").startswith("signal")]
+    ok = [r for r in lod_rows if r.get("value_r2", -1) > 0.999]
+    if ok and expl_rows:
+        best = max(ok, key=lambda r: r.get("speedup_vs_explicit", 1.0))
+        ex = expl_rows[0]
+        lines_rows.append(("implicit LOD splitting", "grid", "signalled, $4\\times$ the explicit step",
+                           f"${best['value_r2']:.5f}$ / ${best['control_r2']:.4f}$",
+                           f"{best['seconds']:.3f} vs {ex['seconds']:.3f}"))
+
+    pruns = (pipinn or {}).get("runs") or []
+    direct = [r for r in pruns if r.get("method") == "Direct PINN" and "value_r2" in r]
+    if direct:
+        v = float(np.mean([r["value_r2"] for r in direct]))
+        c = float(np.mean([r["control_r2"] for r in direct]))
+        t = float(np.mean([r["solve_time_s"] for r in direct]))
+        lines_rows.append(("direct PINN, $4\\times64$", "neural",
+                           f"$p=2$, 6{{,}}000 epochs, {len(direct)} seeds",
+                           f"${v:.5f}$ / ${c:.4f}$", f"{t:.0f}"))
+    for iters in (2, 8):
+        sel = [r for r in pruns if r.get("method") == "PI-PINN" and r.get("num_iters") == iters
+               and "value_r2" in r]
+        if sel:
+            v = float(np.mean([r["value_r2"] for r in sel]))
+            c = float(np.mean([r["control_r2"] for r in sel]))
+            t = float(np.mean([r["solve_time_s"] for r in sel]))
+            lines_rows.append((f"PI-PINN, {iters} outer iterations", "neural",
+                               f"$p=2$, budget-matched, {len(sel)} seeds",
+                               f"${v:+.5f}$ / ${c:.4f}$", f"{t:.0f}"))
+
+    brows = sorted(((bsde or {}).get("rows") or []), key=lambda r: r.get("d", 0))
+    if brows:
+        r = brows[0]
+        secs = r["sec_per_epoch"] * r["epochs"]
+        lines_rows.append(("deep BSDE", "probabilistic",
+                           f"$p={r['d']}$, point-valued at $x_0$",
+                           f"${r['best_V_rel_err'] * 100:.2f}$\\% rel.\\ err / --", f"{secs:.0f}"))
+
+    dims = (lsmc or {}).get("dims") or {}
+    for dkey, label in (("5", "$d=5$"), ("20", "$d=20$")):
+        if dkey in dims:
+            r = dims[dkey][-1]
+            lines_rows.append((f"regression Monte Carlo ({label})", "classical, mesh-free",
+                               f"{r['basis_functions']} basis functions",
+                               f"${r['value_r2']:.5f}$ / ${r['control_r2']:.4f}$",
+                               f"{r['seconds']:.1f}"))
+
+    # Deep splitting, and the control experiment that identifies whose limitation the number is.
+    dsrows = (splitting or {}).get("rows") or []
+    ds_steps = None
+    for r in dsrows:
+        ds_steps = ds_steps or (r.get("validation", {}).get("by_steps") and
+                                max(int(k) for k in r["validation"]["by_steps"]))
+    for arm, label in (("neural", "deep splitting (neural regression)"),
+                       ("quadratic-basis control", "deep splitting, exact quadratic regression")):
+        sel = [r for r in dsrows if r.get("arm") == arm and r.get("d") == 1]
+        if not sel:
+            continue
+        r = sel[0]
+        cfg = f"$d=1$, {ds_steps} steps" if ds_steps else "$d=1$"
+        lines_rows.append((label, "deep splitting", cfg,
+                           f"${r['value_r2']:+.4f}$ / ${r['control_r2']:+.4f}$",
+                           f"{r['seconds']:.1f}"))
+
+    mlp_rows = [r for r in ((mlp or {}).get("rows") or []) if r.get("d") == 20 and r.get("eta") == 1.0]
+    if mlp_rows:
+        r = mlp_rows[0]
+        lines_rows.append(("multilevel Picard ($d=20$, $\\eta=1$)", "probabilistic",
+                           "point-valued at $x_0$",
+                           f"${r['rel_err'] * 100:.2f}$\\% rel.\\ err / --",
+                           f"{r['seconds']:.1f}"))
+
+    if not lines_rows:
+        print("  NOTE: no solver results; skipping tab_solvers")
+        return
+    lines = [
+        "% Auto-generated by src/make_tables.py -- do not edit by hand.",
+        "\\begin{table*}[t]",
+        "\\centering",
+        "\\caption{Every solver measured in this work, with the operating point each was measured "
+        "at. The headline comparison of Table~\\ref{tab:main} isolates the two families that can be "
+        "compared at \\emph{matched accuracy}; this is the full set, and the operating points "
+        "intentionally differ --- matched accuracy where a grid can run, matched \\emph{budget} among "
+        "the neural variants so that iterations rather than compute is the variable, the same problem "
+        "and the same exact reference throughout. The accuracy column names its own metric: $R^2$ for "
+        "the grid, neural and regression rows (value / control), and the relative error of the point "
+        "estimate at $x_0$ for deep BSDE, which is the only quantity that scheme produces "
+        "(Table~\\ref{tab:bsde} gives its dimension sweep). Policy iteration ran at a finer grid than "
+        "the accuracy-matched column, and says so. Two rows had been measured and never reported "
+        "before a reader asked how many methods the comparison covered: the implicit scheme, whose "
+        "$4\\times$ step holds at $R^2 = 0.9997$ on the signalled problem and at $0.9966$ on the "
+        "inventory-only one --- on this benchmark the stability restriction is set by the optimal "
+        "control rather than by the diffusion, so implicitness buys less than it does elsewhere --- "
+        "and the PI-PINN sweep, whose budget-matched runs are sensitive to the iteration count: two "
+        "iterations are worse than predicting the mean. Sources: "
+        "\\texttt{exp\\_grid\\_refinement\\_merged.json}, \\texttt{exp\\_dimension.json}, "
+        "\\texttt{exp\\_implicit\\_grid.json}, \\texttt{exp\\_pi\\_pinn.json}, "
+        "\\texttt{exp\\_bsde\\_dims.json}, \\texttt{exp\\_lsmc.json}.}",
+        "\\label{tab:solvers}",
+        "\\footnotesize",
+        "\\setlength{\\tabcolsep}{4pt}",
+        "\\begin{tabular}{llllr}",
+        "\\toprule",
+        "solver & family & operating point & accuracy (metric named per row) & time (s) \\\\",
+        "\\midrule",
+    ]
+    last_family = None
+    for name, family, cfg, acc, t in lines_rows:
+        if last_family is not None and family != last_family:
+            lines.append("\\addlinespace")
+        last_family = family
+        lines.append(f"{name} & {family} & {cfg} & {acc} & {t} \\\\")
+    lines += ["\\bottomrule", "\\end{tabular}", "\\end{table*}", ""]
+    (TABDIR / "tab_solvers.tex").write_text("\n".join(lines))
+    print("  wrote paper/tables/tab_solvers.tex")
+
+
+def tab_mlp(res) -> None:
+    """Multilevel Picard: what it does where its hypothesis holds, and where that hypothesis fails.
+
+    Generated from `multilevel_picard.py`. Two panels on purpose. The upper one is the contraction
+    boundary -- eta decides whether the Picard iteration MLP realises is a contraction, and the
+    verdict column is measured rather than asserted. The lower one gives the two instances across
+    dimension, and the contrast is the finding: at the paper's calibration MLP diverges at every
+    dimension, and at weaker control authority (eta = 1, a wider spread) it is the cheapest method in
+    the paper by a wide margin, reaching 0.26% at d = 20 in 2.3 seconds on a CPU.
+    """
+    rows = (res or {}).get("rows") or []
+    sweep = (res or {}).get("contraction_sweep") or []
+    check = (res or {}).get("implementation_check") or {}
+    if not rows and not sweep:
+        print("  NOTE: no exp_mlp results; skipping tab_mlp")
+        return
+    c2 = (check.get("2") or {}).get("rel_err", float("nan"))
+    c4 = (check.get("4") or {}).get("rel_err", float("nan"))
+    lines = [
+        "% Auto-generated by src/make_tables.py -- do not edit by hand.",
+        "\\begin{table}[t]",
+        "\\centering",
+        "\\caption{Multilevel Picard, measured rather than cited. \\emph{Upper}: the method realises "
+        "the Picard iteration, so it needs that iteration to be a contraction, with Lipschitz "
+        "constant $|\\nabla V|/\\eta$. Sweeping $\\eta$ from weak control authority to strong locates "
+        "the boundary between $|\\nabla V|/\\eta = 0.56$ (converged) and $0.91$ (diverged) instead of "
+        "leaving it as a caveat. \\emph{Lower}: the same HJB family at $d = 1$ to $20$. At the "
+        "paper's own calibration the scheme diverges at every dimension --- in a tenth of a second, "
+        "so this is the hypothesis failing rather than a budget running out --- while at $\\eta = 1$ "
+        "it is the cheapest method in this paper, $0.26$\\% at $d=20$ in $2.3$\\,s on a CPU, where no "
+        "grid can run and where the PINN reaches $R^2 = 0.757$. The implementation is checked where "
+        f"the hypothesis holds: at $\\eta=1$ the relative error falls ${c2:.1e} \\to {c4:.1e}$ from "
+        "level 2 to level 4.}",
+        "\\label{tab:mlp}",
+        "\\footnotesize",
+        "\\setlength{\\tabcolsep}{4pt}",
+        "\\begin{tabular}{rrrr}",
+        "\\toprule",
+        "\\multicolumn{4}{l}{\\emph{contraction boundary at $d=1$}} \\\\",
+        "$\\eta$ & $|\\nabla V|/\\eta$ & level-3 rel.\\ err & verdict \\\\",
+        "\\midrule",
+    ]
+    for r in sweep:
+        l3 = (r.get("levels") or {}).get("3")
+        if not l3:
+            continue
+        e = l3["rel_err"]
+        verdict = "converged" if e < 0.1 else ("not converged" if e < 1.0 else "diverged")
+        ratio = r["grad_V_at_x0"] / r["eta"]
+        lines.append(f"${r['eta']:g}$ & ${ratio:.3f}$ & ${e:.2e}$ & {verdict} \\\\")
+    lines += [
+        "\\midrule",
+        "\\multicolumn{4}{l}{\\emph{across dimension, $M=2$, 3 levels}} \\\\",
+        "$d$ & rel.\\ err at $\\eta=0.01$ & rel.\\ err at $\\eta=1$ & time at $\\eta=1$ (s) \\\\",
+        "\\midrule",
+    ]
+    by_d: dict = {}
+    for r in rows:
+        by_d.setdefault(r["d"], {})[r["eta"]] = r
+    for d in sorted(by_d):
+        a = by_d[d].get(0.01)
+        b = by_d[d].get(1.0)
+        if not (a and b):
+            continue
+        lines.append(f"${d}$ & ${a['rel_err']*100:.0f}$\\% & ${b['rel_err']*100:.3f}$\\% & "
+                     f"${b['seconds']:.2f}$ \\\\")
+    lines += ["\\bottomrule", "\\end{tabular}", "\\end{table}", ""]
+    (TABDIR / "tab_mlp.tex").write_text("\n".join(lines))
+    print("  wrote paper/tables/tab_mlp.tex")
 
 
 def main():
@@ -704,8 +1324,18 @@ def main():
     tab_extract(load("exp_control_extraction.json"),
                 load("exp_control_extraction_p3.json"),
                 load("exp_control_extraction_p5.json"),
-                load("exp_merton_extraction.json"))
+                load("exp_merton_extraction.json"),
+                load("exp_control_extraction_intrinsic.json"))
     tab_budget(budg)
+    tab_limit(load("exp_limited_reconstruction.json"))
+    tab_nonpoly(load("exp_nonpolynomial.json"), load("exp_nonpolynomial_omega12.json"))
+    tab_meshfree(load("exp_lsmc.json"), high)
+    tab_shortfall(load("exp_execution_shortfall.json"))
+    tab_compiled(load("exp_compiled_grid.json"))
+    tab_solvers(load("exp_grid_refinement_merged.json"), dim, load("exp_pi_pinn.json"),
+                load("exp_implicit_grid.json"), load("exp_bsde_dims.json"), load("exp_lsmc.json"),
+                load("exp_deep_splitting.json"), load("exp_mlp.json"))
+    tab_mlp(load("exp_mlp.json"))
     tab_highdim(high)
     tab_latency(lat)
     tab_ood(ood)

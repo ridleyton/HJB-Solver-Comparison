@@ -1,0 +1,112 @@
+{
+  "dims": {
+    "1": [
+      {
+        "N": 11,
+        "n_steps": 210,
+        "boundary_share_measured": 0.2636,
+        "boundary_share_geometric": 0.25,
+        "value_rms_interior": 6.515526401610303e-05,
+        "value_rms_boundary": 4.815676565098884e-05,
+        "control_rms_interior": 0.09066178928632064,
+        "control_rms_boundary": 0.09032414647677191,
+        "control_error_density_ratio": 0.9962757980820076,
+        "control_error_share_from_boundary": 0.26215401133846344,
+        "value_rel_l2": 0.021566239166716537,
+        "control_rel_l2": 0.12434193863527784,
+        "cubic_gain_interior": 30.390339470642047,
+        "cubic_gain_boundary": 14.950801603446388,
+        "seconds": 0.017439099996408913
+      },
+      {
+        "N": 21,
+        "n_steps": 420,
+        "boundary_share_measured": 0.131,
+        "boundary_share_geometric": 0.125,
+        "value_rms_interior": 1.4336469414519336e-05,
+        "value_rms_boundary": 7.5577449701006656e-06,
+        "control_rms_interior": 0.045384921756939096,
+        "control_rms_boundary": 0.04487182078312731,
+        "control_error_density_ratio": 0.9886944616416942,
+        "control_error_share_from_boundary": 0.1284329672918646,
+        "value_rel_l2": 0.00481225770360676,
+        "control_rel_l2": 0.06221432601266884,
+        "cubic_gain_interior": 25.848803806195296,
+        "cubic_gain_boundary": 13.88997160271503,
+        "seconds": 0.030657700001029298
+      }
+    ],
+    "2": [
+      {
+        "N": 11,
+        "n_steps": 210,
+        "boundary_share_measured": 0.4464,
+        "boundary_share_geometric": 0.4375,
+        "value_rms_interior": 0.0001241201215910516,
+        "value_rms_boundary": 0.00010289081150919749,
+        "control_rms_interior": 0.09017742871304628,
+        "control_rms_boundary": 0.08994202029329045,
+        "control_error_density_ratio": 0.997389497315288,
+        "control_error_share_from_boundary": 0.44510842621373037,
+        "value_rel_l2": 0.023210005346590047,
+        "control_rel_l2": 0.12455823511385847,
+        "cubic_gain_interior": 30.396903344223,
+        "cubic_gain_boundary": 18.062362042380556,
+        "seconds": 1.106940500001656
+      },
+      {
+        "N": 21,
+        "n_steps": 420,
+        "boundary_share_measured": 0.2388,
+        "boundary_share_geometric": 0.234375,
+        "value_rms_interior": 2.64907645346712e-05,
+        "value_rms_boundary": 1.6979097092178608e-05,
+        "control_rms_interior": 0.044899742013749085,
+        "control_rms_boundary": 0.0446650233342738,
+        "control_error_density_ratio": 0.9947723824470215,
+        "control_error_share_from_boundary": 0.23689973977338707,
+        "value_rel_l2": 0.004950638096367375,
+        "control_rel_l2": 0.0620130450286888,
+        "cubic_gain_interior": 25.77264795980571,
+        "cubic_gain_boundary": 16.853052398844984,
+        "seconds": 1.30919150000409
+      }
+    ],
+    "3": [
+      {
+        "N": 11,
+        "n_steps": 210,
+        "boundary_share_measured": 0.5824,
+        "boundary_share_geometric": 0.578125,
+        "value_rms_interior": 0.00018229815270574118,
+        "value_rms_boundary": 0.00015746760364566197,
+        "control_rms_interior": 0.09007993993761218,
+        "control_rms_boundary": 0.09031332371556916,
+        "control_error_density_ratio": 1.0025908518380298,
+        "control_error_share_from_boundary": 0.5836580743810069,
+        "value_rel_l2": 0.023824811025772653,
+        "control_rel_l2": 0.12475536554353021,
+        "cubic_gain_interior": 30.09768771199104,
+        "cubic_gain_boundary": 19.731916915171634,
+        "seconds": 12.449323499997263
+      },
+      {
+        "N": 21,
+        "n_steps": 420,
+        "boundary_share_measured": 0.3344,
+        "boundary_share_geometric": 0.330078125,
+        "value_rms_interior": 3.846503502770296e-05,
+        "value_rms_boundary": 2.7394423344724936e-05,
+        "control_rms_interior": 0.04494633907639638,
+        "control_rms_boundary": 0.04491530812425173,
+        "control_error_density_ratio": 0.9993096000078693,
+        "control_error_share_from_boundary": 0.334092630394925,
+        "value_rel_l2": 0.0049768433349797,
+        "control_rel_l2": 0.06213982748285518,
+        "cubic_gain_interior": 25.75105468009161,
+        "cubic_gain_boundary": 18.552595458921537,
+        "seconds": 12.773397900004056
+      }
+    ]
+  }
+}

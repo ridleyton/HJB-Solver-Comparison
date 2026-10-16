@@ -1,0 +1,77 @@
+%=====================================================================
+% Declarations required by Elsevier at submission. Kept in one file so the
+% corresponding author can paste each block into the submission system, and so
+% the statements cannot drift apart from each other.
+%
+% NOT part of the manuscript body: a journal asks for these as separate items.
+% Compile with:  python src/build_journal.py
+%=====================================================================
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.4em}
+\pagestyle{empty}
+
+\newcommand{\paper}{Reconstruction Order, Not Solver Family, Governs Control Accuracy: A Comparison
+of Neural and Classical HJB Solvers Against an Exact Reference}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries Declarations}\\[0.3em]
+{\itshape \paper}
+\end{center}
+
+\section*{CRediT authorship contribution statement}
+
+\textbf{Jingwen Zhang}: Conceptualization, Methodology, Software, Validation, Formal analysis,
+Investigation, Data curation, Visualization, Writing -- original draft.
+\textbf{Fei Ma}: Conceptualization, Supervision, Methodology, Writing -- review \& editing,
+Project administration.
+
+\emph{To be confirmed by both authors before submission: the corresponding author is not yet marked
+here, and funding acquisition and resources have been left out deliberately rather than assumed.}
+
+\section*{Declaration of competing interest}
+
+The authors declare that they have no known competing financial interests or personal relationships
+that could have appeared to influence the work reported in this paper.
+
+\section*{Data availability}
+
+\emph{Code and derived results.} All code, the preprocessing manifest, the temporal data splits and
+every raw result file behind every table and figure are released
+(see the manuscript's Reproducibility section). The repository is archived with a DOI at the time of
+publication, and the archived version is the one the paper's numbers were produced with.
+
+\emph{Market data.} The minute-bar data used for the market calibration are vendor data and cannot be
+redistributed. The repository instead contains the full preprocessing that consumes them, the
+temporal split dates, and the derived quantities the calibration depends on (per-instrument
+volatility and the Roll effective spread), so the calibration tables can be re-checked without the
+bars themselves.
+
+\emph{Environment.} The neural results were produced with the pinned environment in
+\texttt{requirements.txt}; the grid results need no GPU. The verification suite runs on CPU and on a
+clean checkout with no market data present.
+
+\section*{Funding}
+
+\emph{To be completed by the authors.} No funder is recorded here rather than guessed; if the work
+was supported by a grant, this section must name it before submission, since a missing funding
+statement is a common cause of a submission being returned.
+
+\section*{Acknowledgements}
+
+\emph{To be completed by the authors.} The compiler used for the timing comparison is numba, an
+open-source project; the reference baseline for the regression method is the published
+least-squares Monte Carlo line, cited in the manuscript.
+
+\section*{Use of generative AI}
+
+\emph{To be confirmed by the authors, and stated honestly in whatever form is true.} Elsevier requires
+disclosure of generative-AI use in the writing process. The measurements, code and verifications in
+this work were produced and checked computationally; any assistance used in drafting must be declared
+here in the wording the publisher requires.
+
+\end{document}

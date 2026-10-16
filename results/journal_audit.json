@@ -9,7 +9,7 @@
     {
       "item": "Repository actually published",
       "verdict": "MANUAL",
-      "evidence": "results directory holds 55 result files",
+      "evidence": "results directory holds 74 result files",
       "why": "Every table needs a path from the released repo to the number; the results exist, the public location does not yet. The manuscript's \\repourl macro carries a visible placeholder until it is set, so the PDF cannot be submitted with a stale link."
     },
     {
@@ -27,13 +27,13 @@
     {
       "item": "Reference list sized for a journal",
       "verdict": "OK",
-      "evidence": "40 entries in refs.bib, 40 \\cite commands in main.tex",
+      "evidence": "60 entries in refs.bib, 57 \\cite commands in main.tex",
       "why": "Journal reviews in this area typically see 40-60+ references; a short list reads as an under-positioned contribution and invites 'the authors appear unaware of ...'."
     },
     {
       "item": "Figure count appropriate to a journal paper",
       "verdict": "OK",
-      "evidence": "6 figures, 7 tables, 7 sections, 7 display equations",
+      "evidence": "6 figures, 14 tables, 8 sections, 12 display equations",
       "why": "A results paper with no figure asks the reader to reconstruct every trend from tables. It is survivable but it is the first thing a referee asks for."
     },
     {
@@ -45,7 +45,7 @@
     {
       "item": "Current paper's numbers are traceable to results/",
       "verdict": "OK",
-      "evidence": "verified: 7/7 prose assertions match, all 12 tables reproduce digit-for-digit, 0 unmatched",
+      "evidence": "verified: 93/93 prose assertions match, all 12 tables reproduce digit-for-digit, 0 unmatched",
       "why": "This replaces an earlier MANUAL item that asked the authors to source six conclusions from the ORIGINAL THESIS. That item was removed when the thesis was put out of scope: nothing in this paper cites or reproduces those conclusions, and the paper's own traceability is checked mechanically by verify_paper_numbers.py and check_table_drift.py instead of being asserted."
     }
   ],

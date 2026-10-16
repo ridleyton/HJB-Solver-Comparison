@@ -18,15 +18,21 @@ is beaten on accuracy.}
 Regime & Use & Deciding measurement \\
 \midrule
 Single instance, $p \le 5$ & \textbf{grid scheme} & faster \emph{and} more accurate everywhere it
-runs: factor $5$--$50$ in time at $p=4$--$5$, two to three orders at low $p$ (Table~\ref{tab:main}) \\
+runs: factor $5.6$ in time at $p=4$ as measured in NumPy, $114$ compiled, and two to three orders at
+low $p$ (Table~\ref{tab:main}) \\
 \addlinespace
 Control accuracy matters, not just value accuracy & \textbf{grid scheme}, and raise the
-reconstruction order & a cubic reconstruction on the same nodes cuts the control error
-$4$--$5$ orders of magnitude and the control/value ratio from $185$ to $2.8$
+reconstruction order & a cubic reconstruction on the same nodes raises the control-error order
+from $1.0$ to $2.4$ and cuts the control/value error ratio from $13.6$ to $1.7$
 (Table~\ref{tab:extract}) \\
 \addlinespace
-$p \ge 8$ & \textbf{neural}, the only method that runs & the grid needs $N^p$ points;
-at $N=21$, $p=8$ is $2\times10^{7}$ before the CFL-limited time step is counted
+$p \ge 8$, value function close to quadratic & \textbf{regression Monte Carlo} & it needs no grid
+either and is more accurate than the neural solver at every dimension tested, in seconds on a CPU
+(Table~\ref{tab:meshfree}) \\
+\addlinespace
+$p \ge 8$, value function not near-quadratic & \textbf{neural}, with the accuracy caveat & no
+classical method measured reaches this regime, and the neural solver's $R^2$ falls from $0.98$ at
+$p=8$ to $0.76$ at $p=20$ with no internal signal of the decay
 (Section~\ref{sec:highdim}) \\
 \addlinespace
 A family of $\gtrsim 10^3$ problems & \textbf{learned operator} & the classical scheme must be

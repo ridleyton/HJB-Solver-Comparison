@@ -118,10 +118,16 @@ class _GridSolver:
         dt_adv = np.inf if max_u <= 0 else 0.25 * dx_min / max_u
         return min(dt_diff, dt_adv)
 
-    def _hamiltonian_and_control(self, V: np.ndarray):
+    def _hamiltonian_and_control(self, V: np.ndarray, t: float | None = None):
         """Return (H_max reshaped, u* (N, control_dim)) where
         H_max = max_u { -1/2(x'Qx + u'Ru) + (grad V)'(Ax + Bu) },
         u* = R^{-1} B' grad V.
+
+        If the problem defines a `source(x, t)` -- a manufactured problem does, so that an exact but
+        NON-POLYNOMIAL value function can be imposed (see exp_nonpolynomial.py) -- it is added to the
+        running reward here. The maximiser is unchanged, because the source does not depend on u, so
+        the stencil, the CFL bound and every other solver path are untouched. Problems without a
+        source take exactly the code path they took before.
         """
         prob = self.problem
         d = prob.state_dim
@@ -137,6 +143,10 @@ class _GridSolver:
         ax = np.einsum("...i,ij,...j->...", g, prob.A, x)
         bu = np.einsum("...i,...i->...", g, Bu)
         H = (-0.5 * (xq + ur) + ax + bu).reshape(self.shape)
+        if t is not None:
+            src = getattr(prob, "source", None)
+            if src is not None:
+                H = H + np.asarray(src(self.X, float(t))).reshape(self.shape)
         return H, u
 
     def _diffusion(self, V: np.ndarray) -> np.ndarray:
@@ -275,7 +285,7 @@ class _GridSolver:
             k -= 1
         for step in range(n_steps):
             if policy_snap is None:
-                H, _ = self._hamiltonian_and_control(V)
+                H, _ = self._hamiltonian_and_control(V, t_now)
             else:
                 # Interpolate the frozen policy in time.
                 j = int(np.clip(np.searchsorted(snap_times, t_now), 1, len(snap_times) - 1))

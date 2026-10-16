@@ -64,9 +64,9 @@ plt.rcParams.update({
 # orders are not used to draw anything -- they are printed beside the measured ones so a reader can
 # see the measurement agreeing or disagreeing with theory.
 RECON = {
-    "fd": ("Probing difference (2nd order)", "#1f77b4", "o"),
-    "cell": ("Multilinear cell gradient (2nd order)", "#ff7f0e", "s"),
-    "spline": ("Cubic spline derivative (4th order)", "#2ca02c", "^"),
+    "fd": ("Probing difference (1st order)", "#1f77b4", "o"),
+    "cell": ("Multilinear cell gradient (1st order)", "#ff7f0e", "s"),
+    "spline": ("Cubic spline derivative (3rd order)", "#2ca02c", "^"),
 }
 
 
@@ -111,14 +111,17 @@ def fig_control_order() -> bool:
         if not tr:
             continue
         h = np.array([pt[0] for pt in tr])
-        e = np.array([pt[1] for pt in tr])
+        # Stored as a normalised MSE; the figure, like the rest of the paper, is on the relative
+        # L2 scale, so the ordinate is its square root and the measured order is halved.
+        e = np.sqrt(np.array([pt[1] for pt in tr]))
         o = (rep["orders"].get(key) or {}).get("order")
+        o = o / 2.0 if o else o
         shown = f"{label.split(' (')[0]} — order {o:.2f}" if o else label
         ax.loglog(h, e, marker=marker, color=color, lw=1.0, label=shown)
         hh = np.array([h[0], h[-1]])
-        ax.loglog(hh, e[0] * (hh / h[0]) ** 2, ls=":", color=color, lw=0.7, alpha=0.7)
+        ax.loglog(hh, e[0] * (hh / h[0]) ** 1, ls=":", color=color, lw=0.7, alpha=0.7)
     ax.set_xlabel("mesh spacing $h$")
-    ax.set_ylabel("control error")
+    ax.set_ylabel("control error (relative $L^2$)")
     ax.set_title(f"Reconstruction order sets control error\ntest function: {rep['function']}",
                  fontsize=7.5)
     ax.legend(loc="lower right", framealpha=0.9)
@@ -134,13 +137,13 @@ def fig_control_order() -> bool:
         for i, s in enumerate(synth):
             o = (s["orders"].get(key) or {}).get("order")
             if o:
-                vals.append(o)
+                vals.append(o / 2.0)
                 xs.append(i + (j - (len(keys) - 1) / 2) * w)
         ax.bar(xs, vals, width=w, color=RECON[key][1], label=RECON[key][0].split(" (")[0])
-    ax.axhline(2, ls="--", lw=0.8, color="0.35")
-    ax.axhline(4, ls="--", lw=0.8, color="0.35")
-    ax.text(len(funcs) - 0.5, 2.15, "order 2", fontsize=6.5, color="0.35", ha="right")
-    ax.text(len(funcs) - 0.5, 4.15, "order 4", fontsize=6.5, color="0.35", ha="right")
+    ax.axhline(1, ls="--", lw=0.8, color="0.35")
+    ax.axhline(3, ls="--", lw=0.8, color="0.35")
+    ax.text(len(funcs) - 0.5, 1.12, "order 1", fontsize=6.5, color="0.35", ha="right")
+    ax.text(len(funcs) - 0.5, 3.12, "order 3", fontsize=6.5, color="0.35", ha="right")
     ax.set_xticks(x)
     ax.set_xticklabels(funcs, rotation=20, ha="right", fontsize=6.5)
     ax.set_ylabel("measured order")
@@ -152,7 +155,7 @@ def fig_control_order() -> bool:
     save(fig, "fig_j1_control_order")
     plt.close(fig)
     for s in synth:
-        got = ", ".join(f"{k}={(s['orders'][k] or {}).get('order', float('nan')):.2f}"
+        got = ", ".join(f"{k}={(s['orders'][k] or {}).get('order', float('nan')) / 2:.2f}"
                         for k in keys if s["orders"].get(k))
         print(f"    {s['function']}: {got}")
     return True

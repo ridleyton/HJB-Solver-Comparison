@@ -1,0 +1,106 @@
+{
+  "texlive_bin_set": true,
+  "pdflatex_found": true,
+  "highlights": {
+    "ok": true,
+    "count": 5,
+    "max_chars": 80,
+    "over_limit": [],
+    "bullets": [
+      "A degree-k reconstruction gives gradient order k, and a bad probe step caps it.",
+      "Control error is 3.2 to 26 times value error; value accuracy does not bound it.",
+      "Raising the reconstruction from linear to cubic is worth 2.7-8.4 bp of notional.",
+      "A compiled grid kernel is 2.5-12x faster than the NumPy one at identical work.",
+      "Classical regression Monte Carlo beats the neural solver at d = 8, 12 and 20."
+    ]
+  },
+  "compiles": [
+    {
+      "file": "cover_letter.tex",
+      "ok": true,
+      "pages": 2,
+      "pdf": "paper\\journal\\cover_letter.pdf",
+      "detail": ""
+    },
+    {
+      "file": "declarations.tex",
+      "ok": true,
+      "pages": 2,
+      "pdf": "paper\\journal\\declarations.pdf",
+      "detail": ""
+    },
+    {
+      "file": "nomenclature.tex",
+      "ok": true,
+      "pages": 1,
+      "pdf": "paper\\journal\\nomenclature.pdf",
+      "detail": ""
+    }
+  ],
+  "inventory": [
+    {
+      "item": "Manuscript PDF",
+      "path": "paper\\main.pdf",
+      "present": true,
+      "required_at_submission": true,
+      "size": 499445
+    },
+    {
+      "item": "Highlights",
+      "path": "paper\\journal\\highlights.txt",
+      "present": true,
+      "required_at_submission": true,
+      "size": 670
+    },
+    {
+      "item": "Cover letter (PDF)",
+      "path": "paper\\journal\\cover_letter.pdf",
+      "present": true,
+      "required_at_submission": true,
+      "size": 84537
+    },
+    {
+      "item": "Cover letter (source)",
+      "path": "paper\\journal\\cover_letter.tex",
+      "present": true,
+      "required_at_submission": false,
+      "size": 4135
+    },
+    {
+      "item": "Declarations (PDF)",
+      "path": "paper\\journal\\declarations.pdf",
+      "present": true,
+      "required_at_submission": true,
+      "size": 79423
+    },
+    {
+      "item": "Declarations (source)",
+      "path": "paper\\journal\\declarations.tex",
+      "present": true,
+      "required_at_submission": false,
+      "size": 3640
+    },
+    {
+      "item": "Nomenclature (PDF)",
+      "path": "paper\\journal\\nomenclature.tex",
+      "present": true,
+      "required_at_submission": false,
+      "size": 2827
+    },
+    {
+      "item": "Submission checklist",
+      "path": "paper\\journal\\README.md",
+      "present": true,
+      "required_at_submission": true,
+      "size": 6162
+    },
+    {
+      "item": "Conversion recipe",
+      "path": "paper\\journal\\README.md",
+      "present": true,
+      "required_at_submission": false,
+      "size": 6162
+    }
+  ],
+  "missing_required": []
+}

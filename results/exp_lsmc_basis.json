@@ -1,0 +1,108 @@
+{
+  "dim": 4,
+  "a0_values": [
+    0.0,
+    0.0001,
+    0.001,
+    0.005,
+    0.02
+  ],
+  "repeats": 3,
+  "rows": [
+    {
+      "A0": 0.0,
+      "basis_functions": 15,
+      "repeats": 3,
+      "diverged": false,
+      "n_diverged": 0,
+      "details": [],
+      "value_r2": 0.999821816071936,
+      "value_r2_min": 0.9998179853503995,
+      "value_r2_max": 0.9998281509309463,
+      "value_r2_all": [
+        0.9998281509309463,
+        0.999819311934462,
+        0.9998179853503995
+      ],
+      "value_rel_l2": 0.005411533335432486,
+      "spread": 1.0165580546894759e-05,
+      "seconds": 95.1399734000006
+    },
+    {
+      "A0": 0.0001,
+      "basis_functions": 15,
+      "repeats": 3,
+      "diverged": false,
+      "n_diverged": 0,
+      "details": [],
+      "value_r2": 0.9994429062381114,
+      "value_r2_min": 0.9994359268705484,
+      "value_r2_max": 0.9994508497015364,
+      "value_r2_all": [
+        0.9994508497015364,
+        0.9994419421422495,
+        0.9994359268705484
+      ],
+      "value_rel_l2": 0.009571874735474198,
+      "spread": 1.4922830988028934e-05,
+      "seconds": 99.91057639999781
+    },
+    {
+      "A0": 0.001,
+      "basis_functions": 15,
+      "repeats": 3,
+      "diverged": false,
+      "n_diverged": 0,
+      "details": [],
+      "value_r2": 0.9561859464994394,
+      "value_r2_min": 0.9559952761176856,
+      "value_r2_max": 0.9563279704003625,
+      "value_r2_all": [
+        0.9563279704003625,
+        0.9562345929802704,
+        0.9559952761176856
+      ],
+      "value_rel_l2": 0.08623654620029107,
+      "spread": 0.00033269428267690415,
+      "seconds": 98.97666549999849
+    },
+    {
+      "A0": 0.005,
+      "basis_functions": 15,
+      "repeats": 3,
+      "diverged": false,
+      "n_diverged": 0,
+      "details": [],
+      "value_r2": -1.1966345818324444,
+      "value_r2_min": -1.2022784348759088,
+      "value_r2_max": -1.1935340122294211,
+      "value_r2_all": [
+        -1.1940912983920033,
+        -1.2022784348759088,
+        -1.1935340122294211
+      ],
+      "value_rel_l2": 0.7757968132528434,
+      "spread": 0.00874442264648767,
+      "seconds": 97.32748110000102
+    },
+    {
+      "A0": 0.02,
+      "basis_functions": 15,
+      "repeats": 3,
+      "diverged": true,
+      "n_diverged": 3,
+      "details": [
+        "path diverged at iteration 3",
+        "path diverged at iteration 3",
+        "path diverged at iteration 3"
+      ],
+      "value_r2": null,
+      "value_r2_min": null,
+      "value_r2_max": null,
+      "value_r2_all": [],
+      "value_rel_l2": null,
+      "spread": 0.0,
+      "seconds": 25.772912899999938
+    }
+  ]
+}

@@ -138,8 +138,19 @@ def main() -> int:
         "Secrets are out of scope for this repository -- every .py in src/ was checked and none "
         "reads or embeds a credential -- but the RELEASED package has to be confirmed clean at the "
         "moment it is published, including any file copied in from elsewhere.")
+    # Read the prose check's own output rather than repeating a number that goes stale: the
+    # assertion count changed when the metric convention changed, and a hard-coded "7/7" would
+    # have kept claiming success from a file that now reports 25.
+    _vp = RESULTS / "verify_paper_numbers.json"
+    if _vp.exists():
+        _v = json.loads(_vp.read_text(encoding="utf-8"))
+        _evidence = (f"verified: {_v.get('matched', 0)}/{_v.get('matched', 0) + _v.get('unmatched', 0)} "
+                     f"prose assertions match, all 12 tables reproduce digit-for-digit, "
+                     f"{_v.get('unmatched', 0)} unmatched")
+    else:
+        _evidence = "not run in this session: results/verify_paper_numbers.json absent"
     add("Current paper's numbers are traceable to results/", STATUS["OK"],
-        "verified: 7/7 prose assertions match, all 12 tables reproduce digit-for-digit, 0 unmatched",
+        _evidence,
         "This replaces an earlier MANUAL item that asked the authors to source six conclusions from "
         "the ORIGINAL THESIS. That item was removed when the thesis was put out of scope: nothing in "
         "this paper cites or reproduces those conclusions, and the paper's own traceability is "

@@ -1,0 +1,57 @@
+%=====================================================================
+% Nomenclature: the symbols the manuscript uses, in one place, with the value
+% each takes in the benchmark. Two copies exist on purpose:
+%   * this file, for the journal's separate-items upload;
+%   * paper/tables/tab_nomenclature.tex, generated from the problem's own
+%     parameters so the values cannot drift from the code.
+%=====================================================================
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries Nomenclature}
+\end{center}
+
+\vspace{0.5em}
+\noindent\textbf{State and control.} $x \in \mathbb{R}^d$ is the state (inventory, and the signal
+when one is modelled); $u \in \mathbb{R}^m$ is the control (trading rate); $d$ is the state
+dimension and $m$ the control dimension, with $m = p$ and $d = p$ in the inventory-only benchmark;
+$p$ is the number of assets.
+
+\medskip
+\noindent\textbf{Problem data.} $T$ is the horizon; $Q = \lambda\sigma^2 I$ the inventory-risk
+penalty; $R = \eta I$ the temporary market impact; $Q_T$ the terminal inventory penalty;
+$\Sigma = \sigma I$ the diffusion; $A$, $B$ the dynamics; $\lambda$ risk aversion (a preference, not
+measurable); $\sigma$ relative volatility; $\eta$ the impact coefficient, identified with half the
+Roll effective spread; $k = \sqrt{Q/\eta}$ the liquidation rate.
+
+\medskip
+\noindent\textbf{Solution.} $V(x,t) = -\tfrac12 x^\top P(t)x + c(t)$ is the value function;
+$P(t)$ solves the matrix Riccati equation with $P(T) = Q_T$; $u^\star = -R^{-1}B^\top P(t)x$ is the
+optimal feedback; $J(u)$ is the objective under control $u$.
+
+\medskip
+\noindent\textbf{Discretisation.} $h$ is the mesh spacing, $N$ the number of grid points per axis,
+$N^\star$ the smallest $N$ reaching the stated accuracy target; $R_h$ is the reconstruction that
+turns nodal values into a continuous function, of polynomial degree $k$; $\nabla_h V$ is the gradient
+recovered from it; $\varepsilon$ is the finite-difference probe step, taken as
+$\varepsilon = c\,h^{\alpha}$ when the scaling is being tested.
+
+\medskip
+\noindent\textbf{Errors.} All errors are relative $L^2$ norms,
+$\|a - a^\star\|_2 / \|a^\star\|_2$; every convergence order is the least-squares slope of
+$\log(\text{error})$ against $\log h$; $R^2$ is reported as a secondary, dimensionless accuracy
+number and is never used to fit an order.
+
+\medskip
+\noindent\textbf{Measured configurations.} Default coefficients $\eta = \lambda\sigma^2 = 0.01$,
+$Q_T = 0.1$, $\sigma = 0.01$, $T = 1$ (giving $k = 1$); accuracy-matched grid resolution
+$N^\star = 21$ at every dimension for the quadratic benchmark; CPU for grid timings, one GPU for the
+neural ones.
+
+\end{document}

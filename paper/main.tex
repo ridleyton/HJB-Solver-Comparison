@@ -99,24 +99,46 @@ Suzhou, China}
 Value accuracy does not bound control accuracy. On the Hamilton--Jacobi--Bellman (HJB) equation of
 optimal execution, the reconstruction that turns
 nodal values into a gradient can dominate the error in the strategy actually executed. With a
-multilinear reconstruction the control error is 10 to 684 times the value error. Replacing it with a
-cubic reconstruction on the same nodes is four to five orders of magnitude more accurate and costs
-nothing at the grid level. What governs control accuracy is therefore the order of the
+multilinear reconstruction the control error is 3.2 to 26 times the value error. Replacing it with a
+cubic reconstruction on the same nodes raises the control-error order from one to about $2.4$,
+cutting the control/value error ratio from $13.6$ to $1.7$, and costs nothing at the grid level.
+Two propositions fix the rates rather than merely observing them: a degree-$k$ reconstruction
+delivers order $k$ --- capped at $2\alpha$ if the gradient is probed at step $h^{\alpha}$, so a
+probe that shrinks only like $h$ caps a cubic at order two --- and, for this problem, the objective
+lost is \emph{exactly} the $R$-weighted squared control deviation accumulated along the executed
+path.
+What governs control accuracy is therefore the order of the
 reconstruction, not the choice of solver family.
 
 This reframes the choice between neural and classical solvers, which is what we set out to measure.
 Physics-informed neural networks (PINNs) are widely proposed for optimal control in finance on the
 grounds of the curse of dimensionality, but it is unclear when a neural solver is the right choice
-and when a classical one is. We compare explicit finite differences, Howard policy iteration and two
-PINN variants on a multi-asset optimal-execution HJB whose value function has an exact matrix Riccati
+and when a classical one is. We compare twelve solver configurations across five families: explicit
+finite differences, an implicit splitting scheme and Howard policy iteration on the grid; a direct
+physics-informed network and a policy-iteration variant of it; the deep BSDE scheme and its modern
+relative, deep splitting; and regression Monte Carlo, a classical mesh-free method that the earlier
+version of this work had only cited.
+The benchmark is a multi-asset optimal-execution HJB whose value function has an exact matrix Riccati
 reference, both without a predictive signal and with one. Because that reference is exact rather than
 another solver, it removes the circularity of scoring one solver against another, and it stays exact
-at every state dimension --- so accuracy can be measured where no classical baseline can run.
+at every state dimension --- so accuracy can be measured where no grid can run.
 
 Against that reference the comparison gives a boundary rather than a winner. Where a grid scheme can
-run ($d \le 5$) it is both faster and more accurate, by a factor of $5$ to $50$ in time at
-$d=4$--$5$. Beyond that the mesh-free solver is the only method that runs, at accuracy decaying from
-$R^2 = 0.98$ at $d=8$ to $0.76$ at $d=20$ and with no internal signal of the decay. The neural
+run ($d \le 5$) it is both faster and more accurate, by a factor of $5.6$ to $114$ in time at
+$d=4$ depending on whether the scheme is compiled. Beyond that the classical side does not disappear:
+regression Monte Carlo, which needs no grid either, also runs, and on this benchmark it is more
+accurate than the neural solver at every
+dimension tested --- $R^2$ of $0.999$ at $d=12$ and $0.977$ at $d=20$, against the neural solver's
+$0.927$ and $0.757$, in seconds on a CPU rather than minutes on a GPU. Multilevel Picard, the classical
+method with a complexity theory behind it, reaches $0.26\%$ relative error at $d=20$ in
+$2.3$ seconds where no grid can run. That last result holds at a wider spread: at the benchmark's own
+calibration the Picard iteration multilevel Picard realises is not a contraction and it diverges, with
+the boundary measured. A single term --- the maximised Hamiltonian, whose coefficient is $1/\eta$ ---
+sets the grid's time-step limit, destabilises the explicit deep-splitting recursion, and breaks that
+contraction. So the mesh-free region is not
+the neural solver's alone, and the accuracy it offers there decays without any internal signal that it
+is decaying. On the paper's own market calibration the reconstruction result is worth $2.7$ to $8.4$
+basis points of notional across nine instruments. The neural
 solver's failure at high dimension is a property of \emph{parameterisation}, not of dimension: the
 same architecture fails on a symmetric problem and succeeds on a non-separable one at matched state
 dimension.
@@ -148,13 +170,17 @@ obtained differently by each family and, as it turns out, not equally accurately
 in a single regime, whereas the answer here depends on the regime.
 
 This paper compares two solver families on a benchmark whose answer is known in closed form, at
-matched accuracy, scored on \emph{both} the value function and the control. Three findings follow.
+matched accuracy, scored on \emph{both} the value function and the control. Section~\ref{sec:theory}
+turns the comparison into rates: two propositions give the order a degree-$k$ reconstruction can
+deliver, the probe step it requires, and the objective lost when the control is wrong.
+Three findings follow.
 First, the comparison yields a boundary rather than a winner: a grid scheme is faster and more
-accurate wherever it is runnable ($p \le 5$), and beyond that the mesh-free solver is the only
-method that runs, at accuracy that decays with dimension without any internal warning. Second, and
-more usefully, value accuracy does not bound control accuracy: the control error is governed by the
-order of the reconstruction the grid solver differentiates, not by the accuracy of the solution, so
-a cubic reconstruction on the same nodes buys four to five orders of magnitude for free. Third, the
+accurate wherever it is runnable ($p \le 5$), and beyond it the mesh-free methods take over --- where
+the classical one among them, regression Monte Carlo, turns out to be the more accurate of the two we
+measure, at a fraction of the cost. Second, and
+more usefully, value accuracy does not bound control accuracy: the control error is governed by the order of the reconstruction the grid scheme differentiates, not by the accuracy of the solution, so
+a cubic reconstruction on the same nodes raises that order from one to between two and three, for
+free --- worth $2.7$ to $8.4$ basis points of notional on the paper's real-market calibration. Third, the
 neural solver's failure is a property of the problem's parameterisation rather than its dimension.
 We close with a decision guide: which regime favours which method, and the measurement that decides
 it.
@@ -190,7 +216,8 @@ splitting method \cite{beck2019deep}, and the Malliavin-weighted formulations of
 \cite{fujii2019ml}, with \cite{pham2021stochastic} surveying the stochastic-control setting. We
 measure the plain deep BSDE scheme of \cite{e2017deep,han2018solving} in
 Table~\ref{tab:bsde}, so the family is represented by its reference member rather than by its
-strongest variant -- a distinction worth stating, since the variants were introduced precisely to
+strongest variant \cite{hure2020deep,germain2022approximation,e2019multilevel} -- a distinction
+worth stating, since the variants were introduced precisely to
 address the training behaviour we report. High-order derivatives are the recognised bottleneck
 \cite{hutzenthaler2022overcoming}, and domain decomposition and adaptive refinement reduce training
 cost \cite{meng2020ppinn,moseley2021finite}.
@@ -219,15 +246,17 @@ optimal-execution HJB has one in closed form. Second, most comparisons report a 
 number, the value function, when what an HJB is solved \emph{for} is the control. The control is a
 derivative, each family obtains it differently, and it is not obtained equally accurately --- which
 is the finding we lead with, and which no comparison design built on a single accuracy number can
-detect. It is worth being explicit that our comparison also excludes an entire classical
-alternative. Backward dynamic-programming methods that avoid a mesh by simulating paths and
-regressing the continuation value --- the least-squares Monte Carlo family
-\cite{longstaff2001valuing}, treated at book length in \cite{glaserman2003monte} --- reach high
-dimension without a grid and are the natural third family to place against the two we measure. We
-do not run them, and the reason is scope rather than judgement: our object is the comparison of a
-learned solver against a mesh-based one on a problem with an exact reference, and adding a
-regression-based classical method would widen the paper without changing what it measures. A reader
-deciding between deep BSDE and least-squares Monte Carlo should treat that comparison as open.
+detect. One classical family is absent from the main comparison and we now run it separately.
+Backward dynamic-programming methods that avoid a mesh by simulating paths and regressing the
+continuation value --- the least-squares Monte Carlo family \cite{longstaff2001valuing}, treated at
+book length in \cite{glaserman2003monte}, and its stochastic-control variants
+\cite{kharroubi2014numerical,bender2012least} --- reach high dimension without a grid, and they are
+the natural third family to place against the two we measure. Section~\ref{sec:lsmc} runs them on the
+same problem and the same reference. It was the right thing to do and it changed a conclusion: the
+mesh-free region is not the neural solver's alone, and on this benchmark the classical regression
+method is the more accurate of the two. The remaining comparison we still do not make is against a
+tuned, modern deep-BSDE variant rather than its reference member, and we say so wherever that number
+is quoted.
 Finally, the SHoP framework \cite{xiao2024shop} has been applied to this HJB in earlier work. We do
 not claim SHoP, or any solver here, as a new method: the findings below concern the choice between
 existing families rather than the introduction of another.
@@ -305,14 +334,157 @@ asserted, and every method solves the same equation, so the comparison isolates 
 discretisation.
 
 %=====================================================================
+\section{What Governs Control Accuracy}\label{sec:theory}
+%=====================================================================
+
+The measurements below say that control accuracy is set by the order of the operator that turns
+stored nodal values into a gradient, and not by the accuracy of the stored values. This section
+states that as two propositions, because the claim is a rate rather than an observation, and because
+one of its consequences --- how the probe step must be scaled --- is what reconciles two tables in
+this paper that would otherwise appear to disagree.
+
+Fix a mesh of spacing $h$, let $R_h$ be a reconstruction of degree $k$ (piecewise linear for
+$k=1$, cubic for $k=3$), and let $\widehat{u} = -R^{-1}B^\top \nabla (R_h V)$ be the control a grid
+solver extracts from it.
+
+\smallskip
+\noindent\textbf{Proposition 1 (reconstruction and probe).} \emph{Let $V \in C^{k+1}$ and suppose the
+nodal values are exact. On the interior of a cell,}
+\begin{equation}
+\big\| \nabla (R_h V)(x) - \nabla V(x) \big\| = O(h^{k}),
+\end{equation}
+\emph{and if the gradient is obtained by a symmetric difference of step $\varepsilon$ instead of
+exactly,}
+\begin{equation}
+\big\| D_{\varepsilon}(R_h V)(x) - \nabla V(x) \big\| = O(h^{k}) + O(\varepsilon^{2}).
+\end{equation}
+\emph{Hence with $\varepsilon = c\,h^{\alpha}$ the attainable order is $\min(k, 2\alpha)$; the
+reconstruction's own order $k$ survives only if $\varepsilon = o(h^{k/2})$.}
+
+\emph{Proof sketch.} The first estimate is the standard derivative loss of one order in polynomial
+interpolation: the interpolant reproduces polynomials of degree $k$, so the difference
+$\nabla(R_hV) - \nabla V$ is the gradient of an $O(h^{k+1})$ interpolation error. For the second,
+$D_\varepsilon$ is the average of $\nabla(R_hV)$ over $[x-\varepsilon, x+\varepsilon]$ up to
+$O(\varepsilon^2)$, so its error is the first error plus the symmetric-difference truncation
+$O(\varepsilon^2)$; the two are independent and add. $\square$
+
+The practical content is in the exponent: a cubic reconstruction differentiated with a probe that
+shrinks like $h$ cannot beat order $2$, however good the reconstruction is. Table~\ref{tab:extract}
+measures this --- the same cubic reaches $2.2$--$2.8$ at $\varepsilon = h/4$ and $3.4$--$3.8$ at
+$\varepsilon \ll h$ --- and \texttt{exp\_probe\_scaling.py} sweeps the exponent and recovers
+$2.10$--$2.37$ at $\alpha = 1$, $3.32$--$3.79$ at $\alpha = 1.5$ and $3.36$--$3.83$ at
+$\alpha = 2$, against the predicted $2$ and $3$ and the reconstruction's own ceiling of $\approx
+3.4$.
+
+\smallskip
+\noindent\textbf{Proposition 2 (control error and objective loss).} \emph{For the
+linear--quadratic benchmark, let $u$ be any admissible control and $x$ the state it produces from
+$x_0$, let $u^\star$ and $x^\star$ be the optimal feedback and its path, and write
+$\delta u_t = u(x_t,t) - u^\star(x_t,t)$. Then}
+\begin{equation}\label{eq:loss}
+J(u^\star) - J(u) \;=\; \tfrac{1}{2}\,\mathbb{E}\!\left[\int_0^T\!
+\delta u_t^\top R \,\delta u_t \; dt\right]
+\end{equation}
+\emph{exactly, with no remainder term. Consequently} (i) \emph{the objective loss is the
+$R$-weighted squared control deviation accumulated along the path actually taken, so a degree-$k$
+reconstruction --- control error $O(h^{k})$ --- loses $O(h^{2k})$ of objective;} (ii) \emph{the
+position error obeys $\|x_t - x^\star_t\| \le T\|B\|\sup_t\|\delta u_t\|$, so the path inherits the
+control error at first order; and} (iii) \emph{the loss is governed by the control error and not by
+the value error, which bounds neither.}
+
+\emph{Proof.} Write the verification discrepancy of the HJB at an arbitrary control,
+$D(x,u) = V_t + (\nabla V)^\top(Ax+Bu) + \tfrac12\mathrm{tr}(\Sigma\Sigma^\top\nabla^2V)
+- \tfrac12(x^\top Qx + u^\top Ru)$. Substituting $V = -\tfrac12 x^\top P(t)x + c(t)$ and the
+Riccati equation cancels every quadratic term in $x$ and leaves
+\begin{equation}
+D(x,u) = -\tfrac{1}{2}\big(u - u^\star(x,t)\big)^\top R \big(u - u^\star(x,t)\big),
+\end{equation}
+with $u^\star(x,t) = -R^{-1}B^\top P(t)x$. Dynkin's formula gives
+$J(u) = V(x_0,0) + \mathbb{E}\int_0^T D(x_t,u)\,dt$, and $D(x,u^\star)\equiv 0$; subtracting the
+same identity at $u^\star$ gives \eqref{eq:loss}. The bound in (ii) is Gronwall on
+$d(x-x^\star) = (A(x-x^\star) + B(u-u^\star))dt$. $\square$
+
+Part (i) is the reason the proposed remedy is worth its cost: raising the reconstruction from first
+to third order moves the loss from $O(h^2)$ to $O(h^6)$, and it is free at the grid level. It also
+replaces an appeal to the envelope theorem, which would give only that the loss is second order in
+the deviation, with an identity that says which deviation and along which path.
+\texttt{verify\_suboptimality\_identity.py} checks \eqref{eq:loss} numerically: with an exact
+reference the two sides agree to $4\times10^{-10}$ relative, and the residual is shown to be the
+checker's own piecewise-linear interpolation of $P(t)$, falling as $n_{\text{ref}}^{-1.9}$ as that
+grid is refined. The same check confirms the bound in (ii) in every case, and shows the measured
+orders in Section~\ref{sec:control}: the loss converges at $2.1$ where \eqref{eq:loss} plus a
+first-order control error predicts $2$.
+
+One caveat belongs with the identity, and it is the one place where a low-order extraction is worse
+than its order suggests. A multilinear reconstruction's gradient is piecewise \emph{constant}, so the
+extracted control is discontinuous in $x$ and the closed-loop dynamics are only piecewise smooth;
+with a cubic reconstruction, whose gradient is continuous, the same numerical check agrees to
+$9\times10^{-9}$ instead of $7\times10^{-5}$. The asymmetry is in the trajectory integration rather
+than in the identity, but it is a real additional cost of the piecewise-constant control.
+
+\subsection{Monotonicity: when a high-order reconstruction must be limited}\label{sec:mono}
+
+Proposition~1 says to raise the order. Convergence theory for viscosity solutions says something that
+pulls the other way: the Barles--Souganidis framework requires the scheme to be \emph{monotone},
+consistent and stable \cite{barles1991convergence,crandall1983viscosity}, and a high-order
+reconstruction of $\nabla V$ is not monotone. Whether that conflict binds depends on where the
+gradient enters the scheme, and this problem separates the three cases cleanly.
+
+\emph{(i) Post-processing.} Here the Hamiltonian maximiser is available in closed form,
+$u^\star = -R^{-1}B^\top P(t)x$, and is substituted into the residual analytically. The value
+function is therefore solved by a scheme in which the reconstruction does not appear at all, so its
+monotonicity is untouched, and the reconstruction acts only on the control that is read out
+afterwards. This is why the order result of Proposition~1 can be had without reopening the
+convergence argument, and it is a property of the benchmark rather than a general one.
+
+\emph{(ii) Policy iteration.} The extracted gradient defines the frozen policy, which does enter the
+evaluation operator, so the reconstruction now influences the scheme. It does not follow that
+monotonicity is lost: monotonicity is a property of how the \emph{frozen} advection is discretised,
+not of how the policy was obtained. Our implementation upwinds it for exactly this reason --- an
+earlier version that central-differenced a frozen advection term was unconditionally unstable and
+diverged near $t=T$, which is how the requirement was discovered here. What the reconstruction
+changes is the fixed point, not the monotonicity of the step that finds it.
+
+\emph{(iii) A general HJB.} When $u^\star$ is not available in closed form, $\nabla V$ enters the
+Hamiltonian discretisation itself and the scheme's monotonicity does depend on how it is
+approximated. There the conflict is real and is the reason essentially non-oscillatory
+reconstructions exist \cite{harten1987uniformly,shu1998essentially,liu1994weighted}; monotone families
+that sidestep it exist too --- semi-Lagrangian schemes are the standard example
+\cite{falcone2002semi} --- at the cost of a different restriction on the time step. It is also
+worth saying plainly that raising the order of a recovered derivative is not itself a new idea ---
+gradient recovery and post-processing have a long history in finite elements
+\cite{zienkiewicz1992superconvergent,cockburn2003enhanced}, and the error of a discretised control is
+classical in PDE-constrained optimisation \cite{falk1973approximation,hinze2009optimization}. What is
+specific to this paper is which of the two errors a practitioner is buying, and that the control can
+be wrong in \emph{direction} while the value is right.
+
+That last possibility is measurable, and Table~\ref{tab:limit} measures it. The unlimited cubic is
+compared with the same gradient passed through a monotonised-central limiter built from the nodal
+one-sided slopes --- a post-limiter, not a different solve. On smooth data with exact nodal values
+the limiter is inert: no wrong-way samples either way, and the same order ($3.41$). Where the data
+have an interior turning point the clipping costs order ($3.72 \to 1.51$) and still buys nothing.
+The picture inverts once the nodal data are not smooth. Across a gradient kink the unlimited cubic
+overshoots the true gradient by $1.33\times$, and on nodal values carrying $2\%$ noise --- the
+realistic case, since the reconstruction is applied to a \emph{solved} grid and not to exact
+data --- it points the wrong way at $8.6\%$ of samples and overshoots by $2.26\times$. The limited
+reconstruction never points the wrong way in any of these cases, at $0\%$ throughout.
+
+The recommendation is therefore conditional, and the condition is checkable before any solve: raise
+the reconstruction order, and limit it where the nodal data are not monotone. For this benchmark and
+every smooth instance of it the limiter is unnecessary; for a value function with a kink, a
+constraint, or a boundary layer, the unlimited reconstruction is the one that will trade the wrong
+way.
+
+\input{tables/tab_limit.tex}
+
+%=====================================================================
 \section{Methodology}\label{sec:setup}
 %=====================================================================
 
-The four methods fall into two families on the one axis this paper is about. A grid solver stores
-$V$ at $N^d$ nodes and must \emph{reconstruct} a continuous function from them before it can
+The four methods fall into two families on the one axis this paper is about. A grid scheme stores $V$ at $N^d$ nodes and must \emph{reconstruct} a continuous function from them before it can
 differentiate one; a network \emph{is} a continuous function, so automatic differentiation returns
 its gradient exactly. Everything the paper reports about control accuracy follows from that
-difference, and from the order of the reconstruction the grid solver uses.
+difference, and from the order of the reconstruction the grid scheme uses.
 
 \textbf{Solvers.} The \emph{finite-difference} scheme uses explicit backward time stepping on a
 tensor-product grid of $N$ points per dimension, with the analytic Hamiltonian maximiser and
@@ -363,7 +535,7 @@ Courant--Friedrichs--Lewy (CFL) bound rather than by an artificial stiffness. Ne
 timings run on a single NVIDIA RTX 4090 Laptop GPU (17.2\,GB) and grid timings on the CPU. That
 asymmetry would make a wall-clock comparison unfair on its face, so the cost results are reported
 twice: as measured seconds, and as an analytic count of floating-point work with the rate each family
-achieves on the hardware it ran on (\S\ref{sec:results}).
+achieves on the hardware it ran on Section~\ref{sec:results}.
 
 %=====================================================================
 \section{Results}\label{sec:results}
@@ -373,7 +545,27 @@ Below, the dimension and cost results use the inventory-only benchmark, where $d
 extension of Section~\ref{sec:alpha} is used wherever a result could be an artefact of that model.
 
 \subsection{Accuracy and cost against the analytic solution}
+Table~\ref{tab:main} is the central result of the paper.
 \input{tables/tab_main.tex}
+
+Before the results, the scope of the comparison should be unambiguous, because a table with two
+columns invites the reading that two methods were tried. Twelve solver configurations across five
+families were measured, and Table~\ref{tab:solvers} lists all of them with the operating point each
+was measured at. The operating points differ by design rather than by accident: the two families in
+Table~\ref{tab:main} are compared at \emph{matched accuracy}, which is the only way to ask which is
+cheaper for the same answer; the neural variants are compared at matched \emph{budget}, so that the
+number of policy iterations is the variable rather than the compute; and every row shares the same
+problem and the same exact reference. Three of the rows exist only because of that audit, and two of
+them changed what the paper says. The implicit scheme shows that the CFL restriction is removable but
+that on this benchmark it is set by the optimal control rather than by the diffusion, so implicitness
+buys a factor of four rather than the orders it buys on diffusion-dominated problems. The PI-PINN
+sweep shows that the second neural variant the abstract refers to needs its iterations resolved: at
+matched budget, two outer iterations are worse than predicting the mean ($R^2 = -0.15$) while eight
+recover $0.9997$, so the honest statement about that family is conditional on a hyperparameter that
+the direct variant does not have. And regression Monte Carlo is the row that keeps the mesh-free
+region from being the neural solver's alone.
+
+\input{tables/tab_solvers.tex}
 
 \begin{figure}[!t]
 \centering
@@ -385,7 +577,9 @@ problem instead of inferring it from an absence.}
 \label{fig:acc_cost}
 \end{figure}
 
-Table~\ref{tab:main} is the central result. The finite-difference scheme is the most accurate method
+Figure~\ref{fig:acc_cost} is the same comparison as a single picture: accuracy against solve time, with the accuracy-matched grid configuration marked, so
+the crossing between the two families can be read off rather than assembled from columns. The
+finite-difference scheme is the most accurate method
 at every dimension, with value $R^2$ between $0.99927$ and $0.99999$, and its control has the
 correct sign at every sampled state. Policy iteration converges in 13 outer iterations and is
 slightly less accurate ($R^2 = 0.9908$ to $0.9966$), as expected from the first-order upwind
@@ -397,27 +591,30 @@ work rather than seconds. Counting $3d^2 + 3m^2 + 2dm + 4d + 2$ floating-point o
 point per time step, and $(6+2d)P$ per sample for the network ($P \approx 1.3\times10^4$ parameters
 for training and $2P$ per query), the grid scheme converts work into time at $0.13$ to
 $0.27$\,GFLOP/s while the network reaches $26$ to $30$\,GFLOP/s: a ratio of about $10^2$. Counting
-work instead of seconds therefore \emph{flatters the neural method}, which means the wall-clock
+work instead of seconds therefore \emph{flatters the neural solver}, which means the wall-clock
 result below is the conservative one and is not an artefact of giving the network a GPU. One caveat
-runs the other way and should be stated: the grid figures come from a NumPy implementation whose
-per-step cost is many small array operations, and its achieved rate is still rising with $N$ rather
-than saturating, so a compiled kernel would be faster and would strengthen this conclusion. The
-absolute grid seconds should not be read as the best a grid scheme can do.
+ran the other way in an earlier draft and is now measured rather than conceded: the grid figures come
+from a NumPy implementation whose per-step cost is many small array operations, and
+Table~\ref{tab:compiled} runs the same scheme as a fused parallel kernel at identical work. It is
+$2.5$ to $11.9$ times faster, its achieved rate rises from $0.65$ to $7.7$\,GFLOP/s, and the two
+implementations agree on the solved field to $1.3\times10^{-4}$ relative. Everything below therefore
+reports both: the NumPy seconds, which are what the paper's other tables carry and which no
+well-implemented grid solver would take, and what the same scheme costs compiled.
 
 We had to reduce the grid resolution as $p$ grew, so comparing cost at the resolutions the sweep
 could afford would be unfair. A separate refinement study swept $N$ at each $p$ and found the
 smallest resolution reaching a fixed accuracy target of $R^2 \ge 0.9999$. That resolution is
 $N^\star = 21$ at \emph{every} dimension tested, which gives one accuracy-matched grid
 configuration per $p$; the grid columns of Table~\ref{tab:main} use it. Grid work grows far faster
-than the point count $N^d$ suggests, because the explicit time step is CFL-limited by the mesh
-spacing and work scales closer to $N^{p+1}$: at $p=5$, $N=21$ is $4.1\times10^6$ points over 420
-steps, which is why accuracy-matched finite differences cost nearly 15 minutes at a dimension the
-neural solver covered in under four.
+than the point count $N^d$ suggests. The explicit time step is CFL-limited by the mesh spacing, so work
+scales closer to $N^{p+1}$: at $p=5$, $N=21$ is $4.1\times10^6$ points over 420 steps, which is why
+accuracy-matched finite differences cost nearly ten minutes of NumPy at a dimension the neural solver
+covered in under four --- and why that is $59$\,s when the same scheme is compiled.
 
 At matched accuracy the grid scheme is faster than the fixed-budget neural solver at every
-dimension: by a factor of 5.6 at $p=4$ and by two to three orders of magnitude at $p \le 2$. The
-mesh-free solver's cost is indeed almost flat in $p$ ($95 \rightarrow 226$\,s, a factor of $2.4$
-across five dimensions) against $0.023 \rightarrow 865$\,s for the grid scheme, so the two curves
+dimension, by $5.6\times$ at $p=4$ as measured in NumPy and by $114\times$ with the same scheme
+compiled, and by two to three orders of magnitude at $p \le 2$. The mesh-free solver's cost is indeed almost flat in $p$ ($95 \rightarrow 226$\,s, a factor of $2.4$
+across five dimensions) against $0.023 \rightarrow 865$\,s for the NumPy grid scheme, so the two curves
 do cross --- but at the crossing the neural solver is no longer solving the problem. Its accuracy
 is competitive at low dimension ($R^2 = 0.9997 \pm 0.0002$ at $p=1$) and degrades with $p$,
 failing outright at $p \ge 4$ under this budget. A negative $R^2$ means the learned value function
@@ -426,6 +623,58 @@ accuracy. Control-sign agreement stays high even where $R^2$ is negative: the ne
 \emph{direction} of the optimal control while missing its level, so sign agreement alone is not
 evidence that an HJB solver works. \emph{That failure is specific to this parameterisation, not to
 the dimension} --- see Section~\ref{sec:highdim}.
+
+\input{tables/tab_compiled.tex}
+
+\subsection{Is the comparison an artefact of the quadratic solution?}\label{sec:nonpoly}
+
+Every number above is measured on a value function that is a quadratic form, and a second-order
+scheme reproduces a quadratic almost exactly. That is why the resolution needed to hit the accuracy
+target came out at $N^\star = 21$ at \emph{every} dimension, which is a property of the solution
+rather than of the solvers, and it is the first thing a referee should attack. The attack is
+answerable, and the answer is in Table~\ref{tab:nonpoly}.
+
+We keep the solvers and change the solution. Fix a value function that is not a polynomial,
+\begin{equation}
+V(x,t) = -\tfrac{1}{2}x^\top P(t)x + A_0 (T-t)\sin\!\big(\omega\,\mathbf{1}^\top x\big),
+\end{equation}
+with $P$ the Riccati solution so that $V(x,T) = -\tfrac12 x^\top Q_T x$ still holds, and add to the
+running reward the source $s$ that makes it exact,
+$s = -V_t + \tfrac12 x^\top Qx - (\nabla V)^\top Ax - \tfrac12(\nabla V)^\top BR^{-1}B^\top\nabla V
+- \tfrac12\mathrm{tr}(\Sigma\Sigma^\top\nabla^2 V)$.
+Then $V$ solves the HJB of the modified problem and the maximiser is unchanged --- $s$ does not
+depend on $u$, so $u^\star = -R^{-1}B^\top\nabla V$ is still optimal --- which means \emph{the same
+solver, the same stencil and the same CFL bound} apply, with one added term. That matters: a
+reimplementation would have answered a question about the reimplementation. (Ours did, first time
+round: it froze the boundary values instead of using the solver's one-sided stencils and went
+unstable before producing a number.)
+
+What changes is the physics of the question. The same accuracy target, relative $L^2$ value error
+$\le 10^{-3}$, is now \emph{not reached at $N=61$ in any dimension}, where the quadratic benchmark
+reached it at $N=21$ with room to spare ($R^2 \ge 0.9999$). The dimension-free resolution was
+therefore an artefact of the quadratic solution. Three things are worth separating in the rest of
+the table. The value error still converges at the scheme's order ($2.0$--$2.2$), so the grid method
+is not degraded by the non-polynomial term --- it simply has more to resolve. The control error
+converges at $1.04$--$1.13$, which is Proposition~\ref{sec:theory}'s prediction for a piecewise-linear
+reconstruction and not an artefact of the quadratic either. And the cubic reconstruction keeps a
+nine- to seventeen-fold advantage over the multilinear one \emph{on the same nodes}, so the paper's
+headline result survives where a cubic reconstruction is no longer exact on the solution.
+
+Two honest qualifications. First, the resolution requirement did not turn out to grow with dimension
+in the way the objection anticipates: with $\omega = 3$ the dominant error is the CFL-tied time step,
+which is dimension-independent, so the failure to reach the target is a statement about resolution
+rather than about dimension. Push the non-polynomial term to $\omega = 12$ --- amplitude-matched, so
+the control magnitude and the CFL bound are unchanged, and only the spatial scale moves --- and the
+error at $N=61$ rises to $1.2\times10^{-2}$ at $d=1$ and $5.1\times10^{-3}$ at $d=2$, with apparent
+orders of $2.8$--$3.1$ as the error crosses from the under-resolved spatial term to the temporal
+one. The cubic's advantage shrinks to $1.7$--$2.7\times$ there, which is what one expects: when the
+solve itself is wrong, a better reconstruction cannot rescue it. Second, the source is a device for
+producing an exact non-polynomial solution, not a market friction; the economics of the modified
+problem are artificial and we do not read anything into them. What the experiment settles is the
+narrower and more important point: the accuracy comparison in this paper is not an artefact of the
+benchmark's solution being a polynomial.
+
+\input{tables/tab_nonpoly.tex}
 
 \subsection{Value accuracy is not control accuracy}\label{sec:control}
 
@@ -440,35 +689,45 @@ gradient converging at a rate set by $k$, and it is that rate --- not the accura
 value function --- that governs the control error.
 
 The two errors do not track each other. At every dimension and resolution tested the control error
-exceeds the value error, and it converges at a stable order of approximately $2.00$: least-squares
-fits of $\log(\text{error})$ against $\log h$ give $2.00$, $1.96$, $1.96$, $1.96$ and $1.96$ at
-$p = 1,\dots,5$, with fit $R^2$ between $0.998$ and $1.000$. The value error converges faster on
-average but irregularly, and at the finest grid in two of the five dimensions it regresses, so the
-ratio between the two grows under refinement --- at $p=2$ it runs
-$2 \to 5 \to 13 \to 25 \to 49 \to 83 \to 179$ over $N = 11,\dots,61$. The order is unchanged by the
-signal extension of Section~\ref{sec:alpha}: $2.12$ (fit $R^2 = 0.999$, over $N = 11,\dots,41$)
-against $2.10$ for the inventory-only benchmark at the same state dimension, so what follows is a
+exceeds the value error, and it converges at a stable order of about $1.00$: least-squares
+fits of $\log(\text{error})$ against $\log h$ give $1.00$, $0.98$, $0.98$, $0.98$ and $0.98$ at
+$p = 1,\dots,5$, with fit $R^2$ between $0.998$ and $1.000$. (Every error in this paper is a
+relative $L^2$ norm, $\|a-a^\star\|_2/\|a^\star\|_2$, and every order is fitted to that error rather
+than to its square --- a convention this paper previously left implicit, which is how the same
+control error could be read as order $2$ in one table and order $1$ in another.) The value error
+converges faster and irregularly --- $1.27$, $2.19$, $1.22$, $1.68$ and $1.85$ over the same five
+dimensions --- and at the finest grid in two of the five dimensions it regresses, so the ratio
+between the two grows under refinement: at $p=2$ it runs
+$1.5 \to 2.2 \to 3.6 \to 5.0 \to 7.0 \to 9.1 \to 13.4$ over $N = 11,\dots,61$. The order is unchanged
+by the
+signal extension of Section~\ref{sec:alpha}: $1.06$ (fit $R^2 = 0.999$, over $N = 11,\dots,41$)
+against $1.05$ for the inventory-only benchmark at the same state dimension, so what follows is a
 property of the differentiation operator and not of the inventory-only model.
 
 \emph{The cause is the reconstruction, not the solution.} We put the closed-form value function on
 the grid as exact nodal values, so the discrete solution is error-free by construction and every
 remaining control error belongs to the step that turns nodal values into a gradient. With the
 multilinear interpolation and probing difference used above, that step alone reproduces almost all
-of it: $3.7\times10^{-3}$ against $3.8\times10^{-3}$ at $N=11$, falling to $1.1\times10^{-4}$ at
-$N=61$ at order $1.98$, against $3.8\times10^{-3} \to 1.1\times10^{-4}$ measured on the solved
+of it: $6.1\times10^{-2}$ against $6.2\times10^{-2}$ at $N=11$, falling to $1.0\times10^{-2}$ at
+$N=61$ at order $0.99$, against $6.2\times10^{-2} \to 1.1\times10^{-2}$ measured on the solved
 grid. The grid solution is not what limits control accuracy.
 
 \emph{What limits it is the order of the reconstruction.} Table~\ref{tab:extract} measures the
 gradient-error convergence rate on functions whose gradients are known exactly, so the rates are
 properties of the reconstruction rather than of this benchmark. The multilinear reconstruction is
-second order on every function tested, and taking instead the \emph{exact} gradient of that same
-interpolant --- the best a piecewise-linear reconstruction can do --- is also second order, so
+first order on every function tested, and taking instead the \emph{exact} gradient of that same
+interpolant --- the best a piecewise-linear reconstruction can do --- is also first order, so
 consistency with the interpolant buys nothing. A cubic reconstruction, being $C^2$, has a smooth
-rather than piecewise-constant gradient and is fourth order on the non-polynomial functions and
-four to five orders of magnitude more accurate on the same grid. Because this benchmark's value
+rather than piecewise-constant gradient; with the table's probing step it converges at $2.2$ to
+$2.8$ on the non-polynomial test functions, and with a probing step far below the mesh --- the last
+two rows, which measure the reconstruction rather than the probe --- the same cubic reaches $3.4$
+to $3.8$. The gap between those two numbers is worth stating plainly: a finite-difference probe
+whose step is not scaled with the mesh silently caps the order a high-order reconstruction can
+deliver, so the practical recommendation is not only to raise the order but to differentiate
+consistently with it. Because this benchmark's value
 function \emph{is} quadratic and a cubic reconstruction reproduces quadratics exactly, the last
 column applies the same comparison to the Merton problem, whose closed form is a power function and
-whose HJB is non-linear in the derivatives; there the cubic order is $5.2$ against $2.1$. The result
+whose HJB is non-linear in the derivatives; there the cubic order is $2.6$ against $1.0$. The result
 is therefore not an artefact of the linear--quadratic structure.
 
 \input{tables/tab_extract.tex}
@@ -476,20 +735,25 @@ is therefore not an artefact of the linear--quadratic structure.
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{fig_j1_control_order.pdf}
-\caption{Control error against mesh spacing. Left, the three reconstructions on one non-polynomial
-test function, with a slope-$2$ reference (dotted); the measured orders are fitted to the same data
-the curves show. Right, the same measurement across four test functions, so the order can be seen to
-be a property of the reconstruction rather than of the example. The cubic reconstruction is fourth
-order throughout; the quadratic case is omitted for it because a cubic spline reproduces quadratics
-exactly, leaving only rounding error to fit.}
+\caption{Control error against mesh spacing, on the relative $L^2$ scale used throughout. Left, the
+three reconstructions on one non-polynomial test function, with a slope-$1$ reference (dotted); the
+measured orders are fitted to the same data the curves show. Right, the same measurement across four
+test functions, so the order can be seen to be a property of the reconstruction rather than of the
+example. The cubic reconstruction is second order with the probing step used here --- third order
+when that step is scaled with the mesh, as the last two rows of Table~\ref{tab:extract} show; the
+quadratic case is omitted for it because a cubic spline reproduces quadratics exactly, leaving only
+rounding error to fit.}
 \label{fig:ctrl_order}
 \end{figure}
 
-This is why value and control accuracy can be chosen almost independently. On the benchmark's own
+This is why value and control accuracy can be chosen almost independently. Figure~\ref{fig:ctrl_order}
+is that sentence as a measurement: control error against mesh spacing for the three reconstructions,
+on the relative $L^2$ scale used throughout, with the order visible as a slope and the cubic's ceiling
+visible as the point where the curve stops improving. On the benchmark's own
 solved grid at $p=2$, $N=61$, the multilinear extraction gives a control error of
-$1.1\times10^{-4}$ against a value error of $6.1\times10^{-7}$, a ratio of 184. The cubic
-extraction gives $1.7\times10^{-6}$ on the same grid, a factor of 67 better. There the control
-error is set by the solver rather than the reconstruction, so the ratio falls to $2.8$. The
+$1.06\times10^{-2}$ against a value error of $7.8\times10^{-4}$, a ratio of $13.6$. The cubic
+extraction gives $1.3\times10^{-3}$ on the same grid, $8.2$ times smaller. There the control
+error is set by the solver rather than the reconstruction, so the ratio falls to $1.7$. The
 decoupling is largely an artefact of the gradient operator chosen, not a property of grid methods.
 
 \emph{The order is a property of the reconstruction, and two points are not enough to show it.} The
@@ -500,7 +764,9 @@ comparison mean anything -- every degree is differentiated by an identical rule,
 on its own interpolant, so nothing but the reconstruction varies across a row. The measured gradient
 convergence rate rises monotonically with the degree, from $1.03$--$1.10$ at degree one to
 $3.29$--$3.53$ at degree three and $5.08$--$6.34$ at degree five, and at a fixed mesh the error falls
-by four to five orders of magnitude. The claim therefore holds along the whole sequence rather than
+by four to five orders of magnitude. These are the reconstruction's own rates: the probe step here
+is four orders of magnitude below the mesh, which is what makes them comparable with each other. The
+claim therefore holds along the whole sequence rather than
 between two chosen representatives, which is what makes the recommendation actionable: a practitioner
 who wants control accuracy does not choose a better solver family, they raise the order of the
 operator that turns their stored values into a gradient.
@@ -516,11 +782,11 @@ earlier comparison, where a cubic reconstruction is exact on a quadratic and lea
 rounding to fit.
 
 \emph{Refining in time cannot substitute for any of this.} Holding the mesh fixed and varying only
-the number of stored snapshots separates the two errors cleanly. The value error falls by two to
-four orders of magnitude ($\times23$, $\times163$, $\times428$ at $p=2$ for $N=21,35,45$;
-$\times4{,}559$, $\times17{,}269$, $\times4{,}249$ at $p=3$), while the control error falls by only
-$\times3.8$, $\times10$ and $\times17$ at $p=2$ and then stops improving; at $p=5$ it does not
-improve at all. The plateau is not arbitrary: at $p=2$ it scales as $h^2$ to within measurement
+the number of stored snapshots separates the two errors cleanly. The value error falls by up to two
+orders of magnitude ($\times4.8$, $\times12.8$, $\times20.7$ at $p=2$ for $N=21,35,45$;
+$\times67.5$, $\times131.4$, $\times65.2$ at $p=3$), while the control error falls by only
+$\times2.0$, $\times3.2$ and $\times4.1$ at $p=2$ and then stops improving; at $p=5$ it does not
+improve at all. The plateau is not arbitrary: at $p=2$ it scales as $h$ to within measurement
 error.
 
 The resolution an application needs is therefore fixed by the control target \emph{and} the order of
@@ -537,15 +803,56 @@ closed loop, separates the consequences cleanly at $N=11$ (signalled benchmark):
 extraction gives a maximum position error of $1.6\times10^{-2}$ of the initial position and an
 objective loss of $1.35\%$ of $|J^\star|$, while the cubic extraction on the same nodes gives
 $4.2\times10^{-3}$ and $3.9\times10^{-4}$. The ratio between the two quantities grows with refinement
---- $10.7$, $31.3$, $55.9$, $68.4$ over $N = 11,\dots,31$ --- and the fitted orders are what the
-envelope theorem predicts rather than merely consistent with it: the position error converges at
-$1.7$--$2.0$, the objective loss at $2.1$. In other words an improvement that a value benchmark
+--- $10.7$, $31.3$, $55.9$, $68.4$ over $N = 11,\dots,31$ --- and the fitted orders are $1.7$--$2.0$
+for the position error and $2.1$ for the objective loss. Proposition~\ref{sec:theory} accounts for
+both: \eqref{eq:loss} makes the loss the integral of the squared control deviation, hence second
+order in a first-order control error, which is what the $2.1$ measures; and the position error is
+bounded by, not equal to, the first-order inheritance $\|x_t - x_t^\star\| \le T\|B\|\sup_t\|\delta
+u\|$, so an exponent above one is inside the bound rather than in conflict with it. In other words an
+improvement that a value benchmark
 cannot see, a $35\times$ reduction in the objective loss, is accompanied by a $4\times$ improvement
 in the position actually held, and it is the position that a risk limit or an inventory constraint
 acts on. One limit is worth stating: the controller is stored as snapshots and blended in time, so
 its time sampling contributes about $10^{-3}$ to the position error --- comparable to the
 finest-mesh figures --- and the fine-mesh rows of that comparison are therefore time-limited rather
 than reconstruction-limited.
+
+\emph{Where the error lives.} Accuracy is scored on points drawn uniformly from the state box, and a
+point within one cell of the box's edge lies where the solver's stencils are one-sided and the
+reconstruction has information on one side only. That band is $13\%$ of the domain at $p=1$ and
+$33\%$ at $p=3$ for $N=21$ --- $41\%$ at $p=5$ by the same formula --- so a single domain-wide
+average could be dominated by it without anyone noticing. It is not: the control-error density in
+the band is $0.99$--$1.00$ times the interior's at $p = 1, 2, 3$, and the band contributes exactly
+its share of the domain to the total squared error. Three things belong with that check. The solvers
+pad the domain before building the grid, so the grid's own outermost cells are never queried at all;
+the statement is about the problem domain, not the grid edge. The measurement is easy to get
+backwards --- normalising the error inside each region makes the boundary look \emph{more} accurate,
+because $|V|$ is largest there, which is what our first version of it reported. And one asymmetry
+does survive: the cubic reconstruction's advantage is smaller in the band ($14$--$19\times$) than in
+the interior ($26\times$), which is what one expects when there is no node on the far side.
+
+\emph{What the improvement is worth in money.} The comparison above is in relative $L^2$ units, which
+is not what an execution desk books. Table~\ref{tab:shortfall} closes the loop on the paper's own
+real-market calibration. For each of the nine instruments the exact value function is placed on the
+grid, so the solve contributes no error and the reconstruction is the only thing that differs; each
+reconstruction then drives the deterministic closed loop; and the cost is the benchmark's own
+objective. Its units are money once $\sigma$ and $\eta$ are relative --- $\tfrac12\int \eta u^\top u\,dt$
+is the impact paid as a fraction of notional, and $10^4$ times it is basis points. Raising the reconstruction
+from multilinear to cubic is worth $2.7$ to $8.4$ basis points of notional, a mean of $5.7$\,bp ---
+about \$5.7k on a \$10M order --- while the cubic arm itself sits within $0.018$\,bp of the exact
+control --- the pairwise difference is therefore a statement about the multilinear arm, which is what
+makes it quotable. The ordering is the same one Section~\ref{sec:calib} found on the cost side and for
+the same reason: the effect is largest on the \emph{most} liquid instrument, because a tighter spread
+buys a larger optimal control and therefore a larger reconstruction error $\delta u \sim P\,h/\eta$.
+Two measurement points belong with the number. It is the pairwise difference over the full horizon,
+not the excess over the exact control truncated at $T-\delta$. Truncation removes the terminal penalty
+that pays for not liquidating, so the slower arm looks cheap and the difference falls to $-0.21$\,bp at
+$\delta = 0.1$. That is the same terminal contamination the paper documents for accuracy metrics, in its
+cost form, with the opposite remedy: keep the horizon here, drop the terminal sample there. And the
+figure is insensitive to the one coefficient that cannot be measured: across
+$\lambda \in [10^{-6}, 10^{-2}]$ it moves by less than $0.002$\,bp.
+
+\input{tables/tab_shortfall.tex}
 
 \subsection{Dimension and parameterisation}\label{sec:highdim}
 
@@ -558,8 +865,8 @@ at $p=1$: the network applies one learned univariate function and sums. That is 
 curse-of-dimensionality argument is about.
 
 The signal extension of Section~\ref{sec:alpha} removes the symmetry by construction rather than by
-assumption --- with \emph{perfectly uniform} parameters the off-diagonal block of $P$ reaches $0.205$
-of the diagonal, against exactly zero here --- and the contrast at \emph{matched state dimension},
+assumption: with \emph{perfectly uniform} parameters the off-diagonal block of $P$ reaches $0.205$
+of the diagonal, against exactly zero here. The contrast at \emph{matched state dimension},
 with the same architecture, budget and two seeds, is stark:
 
 \begin{center}
@@ -610,6 +917,70 @@ the grid scheme's grows geometrically, the gap must close eventually, but over $
 does not, and at each dimension where both methods succeed the grid scheme is faster by a factor of
 $5$ to $50$ --- at the coefficients benchmarked here, a scope Section~\ref{sec:calib} measures.
 
+\subsection{The mesh-free region is not the neural solver's alone}\label{sec:lsmc}
+
+Everything above compares a learned solver with a mesh-based one. That leaves out the classical
+family that also needs no mesh --- simulation with backward regression, the least-squares Monte Carlo
+line \cite{longstaff2001valuing,glaserman2003monte} and its stochastic-control variants
+\cite{kharroubi2014numerical,bender2012least} --- and leaving it out is not neutral: it is the family
+a referee would name, and it decides whether the boundary drawn above is between \emph{learned} and
+\emph{classical} or merely between \emph{what we ran} and \emph{what we did not}. So we run it.
+
+The scheme is policy iteration with backward regression, on the same problem and the same reference
+as the high-dimensional sweep of Section~\ref{sec:highdim}. Sample states across the domain; simulate
+paths under the current policy;
+regress the realised future reward at each time slice on the quadratic features
+$1, x_i, x_i x_j, \tfrac12 x_i^2$; improve the policy to $u = R^{-1}B^\top\nabla V$ from the fitted
+quadratic; repeat. Three implementation facts belong in the record, because each of them was needed
+to make the method work at all and none of them is free. Paths must start \emph{across the domain}:
+started from $x_0$ alone the cloud has radius $\sigma\sqrt{T} = 0.01$ around one corner of the box,
+the fitted Hessian is meaningless, and the extracted control diverges --- to $10^{33}$ in two
+iterations when we did that. The greedy update must be \emph{damped}: with a gain of $1/\eta = 100$,
+a Hessian error of $10^{-3}$ is a feedback-gain error of $0.1$, and replacing the policy outright is
+unstable here (we report $\alpha = 0.5$). And the regression must include the exact terminal
+condition, which is part of the problem rather than part of the answer.
+
+\input{tables/tab_meshfree.tex}
+
+Table~\ref{tab:meshfree} is the result, and it changes a conclusion. Regression Monte Carlo is more
+accurate than the neural solver at every dimension where both were measured --- at $d=8$ by
+$0.9988$ against $0.9813$, at $d=12$ by $0.9989$ against $0.9269$, and at $d=20$ by $0.9771$ against
+$0.7570$ --- and it does so in $2.7$, $5.1$ and $12.5$ seconds on a CPU where the neural runs took
+$196$, $270$ and $414$ seconds on a GPU. Its control is more accurate still. So ``beyond the grid's
+reach the neural solver is what remains'' is false as stated; what remains is mesh-free methods, of
+which one is classical, cheaper and --- here --- better.
+
+Two qualifications keep that from being over-read, and the first is the important one. The regression
+uses a quadratic basis, which is the exact structure of this benchmark's value function; the neural
+solver is given no such structure. That is a real advantage and it is the reason the comparison is a
+statement about \emph{this benchmark class} rather than about high-dimensional HJB equations in
+general. Where the value function is not close to quadratic the basis has to be enlarged. The cost of this
+family grows as $1 + d + d(d+1)/2$ basis functions (231 at $d=20$) rather than in the state dimension,
+and Section~\ref{sec:nonpoly} shows what happens when the solution stops being quadratic. The honest
+reading is that the classical mesh-free method wins where the practitioner
+has structural knowledge, and the neural solver is the fallback where they do not.
+
+That qualification is measured rather than asserted. Running the same regression, with the same
+quadratic basis, on the manufactured family of Section~\ref{sec:nonpoly} --- whose value function is
+progressively less quadratic --- gives a realised accuracy of $R^2 = 0.9998$ with the basis exactly
+right ($A_0 = 0$), $0.9995$ at $A_0 = 10^{-4}$, $0.956$ at $A_0 = 10^{-3}$, and $-1.19$ to $-1.20$ at
+$A_0 = 5\times10^{-3}$, which is the amplitude of the non-polynomial term used in
+Section~\ref{sec:nonpoly}. At $A_0 = 2\times10^{-2}$ the run diverges: the fitted policy
+drives the state out of the region the basis can describe, and the regression becomes ill-posed. The
+figure at the failing amplitude is quoted as a range on purpose: within one run the seeded repeats
+agree to $0.01$, but across independent runs of the same script it moves by up to $0.07$, which is
+part of the finding rather than an inconvenience --- a method in a failing regime does not fail
+reproducibly. So
+the classical advantage is worth exactly what structural knowledge of the value function is worth, and
+it fails outright --- not merely degrades --- when that knowledge is wrong by an amount this benchmark
+can produce. The practitioner's decision is therefore not "classical or neural" but whether the
+structural assumption can be checked, and the same repository runs the check. Second, the neural
+numbers here come from a fixed 8000-epoch budget applied at every dimension rather than tuned per
+dimension, and this paper's own ablation shows that budget moves the boundary; the comparison is
+therefore at stated budgets, not at matched accuracy. Both point the same way for a practitioner:
+the neural solver's niche is narrower than the framing it is usually given, and the measurement that
+decides it is cheap to run.
+
 \subsection{How much does the architecture choice matter?}\label{sec:arch}
 
 Table~\ref{tab:arch} answers the objection this paper would otherwise have to concede, that a single
@@ -648,6 +1019,9 @@ operator architectures, spectral features or curriculum on the sampling, and the
 ``no architecture search'' is that this bounds the effect of capacity within one family rather than
 the effect of architecture as such.
 
+
+\input{tables/tab_bsde.tex}
+
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{fig_j2_bsde_stopping.pdf}
@@ -659,8 +1033,6 @@ run passes through, by a factor of $14$ to $686$ depending on dimension --- whic
 Table~\ref{tab:bsde} quotes the value at its minimum and not at the end.}
 \label{fig:bsde_stop}
 \end{figure}
-
-\input{tables/tab_bsde.tex}
 
 The omission that most needs answering is deep BSDE, which is the standard high-dimensional method in
 mathematical finance and which we therefore ran rather than merely cited. Table~\ref{tab:bsde} gives
@@ -691,6 +1063,73 @@ of magnitude too late at $p=4$. A scale-free version still moves by a factor of 
 dimensions we measured, so the stopping point has to be found by monitoring the value rather than by
 a rule.
 
+\emph{And the family's modern member.} A referee is entitled to answer the above with ``then compare
+against a strong variant''. Deep splitting \cite{beck2019deep} is that variant: instead of one
+time-global network it fits one small network per time step by regression on simulated paths, and we
+implement it, validate it and run it on the same benchmark. The scheme itself is sound here --- running
+the same recursion with the per-step regression solved exactly in the quadratic basis, which is the
+solution's own functional form, gives value $R^2$ of $0.9987$, $0.9960$ and $0.9939$ at $d = 1, 4, 8$
+--- but the neural realisation does not reach it: $0.16$, $-76$ and $-286$ at the same step count, with
+the median per-step regression loss degrading from $0.05$ to $1.0$ over the same range. The
+discrepancy is therefore the learner's, not the scheme's, and the mechanism is the one this paper is
+about. The recursion feeds the \emph{gradient} forward: $z = \Sigma^\top\nabla u$ enters
+$f = -\tfrac12 x^\top Qx + \tfrac12 z^\top M z$ with $M = \Sigma^{-1}BR^{-1}B^\top\Sigma^{-\top}$
+of order $10^6$, so a per-step regression is asked for gradient accuracy, while a mean-squared-error
+loss constrains the function and not its derivative. This is the value/control decoupling of
+Section~\ref{sec:control} reappearing inside a neural solver, with the same practical reading: a
+splitting implementation validated on its value residual can be worthless in the value it reports
+while its control looks reasonable --- $R^2$ of $0.86$ on the control against $0.16$ on the value at
+$d=1$. Deep splitting is not a weak method; on this benchmark it is a method whose per-step regression
+has to be accurate in a derivative, and we report both arms so that the reader can see which one the
+limitation belongs to.
+
+That the limitation is neither the training budget nor the network's capacity is measured rather than
+assumed. At a fixed 50 steps, moving from $2\times32$ and 300 epochs per step to $4\times64$ and 2000
+--- $6.7\times$ the gradient steps --- improves the median per-step fit by $179\times$ (to
+$2.7\times10^{-4}$), and moves the value $R^2$ from $+0.16$ to $-16.5$: a better fit to each step's
+target produces a worse value function, while the control $R^2$ stays between $0.86$ and $0.89$
+throughout. The corresponding check on the mechanism is direct: at the trained networks the
+\emph{relative} error of the recovered gradient exceeds that of the value by $1.6$ to $4.3\times$ at
+the steps we measured (with one exception near $t=0$), which is what a loss constraining the function
+rather than its derivative predicts, and it is the gradient that the recursion feeds forward.
+
+\subsection{The classical probabilistic method, where it applies}\label{sec:mlp}
+
+The last family to place is the one with a complexity theory behind it, and
+Table~\ref{tab:mlp} gives both what it achieves and the condition under which it achieves it.
+Multilevel Picard
+\cite{hutzenthaler2020multilevel,hutzenthaler2022overcoming} approximates a high-dimensional semilinear PDE at a point by
+realising the Picard iteration in a full-history multilevel Monte Carlo scheme, and it is the classical
+method the deep-learning literature is usually measured against on high-dimensional problems. We
+implement it in the published form, with one deviation stated rather than hidden: our nonlinearity
+consumes the \emph{gradient}, so $\nabla U_\ell$ is obtained by central differences with step
+$\varepsilon$ --- the practical route for gradient-dependent nonlinearities
+\cite{neufeld2023multilevel} --- rather than by the Beta-time-sampled variant that reference
+introduces for exactly this case. Two consequences follow, and the second is the finding.
+
+\input{tables/tab_mlp.tex}
+
+First, where the method's hypothesis holds it is the strongest thing in this paper, and not narrowly.
+MLP realises the Picard iteration, whose Lipschitz constant here is $|\nabla V|/\eta$; at $\eta = 1$
+(a wider spread, i.e.\ weaker control authority) that is $0.10$ and the iteration converges. It then
+reaches $0.26\%$ relative error on $V(x_0,0)$ at $d = 20$ in $2.3$ seconds on a CPU, against
+$R^2 = 0.757$ for the PINN on the same problem, $0.977$ for regression Monte Carlo (in $12.5$\,s, and
+with a hand-chosen basis), and no grid at all. The implementation is checked where the hypothesis
+holds --- the relative error falls $6.7\times10^{-3}$ to $1.5\times10^{-3}$ from level 2 to level 4 ---
+so the divergence below is the method's condition and not a defect in our code.
+
+Second, at the paper's own calibration it does not converge, and the boundary is measurable rather than
+mysterious. The Picard map's Lipschitz constant at $\eta = 0.01$ is $1.25$: above one, so the iteration
+is not a contraction and the iterates diverge. Sweeping $\eta$ locates the transition between
+$|\nabla V|/\eta = 0.56$ (converged) and $0.91$ (diverged). The divergence is not a budget running out
+--- the $d=20$ run that diverges takes $1.8$\,s --- and it is not the finite-difference gradient, whose
+step we varied over two orders of magnitude with no effect on the outcome. It is the same stiffness
+that sets the grid's CFL limit and destabilises the explicit splitting recursion: the maximised
+Hamiltonian $\tfrac12\nabla V^\top BR^{-1}B^\top\nabla V$, whose coefficient is $1/\eta$, is what has
+to be handled carefully by anything that touches it, and multilevel Picard touches it through a
+contraction. This is the third method in this paper to be limited by that one term, and it is the term
+the optimal-execution literature treats as a modelling constant rather than as a numerical parameter.
+
 \subsection{Market-calibrated scope}\label{sec:calib}
 
 \input{tables/tab_calib.tex}
@@ -698,7 +1137,7 @@ a rule.
 Everything above uses coefficients that were chosen, not measured: $\eta = \lambda\sigma^2 = 0.01$ and
 $Q_T = 0.1$. A benchmark is entitled to do that, but the entitlement expires when its conclusions are
 read as statements about trading, so this subsection asks what happens when the coefficients come
-from the data instead.
+from the data instead. Table~\ref{tab:calib} answers it for the impact coefficient.
 
 Two of the three are measurable and one is not. The diffusion scale is the relative volatility, which
 we take from the minute bars. The impact coefficient is not observable, and we identify it with half
@@ -783,6 +1222,35 @@ exactly the regime a calibration study occupies. A fixed-parameter PINN does not
 architectures would need labelled solutions from the solver they aim to replace, though the
 physics-informed family \cite{wang2021physics} trains on the residual and needs none.
 
+\emph{Operator learning, and why it is a different axis.} The field has moved from fixed architectures
+--- the spectral convolutions of \cite{li2021fourier}, the branch/trunk construction of
+\cite{lu2021learning}, and the discretisation-invariance arguments of \cite{raonic2023convolutional} ---
+towards models pretrained across families of equations and specified at query time by examples rather
+than by weights \cite{yang2024pde}. None of that is a solver for one instance, which is what this
+paper measures, and it is worth being explicit about the consequences rather than adding a row that
+would not be comparable. An operator is trained on a \emph{family}, so the honest comparison is an
+amortised one: train once, evaluate on held-out members, and charge the classical methods a full
+re-solve per member. That comparison is well posed here --- every member has a closed-form reference --- and we have not
+run it, for a reason that is a property of this benchmark rather than a preference. The operator's
+input would be a low-dimensional parameter vector $(\lambda, \sigma, \eta, x_0)$, so the exercise would
+test whether a network can learn a smooth map from a handful of numbers. The methods already in this
+paper solve the same problem to a fraction of a percent in seconds: regression Monte
+Carlo at $0.4\%$ relative error at $d=1$, rising to $3.4\%$ at $d=20$, and multilevel Picard at
+$0.26\%$ at $d=20$. Operator learning earns its place when the input is a \emph{function} --- a volatility
+surface, an order-flow signal, a whole price path --- which is the signalled and market-calibrated
+extension of Section~\ref{sec:alpha} rather than the benchmark itself, and that is where we would place
+it.
+
+One connection is worth stating because it is not obvious and it is a prediction. Proposition~1
+is not about grid schemes: it says that any solver whose delivered object is a \emph{derivative} of a
+reconstructed field inherits the reconstruction's order, and that a differentiation step caps it. An
+operator that outputs the value function and whose control is then obtained by differentiating the
+output --- finite differences, or autograd of a network whose smoothness is set by its architecture ---
+is in exactly that position, so the recommendation of Section~\ref{sec:control} transfers: if control
+accuracy matters, raise the order of the reconstruction before changing the solver. We state it as a
+prediction because we did not measure an operator on this benchmark, and the benchmark is released so
+that it can be tested against a closed-form reference.
+
 \subsection{Out-of-domain evaluation}\label{sec:ood}
 A surrogate trained on a normalised state domain and evaluated in physical units fails quietly. A
 $4\times64$ $\tanh$ MLP trained on the HJB residual with terminal condition
@@ -808,7 +1276,7 @@ only first-order in time, so holding the temporal error below the spatial error 
 $dt \sim dx^2$ --- the same rate the CFL condition imposes --- and what implicitness buys is a
 constant factor of about four rather than a change in the scaling. The limitation is therefore the
 cost of controlling the temporal error, not stability; moving it needs a second-order time
-integrator, or sparse grids, which attack the $N^d$ factor instead. (ii) The neural results use one
+integrator, or sparse grids \cite{bungartz2004sparse}, which attack the $N^d$ factor instead. (ii) The neural results use one
 architecture ($4\times64$ $\tanh$), one optimiser and one schedule. Section~\ref{sec:arch} measures
 what that choice is worth \emph{within} the family --- capacity and budget each move the boundary at
 $p=4$ --- but the sweep is still over MLPs at a fixed optimiser and fixed collocation, so it bounds
@@ -820,7 +1288,7 @@ bias and therefore which scales it can represent \cite{wang2020understanding} --
 benchmark so that such claims can be tested against a closed-form
 reference. (iii) The separability effect is established as a phenomenon, not explained: we do not
 claim that symmetry \emph{causes} the failure. (iv) Timings come from a single GPU and CPU, and the
-comparison is stated as GPU-for-neural versus CPU-for-grid, which favours the neural method. (v) The
+comparison is stated as GPU-for-neural versus CPU-for-grid, which favours the neural solver. (v) The
 control-accuracy result assumes a solver whose control is a finite difference of an interpolated
 value function; a scheme that solves for the control directly could narrow the gap, and we have not
 tested it. (vi) The model coefficients are synthetic rather than calibrated to an instrument, so no
@@ -839,17 +1307,25 @@ performance, and we offer none.
 We compared neural and classical solvers for the HJB equation of multi-asset optimal execution
 against a closed-form Riccati reference. The comparison produces a boundary rather than a winner,
 because the two families are not ranked along one axis but along three. Wherever a grid scheme can
-run, up to about five state dimensions, it is both faster and more accurate, by $5$--$50\times$ in
-time at $p=4$--$5$; beyond that it is not runnable, and the mesh-free solver is the only method that
-runs, at accuracy decaying from $R^2 = 0.98$ at $p=8$ to $0.76$ at $p=20$ with no internal signal
-that it is decaying.
+run, up to about five state dimensions, it is both faster and more accurate --- by $5.6\times$ at
+$p=4$ as measured in NumPy and $114\times$ with the same scheme compiled, which is also what flips
+the one dimension where the NumPy grid had been the slower method. Where it cannot run, the classical side is still not finished: regression Monte
+Carlo also needs no grid, and it beats the neural solver at every dimension where both were measured
+($R^2$ of $0.999$ at $p=12$ and $0.977$ at $p=20$ against $0.927$ and $0.757$), in seconds on a CPU rather than minutes on a GPU. Multilevel Picard does better still where its
+hypothesis holds --- $0.26\%$ at $p=20$ in $2.3$ seconds --- though at this paper's own calibration the
+Picard iteration it realises is not a contraction and it diverges, with the boundary measured. The
+neural solver's accuracy also decays with no internal signal
+that it is decaying, which is the property a practitioner cannot work around.
 
 Measuring the \emph{control}, which is what an HJB is for, says something more useful: value
 accuracy does not bound control accuracy, because what limits the control is the order of the
-operator that turns nodal values into a gradient. A multilinear reconstruction is second order, its
-exact gradient is also second order, and a cubic reconstruction on the same nodes is fourth order
-and four to five orders of magnitude more accurate, cutting the control/value error ratio from 184
-to 2.8. That improvement is free at the grid level, which is why the actionable recommendation is
+operator that turns nodal values into a gradient. A multilinear reconstruction is first order, its
+exact gradient is also first order, and a cubic reconstruction on the same nodes reaches order
+$2.4$ with the same probing step and $3.4$ when that step is scaled with the mesh, cutting the
+control/value error ratio from $13.6$ to $1.7$ --- worth $2.7$ to $8.4$ basis points of notional on
+the paper's own market calibration, and largest on the most liquid instrument. That improvement is
+free at the grid level, which is
+why the actionable recommendation is
 the second row of Table~\ref{tab:guide}: if control accuracy matters, change the reconstruction
 before changing the solver.
 
@@ -857,8 +1333,12 @@ Two objections changed the picture without reversing it. A larger training budge
 a smaller one loses, and we report the rescued run rather than the flattering comparison. And the
 field's preference for inference time is justified, because a classical solver must be re-solved for
 every instance --- but the two framings answer different questions, one problem or a family of them,
-and have opposite answers. Both generalise: validate on the problem you actually have, with a
-reference you can trust.
+and have opposite answers. One term links the three limitations above: the maximised Hamiltonian
+$\tfrac12\nabla V^\top BR^{-1}B^\top\nabla V$, whose coefficient is $1/\eta$, sets the grid's
+time-step limit, destabilises the explicit splitting recursion, and breaks multilevel Picard's
+contraction. The reconstruction question and the stiffness question are therefore the same question,
+and it is asked about the one coefficient the optimal-execution literature treats as a modelling
+constant. Both generalise: validate on the problem you actually have, with a reference you can trust.
 
 \section*{Reproducibility}
 Code, the temporal data splits, the preprocessing manifest and every raw result file behind the
