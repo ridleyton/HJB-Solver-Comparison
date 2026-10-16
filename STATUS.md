@@ -4,9 +4,69 @@
 rank 3/60), JIF 3.9. The conference submission is cancelled; the manuscript goes straight to a
 journal. Selection evidence, the gap list and the roadmap are in `JOURNAL_Q1_TARGET_AND_GAPS.md`.
 
-**Current stage: round 14 — the session's work is committed (`2a84b66`, 79 files). One blocking issue
-found during the pre-commit release scan and NOT mine to decide: see "Market data are in the public
-repository" below.**
+**Current stage: round 15 — the vendor market data are out of the repository, out of its history, and
+off GitHub (`main` = `3de4627`). One server-side step remains and is the authors': a purge request to
+GitHub Support, because a force-push does not make unreachable objects disappear immediately.**
+
+---
+
+## Round 15 — the market data are gone, from the working tree, the history and GitHub (2026-10-14)
+
+The authors confirmed redistribution is not permitted, so the bars were removed everywhere.
+
+**Order of operations, because two of them are destructive:**
+
+1. **Backed up first, and verified by hash.** The 19 files (32.8 MB) were copied to
+   `../market_data_not_redistributable/` **outside** the repository and every file's SHA-256 compared
+   against the source before anything was deleted. The authors still need these to re-run the
+   calibration; deleting them from the only copy would have been the real accident here.
+2. **Split the directory that was removed from the file that had to stay.**
+   `data_causal/preprocess_manifest.json` is *metadata* --- row counts, date ranges, session filter,
+   estimator names, per-instrument Roll and Corwin--Schultz summaries, no prices --- and the
+   manuscript's data statement promises it is released. It now lives at
+   `data_manifest/preprocess_manifest.json`, outside the ignored paths, and
+   `exp_real_calibration.py` reads it there first and falls back to `data_causal/` for an author who
+   still has the bars.
+3. **Removed from the working tree and the index**, and both paths added to `.gitignore` so a local
+   copy cannot be committed again by accident.
+4. **Rewrote the history** with `git filter-branch --index-filter` over all refs, then deleted
+   `refs/original/`, expired the reflog and ran `git gc --prune=now`. Verified with
+   `git rev-list --all --objects | grep data/` → no hits, and `git log --all -- data data_causal` → 0
+   lines.
+5. **Force-pushed** (`+ cb75e2f...3de4627 main -> main`), then **fetched the remote back** and checked
+   *its* tree: `git ls-tree -r origin/main` lists `data_manifest/preprocess_manifest.json` and nothing
+   else under `data*`, and the remote history has 0 hits for either removed path. The GitHub API
+   reports `forks_count: 0` and `network_count: 0`, so there are no third-party copies on GitHub.
+
+**A quiet failure mode the removal exposed, and the guard it produced.** Running
+`exp_real_calibration.py` on a checkout without the bars did not fail: it skipped every real asset and
+**overwrote `results/exp_real_calibration.json` --- the file `tab_calib` is generated from --- with a
+synthetic-only version**. The file was restored from git and the script now stops with an explanation
+and refuses to write a partial result over the shipped one. This is the third time in this project
+that a missing input produced a plausible weaker output rather than an error, and the first time the
+demotion was caught by a *reproducibility* check rather than by reading the number.
+
+That check also caught something unrelated but real: **the committed `tab_solvers.tex` was stale
+relative to its generator** (its multilevel Picard row read 99.74% of the value where the generator
+emits 0.26% relative error), and the PDF had been built from the stale table. Regenerated, rebuilt,
+and the PDF's timestamp now post-dates the table it consumed.
+
+**What remains, and only the authors can do it.** A force-push moves the branch, but GitHub does not
+immediately garbage-collect the objects the old branch pointed at, and they can stay retrievable by
+SHA. GitHub's documented route for data that must be gone is a Support request ("Removing sensitive
+data from a repository"). It was not possible to test reachability from here --- the old commit is
+only known by a 7-character prefix, and `git fetch origin <short-sha>` fails on short input
+regardless --- so this is stated as a caveat, not as a verified fact. Nothing else is pending on the
+repository side: the manuscript's data statement and the README were already accurate, and the
+repository now matches them.
+
+```
+python src/verify_all.py            -> 22 passed, 0 failed, 1 skipped   (no data present)
+python src/verify_paper_numbers.py  -> 95 matched, 0 unmatched
+python src/check_release.py         -> 5 items, all accounted for: 2 false-positive BibTeX keys,
+                                      3 paths in an untracked scratch file
+git rev-list --all --objects | grep -c 'data/'  -> 0
+```
 
 ---
 
@@ -20,7 +80,9 @@ fallback that still names someone else's directory solves nothing for a reviewer
 the path"). Fixed: `TEXLIVE_BIN`, then PATH, then nothing. Results no longer record a machine-specific
 engine path either, and `.gitignore` now covers the submission package's LaTeX intermediates.
 
-**A contradiction that needs the authors' decision, not mine.** `rework/README.md` states:
+**A contradiction found here, since resolved in round 15** (the authors confirmed redistribution
+is not permitted, and the data are now out of the tree, the history and GitHub). `rework/README.md`
+states:
 
 > "Market data are not distributed with this repository ... **Neither directory is included here**,
 > because redistributing vendor market data is generally not permitted."
@@ -31,18 +93,9 @@ commit `e360f4e`. The repository is public (`ridleyton/HJB-Solver-Comparison`). 
 publishes exactly what two documents say it does not, and Alpha Vantage's standard terms restrict
 redistribution.
 
-This is not something to fix silently, because the two resolutions are opposite and only the authors
-can choose:
-
-1. **If redistribution is not permitted** (the stated position): remove the files from the working tree
-   and from history (`git rm -r --cached data data_causal`, then a history rewrite with
-   `git filter-repo` and a force-push, plus a request to GitHub to purge cached views --- a checker
-   cannot un-publish), and take the Zenodo snapshot from a commit that does not contain them.
-2. **If it is permitted**, or if those series are not actually vendor data: keep them and correct the
-   README and the manuscript's data statement, which currently misdescribe the repository.
-
-Either way it must be settled before the Zenodo release, because a release archives one commit and the
-statement has to match it. Recorded here rather than acted on.
+The two possible resolutions were opposite and only the authors could choose; they chose removal, and
+round 15 records how it was done. Left here as written because the reasoning is what identified the
+problem: the repository published exactly what two documents said it did not.
 
 ---
 
